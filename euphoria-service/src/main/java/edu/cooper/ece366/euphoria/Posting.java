@@ -7,5 +7,5 @@ public interface Posting {
     //TODO: add location, industry and skill level (all are discrete attributes)
     Integer postingId();
     String jobTitle();
-    String postingBlurb();
+    String description();
 }
