@@ -3,19 +3,16 @@ package edu.cooper.ece366.euphoria;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
-import com.spotify.apollo.route.AsyncHandler;
-import com.spotify.apollo.route.JsonSerializerMiddlewares;
-import com.spotify.apollo.route.Middleware;
-import com.spotify.apollo.route.Middlewares;
-import com.spotify.apollo.route.Route;
+import com.spotify.apollo.route.*;
+import okio.ByteString;
+
+import javax.print.DocFlavor;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.Statement;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
-import java.sql.Statement;
-import okio.ByteString;
 
 import static edu.cooper.ece366.euphoria.Industry.HEALTHCARE;
 import static edu.cooper.ece366.euphoria.Location.NEWYORK;
@@ -31,11 +28,13 @@ public class PostingHandles {
 
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/postings", this::getPostings)
+                Route.sync("GET", "/foo", this::foo),
+                Route.sync("GET", "/posting/<postingId>", rc -> getPosting(rc.pathArgs().get("postingId"))),
+                Route.sync("POST", "/posting", this::createPosting)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
-    private List<edu.cooper.ece366.euphoria.Posting> getPostings(final RequestContext requestContext) {
+    private List<edu.cooper.ece366.euphoria.Posting> foo(final RequestContext requestContext) {
         edu.cooper.ece366.euphoria.Posting posting = new PostingBuilder()
                 .postingId(31415)
                 .jobTitle("Underwater Basket Weaver")
@@ -45,6 +44,60 @@ public class PostingHandles {
                 .industry(HEALTHCARE)
                 .build();
         return Collections.singletonList(posting);
+    }
+
+    private List<edu.cooper.ece366.euphoria.Posting> getPosting(String postingId) {
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/euphoria?" + "user=euphoria&password=euphoria");
+        } catch (Exception ex) {
+            System.out.println("Exception connecting to db: " + ex.getMessage());
+        }
+
+        if (conn != null) {
+            try {
+                //FIXME: we should use PreparedStatements, not Statements
+                Statement statement = conn.createStatement();
+                String foo = "SELECT * from postings WHERE postingId == " + postingId;
+                statement.executeUpdate(foo);
+            } catch (Exception ex) {
+                System.out.println("Exception reading from db: " + ex.getMessage());
+            }
+        }
+
+        return Collections.emptyList();
+    }
+
+    private List<edu.cooper.ece366.euphoria.Posting> createPosting(final RequestContext requestContext) {
+        try {
+            Integer postingId = Integer.valueOf(requestContext.pathArgs().get("postingId"));
+            String jobTitle = requestContext.pathArgs().get("jobTitle");
+            String description = requestContext.pathArgs().get("description");
+            Location location = Location.valueOf(requestContext.pathArgs().get("location"));
+            SkillLevel skillLevel = SkillLevel.valueOf(requestContext.pathArgs().get("skillLevel"));
+            Industry industry = Industry.valueOf(requestContext.pathArgs().get("industry"));
+        } catch (Exception ex) {
+            System.out.println("Malformed POST request: " + ex.getMessage());
+        }
+
+        Connection conn = null;
+        try {
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/euphoria?" + "user=euphoria&password=euphoria");
+        } catch (Exception ex) {
+            System.out.println("Exception connecting to db: " + ex.getMessage());
+        }
+
+        if (conn != null) {
+            try {
+                Statement statement = conn.createStatement();
+                String foo = "INSERT INTO postings (postingId, jobTitle, description, location, industry, skillLevel, dateCreated) VALUES" + "";
+                statement.executeUpdate(foo);
+            } catch (Exception ex) {
+                System.out.println("Exception writing to db: " + ex.getMessage());
+            }
+        }
+
+        return Collections.emptyList();
     }
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {
