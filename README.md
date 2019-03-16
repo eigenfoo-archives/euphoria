@@ -16,8 +16,8 @@ mysql -u root -p receiveDB < d:\db\example.sql;
 
 
 ### additional commands for MySQL  client:    
-mysql -u root -p             
+mysql -u root -p&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; //start mysql             
 show databases;              
 show tables;                
-describe tablenamehere;&nbsp; &nbsp; &nbsp; //show table details  
+describe tablenamehere;&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; //show table details  
 drop table tablenamehere;&nbsp; &nbsp; &nbsp; //delete a table
