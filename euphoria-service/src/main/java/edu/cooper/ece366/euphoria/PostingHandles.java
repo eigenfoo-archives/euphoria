@@ -6,7 +6,6 @@ import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
 import okio.ByteString;
 
-import javax.print.DocFlavor;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.Statement;
@@ -14,12 +13,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-import static edu.cooper.ece366.euphoria.Industry.HEALTHCARE;
-import static edu.cooper.ece366.euphoria.Location.NEWYORK;
-import static edu.cooper.ece366.euphoria.SkillLevel.INTERNSHIP;
-
 public class PostingHandles {
-
     private final ObjectMapper objectMapper;
 
     public PostingHandles(final ObjectMapper objectMapper) {
@@ -28,22 +22,9 @@ public class PostingHandles {
 
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/foo", this::foo),
                 Route.sync("GET", "/posting/<postingId>", rc -> getPosting(rc.pathArgs().get("postingId"))),
                 Route.sync("POST", "/posting", this::createPosting)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
-    }
-
-    private List<edu.cooper.ece366.euphoria.Posting> foo(final RequestContext requestContext) {
-        edu.cooper.ece366.euphoria.Posting posting = new PostingBuilder()
-                .postingId(31415)
-                .jobTitle("Underwater Basket Weaver")
-                .description("What it sounds like.")
-                .location(NEWYORK)
-                .skillLevel(INTERNSHIP)
-                .industry(HEALTHCARE)
-                .build();
-        return Collections.singletonList(posting);
     }
 
     private List<edu.cooper.ece366.euphoria.Posting> getPosting(String postingId) {
