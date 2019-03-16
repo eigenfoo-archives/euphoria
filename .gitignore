@@ -28,3 +28,6 @@ hs_err_pid*
 
 # Maven stuff
 target/
+
+# System stuff
+.DS_Store
