@@ -40,9 +40,14 @@ form{
     -webkit-border-radius:15px;
 }
 
+.lighter{
+    vertical-align: middle;
+}
+
 .lighter input[type=text]{
     border:1px solid #d0d0d0;
     background-color:#fcfcfc;
+    vertical-align: middle;
 }
 
 
