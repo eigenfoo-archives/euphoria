@@ -1,0 +1,19 @@
+create table user (userID INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(40) NOT NULL, email VARCHAR (40) NOT NULL, phone VARCHAR(20) NOT NULL, edu_level ENUM ('1','2','3','4','5','6','7','8','9','10') NOT NULL, blurb TEXT NOT NULL, date_created DATETIME NOT NULL ); 
+Query OK, 0 rows affected (0.00 sec)
+
+/////////////////////////////////////////////
+
+create table company (companyID INT AUTO_INCREMENT PRIMARY KEY, name VARCHAR(40) NOT NULL, website  VARCHAR (40) NOT NULL, blurb TEXT NOT NULL, date_created DATETIME NOT NULL );
+
+/////////////////////////////////////////////
+
+create table postings (postingID INT AUTO_INCREMENT PRIMARY KEY, companyID INT NOT NULL, FOREIGN KEY(companyID) REFERENCES company (companyID), job_title VARCHAR (30) NOT NULL, description TEXT NOT NULL, location ENUM ('1','2','3','4','5','6','7','8','9','10') NOT NULL, industry ENUM ('1','2','3','4','5','6','7','8','9','10') NOT NULL , skill_level ENUM ('1','2','3','4','5','6','7','8','9','10') NOT NULL, date_created DATETIME NOT NULL);
+
+/////////////////////////////////////////////
+
+create table applications (applicationID INT AUTO_INCREMENT PRIMARY KEY, postingID INT NOT NULL, FOREIGN KEY(postingID) REFERENCES postings (postingID), userID INT NOT NULL, FOREIGN KEY(userID) REFERENCES user (userID), resume TEXT NOT NULL, cover_letter TEXT NOT NULL);
+
+/////////////////////////////////////////////
+
+create table authentication (username VARCHAR(30) NOT NULL, password_hash VARCHAR(40) NOT NULL , userbool BOOLEAN NOT NULL);
+
