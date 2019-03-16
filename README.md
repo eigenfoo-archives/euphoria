@@ -1,3 +1,4 @@
+<pre>
 # Euphoria
 
 A simple recruiting platform web application, written for ECE366 at The Cooper Union.
@@ -21,5 +22,6 @@ show databases;           //list all DBs
 show tables;              //list all tables    
 describe tablenamehere;   //show table details    
 drop table tablenamehere; //del selected table    
+</pre>    
 
 
