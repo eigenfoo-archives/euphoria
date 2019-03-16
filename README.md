@@ -21,4 +21,3 @@ show databases;
 show tables;                
 describe tablenamehere;&nbsp; &nbsp; &nbsp; //show table details  
 drop table tablenamehere;&nbsp; &nbsp; &nbsp; //delete a table
-
