@@ -1,17 +1,17 @@
 package edu.cooper.ece366.euphoria;
 
-public enum Location {
+enum Location {
     NEWYORK, LONDON, HONGKONG, BERLIN, BEIJING, WASHINGTON
 }
 
-public enum EducationLevel {
+enum EducationLevel {
     NOHIGHSCHOOL, HIGHSCHOOL, GED, SOMECOLLEGE, ASSOCIATES, BACHELORS, MASTERS, PHD, MD, JD
 }
 
-public enum SkillLevel {
+enum SkillLevel {
     INTERNSHIP, ENTRYLEVEL, ASSOCIATE, SENIOR, DIRECTOR, EXECUTIVE
 }
 
-public enum Industry {
+enum Industry {
     EDUCATION, ENERGY, FINANCE, FOOD, HEALTHCARE, INSURANCE, MEDIA, RETAIL, SERVICES, TECHNOLOGY, TRANSPORT, UTILITIES
 }
