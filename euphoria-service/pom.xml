@@ -34,7 +34,6 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.25</version>
         </dependency>
-
         <dependency>
             <groupId>io.norberg</groupId>
             <artifactId>auto-matter</artifactId>
@@ -65,7 +64,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>edu.cooper.ece366.bookstore.Main</mainClass>
+                            <mainClass>edu.cooper.ece366.euphoria.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
