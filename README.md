@@ -8,14 +8,14 @@ Contributors: [George Ho](https://github.com/eigenfoo), [Wendy Ide](https://gith
 
 ### Creating a DB dump file      
 ```
-create database example;                           //create a db and put stuff in it      
-mysqldump -u root -p example > d:\db\example.sql;  //choose directory for dump file      
+create database example;                           // create a db and put stuff in it      
+mysqldump -u root -p example > d:\db\example.sql;  // choose directory for dump file      
 ```
 
 ### Receiving a DB on your local computer 
 ```
-create database receiveDB;                       //create database you want to copy data into    
-mysql -u root -p receiveDB < d:\db\example.sql;  //use any dump file     
+create database receiveDB;                       // create database you want to copy data into    
+mysql -u root -p receiveDB < d:\db\example.sql;  // use any dump file     
 ```
 
 ### Additional commands for MySQL  client:    
