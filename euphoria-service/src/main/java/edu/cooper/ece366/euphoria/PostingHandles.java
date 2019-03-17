@@ -59,7 +59,7 @@ public class PostingHandles {
         return Collections.singletonList(posting);
     }
 
-    private List<edu.cooper.ece366.euphoria.Posting> createPosting(final RequestContext requestContext) {
+    private List<Posting> createPosting(final RequestContext requestContext) {
         try {
             Integer postingId = Integer.valueOf(requestContext.pathArgs().get("postingId"));
             String jobTitle = requestContext.pathArgs().get("jobTitle");
