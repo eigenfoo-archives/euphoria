@@ -8,7 +8,8 @@ Contributors: [George Ho](https://github.com/eigenfoo), [Wendy Ide](https://gith
 
 ### Initializing database and tables
 
-Beware that this will drop the database and recreate a new, empty one. In bash:
+Beware that this will drop the database and recreate a new, empty one. In bash,
+from the `euphoria/euphoria-service/src/main/resources/` directory:
 
 ```bash
 cat initialize-database.sql | mysql -u root -p
