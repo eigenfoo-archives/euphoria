@@ -60,7 +60,7 @@ create table companies (companyId INT AUTO_INCREMENT PRIMARY KEY,
 --                      "DIRECTOR",
 --                      "EXECUTIVE"
 create table postings (postingId INT AUTO_INCREMENT PRIMARY KEY,
-                       companyId INT NOT NULL, FOREIGN KEY(companyId) REFERENCES companies (companyId),
+                       companyId INT NOT NULL,  -- FOREIGN KEY(companyId) REFERENCES companies (companyId),
                        jobTitle VARCHAR (30) NOT NULL,
                        description TEXT NOT NULL,
                        location VARCHAR(20) NOT NULL,
@@ -68,9 +68,12 @@ create table postings (postingId INT AUTO_INCREMENT PRIMARY KEY,
                        skillLevel VARCHAR(20) NOT NULL,
                        dateCreated DATETIME NOT NULL);
 
+insert into postings (companyId, jobTitle, description, location, industry, skillLevel, dateCreated)
+values (123, 'Frontend Developer', 'Must know React.js.', 'NEWYORK', 'TECHNOLOGY', 'INTERNSHIP', "2019-03-16 23:59:59");
+
 create table applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
-                           postingId INT NOT NULL, FOREIGN KEY(postingId) REFERENCES postings (postingId),
-                           userId INT NOT NULL, FOREIGN KEY(userId) REFERENCES users (userID), 
+                           postingId INT NOT NULL,  -- FOREIGN KEY(postingId), REFERENCES postings (postingId),
+                           userId INT NOT NULL, -- FOREIGN KEY(userId), REFERENCES users (userID), 
                            resume TEXT NOT NULL,
                            coverLetter TEXT NOT NULL);
 
