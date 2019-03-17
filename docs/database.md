@@ -14,8 +14,8 @@ cat initialize-database.sql | mysql -u root -p
 Make sure you have a database called `exampledb` to dump from/to. In bash:
 
 ```bash
-mysqldump -u root -p exampledb > exampledb-dump.sql;  -- Dump to a dump file
-mysql -u root -p exampledb < exampledb-dump.sql;      -- Load from a dump file
+mysqldump -u root -p exampledb > exampledb-dump.sql;  # Dump to a dump file
+mysql -u root -p exampledb < exampledb-dump.sql;      # Load from a dump file
 ```
 
 ## Additional handy commands in MySQL
