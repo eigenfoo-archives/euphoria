@@ -6,23 +6,40 @@ Contributors: [George Ho](https://github.com/eigenfoo), [Wendy Ide](https://gith
 
 ## Database Instructions   
 
-### Creating a DB dump file
-```
-create database example;
-mysqldump -u root -p example > d:\db\example.sql;
+### Initializing database and tables
+
+In bash:
+
+```bash
+cat create-database.sql | mysql -u root -p
 ```
 
-### Receiving a DB on your local computer
-```
-create database receiveDB;
-mysql -u root -p receiveDB < d:\db\example.sql;
+### Dumping database to file
+
+In MySQL:
+
+```sql
+mysqldump -u root -p exampledb > d:\db\exampledb.sql;
 ```
 
-### Additional commands for MySQL client
+### Loading database from dump file
+
+In MySQL:
+
+```sql
+create database exampledb;
+mysql -u root -p exampledb < d:\db\exampledb.sql;
 ```
-mysql -u root -p           // Start MySQL
-show databases;
-show tables;
-describe tablenamehere;    // Show table details
-drop table tablenamehere;  // Delete a table
+
+### Additional handy commands in MySQL
+
+In MySQL:
+
+```sql
+mysql -u root -p             // Start MySQL
+show databases;              // List all databases
+show tables;                 // List all tables
+describe tablename;          // Show table details
+drop table tablename;        // Delete a table
+drop database databasename;  // Delete a table
 ```
