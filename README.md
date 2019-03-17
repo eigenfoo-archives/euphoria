@@ -8,10 +8,10 @@ Contributors: [George Ho](https://github.com/eigenfoo), [Wendy Ide](https://gith
 
 ### Initializing database and tables
 
-In bash:
+Beware that this will drop the database and recreate a new, empty one. In bash:
 
 ```bash
-cat create-database.sql | mysql -u root -p
+cat initialize-database.sql | mysql -u root -p
 ```
 
 ### Dumping database to file

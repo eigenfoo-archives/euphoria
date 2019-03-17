@@ -1,7 +1,13 @@
 -- Initializes database and tables.
 -- To run: `cat create-database.sql | mysql -u root -p`
 
+drop database if exists euphoria;
+
+drop user if exists 'euphoria'@'localhost';
+
 create database euphoria;
+
+create user 'euphoria'@'localhost' identified by 'euphoria';
 
 use euphoria;
 
