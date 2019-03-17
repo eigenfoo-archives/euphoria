@@ -8,6 +8,7 @@ import okio.ByteString;
 
 import java.sql.*;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -39,10 +40,10 @@ public class PostingHandles {
         }
 
         try {
-            //FIXME: we should use PreparedStatements, not Statements!
-            Statement statement = conn.createStatement();
-            String query = "SELECT * from postings WHERE postingId == " + postingId;
-            ResultSet resultSet = statement.executeQuery(query);
+            String sqlQuery = "SELECT * from postings WHERE postingId == ?";
+            PreparedStatement stmt = conn.prepareStatement(sqlQuery);
+            stmt.setInt(1, Integer.valueOf(postingId));
+            ResultSet resultSet = stmt.executeQuery(sqlQuery);
 
             posting = new PostingBuilder()
                     .postingId(resultSet.getInt("postingId"))
@@ -60,32 +61,50 @@ public class PostingHandles {
     }
 
     private List<Posting> createPosting(final RequestContext requestContext) {
+        Integer postingId = null;
+        String jobTitle = null;
+        String description = null;
+        Location location = null;
+        SkillLevel skillLevel = null;
+        Industry industry = null;
+        Date dateCreated = null;
+
         try {
-            Integer postingId = Integer.valueOf(requestContext.pathArgs().get("postingId"));
-            String jobTitle = requestContext.pathArgs().get("jobTitle");
-            String description = requestContext.pathArgs().get("description");
-            Location location = Location.valueOf(requestContext.pathArgs().get("location"));
-            SkillLevel skillLevel = SkillLevel.valueOf(requestContext.pathArgs().get("skillLevel"));
-            Industry industry = Industry.valueOf(requestContext.pathArgs().get("industry"));
+            postingId = Integer.valueOf(requestContext.pathArgs().get("postingId"));
+            jobTitle = requestContext.pathArgs().get("jobTitle");
+            description = requestContext.pathArgs().get("description");
+            location = Location.valueOf(requestContext.pathArgs().get("location"));
+            skillLevel = SkillLevel.valueOf(requestContext.pathArgs().get("skillLevel"));
+            industry = Industry.valueOf(requestContext.pathArgs().get("industry"));
+            dateCreated = new Date(requestContext.pathArgs().get("dateCreated"));
         } catch (Exception ex) {
             System.out.println("Malformed POST request: " + ex.getMessage());
         }
 
         Connection conn = null;
+        Posting posting = null;
+
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/euphoria?user=euphoria&password=euphoria");
-        } catch (Exception ex) {
-            System.out.println("Exception connecting to db: " + ex.getMessage());
+            DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+        } catch (SQLException ex) {
+            System.out.println("SQL exception on connection: " + ex.getMessage());
         }
 
-        if (conn != null) {
-            try {
-                Statement statement = conn.createStatement();
-                String foo = "INSERT INTO postings (postingId, jobTitle, description, location, industry, skillLevel, dateCreated) VALUES" + "";
-                statement.executeUpdate(foo);
-            } catch (Exception ex) {
-                System.out.println("Exception writing to db: " + ex.getMessage());
-            }
+        try {
+            String statement = "INSERT INTO postings (companyId, jobTitle, " +
+                               "description, location, industry, skillLevel, " +
+                               "dateCreated) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement query = conn.prepareStatement(statement);
+            query.setInt(1, postingId);
+            query.setString(2, jobTitle);
+            query.setString(3, description);
+            query.setString(4, location.toString());
+            query.setString(5, skillLevel.toString());
+            query.setString(6, industry.toString());
+            query.setDate(7, (java.sql.Date) dateCreated);
+            query.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println("SQL exception on query: " + ex.getMessage());
         }
 
         return Collections.emptyList();
