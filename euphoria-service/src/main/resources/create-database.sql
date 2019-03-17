@@ -1,3 +1,6 @@
+-- Initializes database and tables.
+-- To run: `cat create-database.sql | mysql -u root -p`
+
 create database euphoria;
 
 use euphoria;
