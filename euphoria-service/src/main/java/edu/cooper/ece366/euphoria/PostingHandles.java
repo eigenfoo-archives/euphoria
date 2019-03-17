@@ -14,7 +14,7 @@ import java.util.stream.Stream;
 
 public class PostingHandles {
     private final ObjectMapper objectMapper;
-    private static final String dbUrl = "jdbg:mysql://localhost:3306/euphoria";
+    private static final String dbUrl = "jdbc:mysql://localhost:3306/euphoria";
     private static final String dbUsername = "euphoria";
     private static final String dbPassword = "euphoria";
 
