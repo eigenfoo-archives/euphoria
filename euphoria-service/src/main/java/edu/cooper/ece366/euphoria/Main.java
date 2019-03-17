@@ -14,11 +14,11 @@ public class Main {
 
     private static void init(final Environment environment) {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new AutoMatterModule());
-        PostingHandles postingHandlers = new PostingHandles(objectMapper);
+        PostingHandles postingHandles = new PostingHandles(objectMapper);
 
         environment
                 .routingEngine()
                 .registerAutoRoute(Route.sync("GET", "/ping", rc -> "pong"))
-                .registerRoutes(postingHandlers.routes());
+                .registerRoutes(postingHandles.routes());
     }
 }

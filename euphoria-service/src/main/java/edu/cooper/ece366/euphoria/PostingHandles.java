@@ -12,49 +12,45 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class PostingHandles {
+public class PostingHandles implements RouteProvider {
     private final ObjectMapper objectMapper;
     private static final String dbUrl = "jdbc:mysql://localhost:3306/euphoria";
     private static final String dbUsername = "euphoria";
     private static final String dbPassword = "euphoria";
 
-    public PostingHandles(final ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
-    }
+    public PostingHandles(final ObjectMapper objectMapper) { this.objectMapper = objectMapper; }
 
+    @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/posting/<postingId>", rc -> getPosting(rc.pathArgs().get("postingId"))),
-                Route.sync("POST", "/posting", this::createPosting)
+                Route.sync("GET", "/posting/<postingId>", this::getPosting)
+                // Route.sync("POST", "/posting", this::createPosting)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
-    private List<Posting> getPosting(String postingId) {
-        Connection conn = null;
+    private List<Posting> getPosting(final RequestContext requestContext) {
         Posting posting = null;
 
         try {
-            DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-        } catch (SQLException ex) {
-            System.out.println("SQL exception on connection: " + ex.getMessage());
-        }
-
-        try {
-            String sqlQuery = "SELECT * from postings WHERE postingId == ?";
+            Integer postingId = Integer.valueOf(requestContext.pathArgs().get("postingId"));
+            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            String sqlQuery = "SELECT * FROM postings WHERE postingId = ?";
             PreparedStatement stmt = conn.prepareStatement(sqlQuery);
-            stmt.setInt(1, Integer.valueOf(postingId));
-            ResultSet resultSet = stmt.executeQuery(sqlQuery);
+            stmt.setInt(1, postingId);
+            ResultSet resultSet = stmt.executeQuery();
 
-            posting = new PostingBuilder()
-                    .postingId(resultSet.getInt("postingId"))
-                    .jobTitle(resultSet.getString("jobTitle"))
-                    .description(resultSet.getString("description"))
-                    .location(Location.valueOf(resultSet.getString("description")))
-                    .skillLevel(SkillLevel.valueOf(resultSet.getString("skillLevel")))
-                    .industry(Industry.valueOf(resultSet.getString("industry")))
-                    .build();
+            if (resultSet.next()) {
+                posting = new PostingBuilder()
+                        .postingId(resultSet.getInt("postingId"))
+                        .jobTitle(resultSet.getString("jobTitle"))
+                        .description(resultSet.getString("description"))
+                        .location(Location.valueOf(resultSet.getString("location")))
+                        .skillLevel(SkillLevel.valueOf(resultSet.getString("skillLevel")))
+                        .industry(Industry.valueOf(resultSet.getString("industry")))
+                        .build();
+            }
         } catch (SQLException ex) {
-            System.out.println("SQL exception on query: " + ex.getMessage());
+            System.out.println(ex);
         }
 
         return Collections.singletonList(posting);
@@ -85,7 +81,7 @@ public class PostingHandles {
         Posting posting = null;
 
         try {
-            DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
         } catch (SQLException ex) {
             System.out.println("SQL exception on connection: " + ex.getMessage());
         }

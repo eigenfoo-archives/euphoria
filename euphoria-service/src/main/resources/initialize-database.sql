@@ -7,9 +7,13 @@ drop user if exists 'euphoria'@'localhost';
 
 create database euphoria;
 
-create user 'euphoria'@'localhost' identified by 'euphoria';
-
 use euphoria;
+
+set global time_zone = '-5:00';
+
+create user 'euphoria'@'localhost' identified with mysql_native_password by 'euphoria';
+
+grant all privileges on euphoria.* to 'euphoria'@'localhost';
 
 -- educationLevel is one of: "NOHIGHSCHOOL",
 --                           "HIGHSCHOOL",
