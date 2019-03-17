@@ -6,15 +6,16 @@ import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
 import okio.ByteString;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class PostingHandles {
     private final ObjectMapper objectMapper;
+    private static final String dbUrl = "jdbg:mysql://localhost:3306/euphoria";
+    private static final String dbUsername = "euphoria";
+    private static final String dbPassword = "euphoria";
 
     public PostingHandles(final ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
@@ -27,26 +28,35 @@ public class PostingHandles {
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
-    private List<edu.cooper.ece366.euphoria.Posting> getPosting(String postingId) {
+    private List<Posting> getPosting(String postingId) {
         Connection conn = null;
+        Posting posting = null;
+
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/euphoria?" + "user=euphoria&password=euphoria");
-        } catch (Exception ex) {
-            System.out.println("Exception connecting to db: " + ex.getMessage());
+            DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+        } catch (SQLException ex) {
+            System.out.println("SQL exception on connection: " + ex.getMessage());
         }
 
-        if (conn != null) {
-            try {
-                //FIXME: we should use PreparedStatements, not Statements
-                Statement statement = conn.createStatement();
-                String foo = "SELECT * from postings WHERE postingId == " + postingId;
-                statement.executeUpdate(foo);
-            } catch (Exception ex) {
-                System.out.println("Exception reading from db: " + ex.getMessage());
-            }
+        try {
+            //FIXME: we should use PreparedStatements, not Statements!
+            Statement statement = conn.createStatement();
+            String query = "SELECT * from postings WHERE postingId == " + postingId;
+            ResultSet resultSet = statement.executeQuery(query);
+
+            posting = new PostingBuilder()
+                    .postingId(resultSet.getInt("postingId"))
+                    .jobTitle(resultSet.getString("jobTitle"))
+                    .description(resultSet.getString("description"))
+                    .location(Location.valueOf(resultSet.getString("description")))
+                    .skillLevel(SkillLevel.valueOf(resultSet.getString("skillLevel")))
+                    .industry(Industry.valueOf(resultSet.getString("industry")))
+                    .build();
+        } catch (SQLException ex) {
+            System.out.println("SQL exception on query: " + ex.getMessage());
         }
 
-        return Collections.emptyList();
+        return Collections.singletonList(posting);
     }
 
     private List<edu.cooper.ece366.euphoria.Posting> createPosting(final RequestContext requestContext) {
@@ -63,7 +73,7 @@ public class PostingHandles {
 
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/euphoria?" + "user=euphoria&password=euphoria");
+            conn = DriverManager.getConnection("jdbc:mysql://localhost:3306/euphoria?user=euphoria&password=euphoria");
         } catch (Exception ex) {
             System.out.println("Exception connecting to db: " + ex.getMessage());
         }
