@@ -16,19 +16,18 @@ cat create-database.sql | mysql -u root -p
 
 ### Dumping database to file
 
-In MySQL:
+Make sure you have a database called `exampledb` to dump from. In bash:
 
-```sql
-mysqldump -u root -p exampledb > d:\db\exampledb.sql;
+```bash
+mysqldump -u root -p exampledb > exampledb-dump.sql;
 ```
 
 ### Loading database from dump file
 
-In MySQL:
+Make sure you have a database called `exampledb` to dump to. In bash:
 
 ```sql
-create database exampledb;
-mysql -u root -p exampledb < d:\db\exampledb.sql;
+mysql -u root -p exampledb < exampledb-dump.sql;
 ```
 
 ### Additional handy commands in MySQL
@@ -36,10 +35,10 @@ mysql -u root -p exampledb < d:\db\exampledb.sql;
 In MySQL:
 
 ```sql
-mysql -u root -p             // Start MySQL
-show databases;              // List all databases
-show tables;                 // List all tables
-describe tablename;          // Show table details
-drop table tablename;        // Delete a table
-drop database databasename;  // Delete a table
+mysql -u root -p             -- Start MySQL
+show databases;              -- List all databases
+show tables;                 -- List all tables
+describe tablename;          -- Show table details
+drop table tablename;        -- Delete a table
+drop database databasename;  -- Delete a table
 ```
