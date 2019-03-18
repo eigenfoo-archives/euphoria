@@ -87,4 +87,4 @@ CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
 
 CREATE TABLE authentication (username VARCHAR(30) NOT NULL,
                              passwordHash VARCHAR(40) NOT NULL,
-                             userbool BOOLEAN NOT NULL);
+                             isUser BOOLEAN NOT NULL);
