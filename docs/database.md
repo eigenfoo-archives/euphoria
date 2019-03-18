@@ -27,6 +27,7 @@ mysql -u root -p             -- Start MySQL
 show databases;              -- List all databases
 show tables;                 -- List all tables
 describe tablename;          -- Show table details
+select * from tablename;     -- Show all table contents
 drop table tablename;        -- Delete a table
-drop database databasename;  -- Delete a table
+drop database databasename;  -- Delete a database
 ```
