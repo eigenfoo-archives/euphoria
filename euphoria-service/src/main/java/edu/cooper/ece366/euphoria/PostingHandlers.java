@@ -13,13 +13,13 @@ import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class PostingHandles implements RouteProvider {
+public class PostingHandlers implements RouteProvider {
     private static final String dbUrl = "jdbc:mysql://localhost:3306/euphoria";
     private static final String dbUsername = "euphoria";
     private static final String dbPassword = "euphoria";
     private final ObjectMapper objectMapper;
 
-    public PostingHandles(final ObjectMapper objectMapper) {
+    public PostingHandlers(final ObjectMapper objectMapper) {
         this.objectMapper = objectMapper;
     }
 

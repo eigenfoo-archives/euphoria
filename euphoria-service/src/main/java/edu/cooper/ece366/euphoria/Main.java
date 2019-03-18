@@ -14,7 +14,7 @@ public class Main {
 
     private static void init(final Environment environment) {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new AutoMatterModule());
-        PostingHandles postingHandlers = new PostingHandles(objectMapper);
+        PostingHandlers postingHandlers = new PostingHandlers(objectMapper);
 
         environment
                 .routingEngine()
