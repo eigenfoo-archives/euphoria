@@ -1,5 +1,5 @@
 -- Initializes database and tables.
--- To run: `cat create-database.sql | mysql -u root -p`
+-- To run: `cat initialize-database.sql | mysql -u root -p`
 
 DROP DATABASE IF EXISTS euphoria;
 
