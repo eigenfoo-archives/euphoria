@@ -7,7 +7,9 @@ import com.spotify.apollo.route.*;
 import okio.ByteString;
 
 import java.sql.*;
+import java.time.ZoneId;
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -25,20 +27,22 @@ public class PostingHandles implements RouteProvider {
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
                 Route.sync("GET", "/posting/<postingId>", this::getPosting),
-                Route.sync("POST", "/posting/<jobTitle>/<description>/<location>/<skillLevel>/<industry>", this::createPosting)
+                Route.sync("POST",
+                        "/posting/<companyId>/<jobTitle>/<description>/<location>/<skillLevel>/<industry>",
+                        this::createPosting)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
-    private List<Posting> getPosting(final RequestContext requestContext) {
+    private List<Posting> getPosting(final RequestContext rc) {
         Posting posting = null;
 
         try {
-            Integer postingId = Integer.valueOf(requestContext.pathArgs().get("postingId"));
+            Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
             Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
             String sqlQuery = "SELECT * FROM postings WHERE postingId = ?";
-            PreparedStatement stmt = conn.prepareStatement(sqlQuery);
-            stmt.setInt(1, postingId);
-            ResultSet resultSet = stmt.executeQuery();
+            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            ps.setInt(1, postingId);
+            ResultSet resultSet = ps.executeQuery();
 
             if (resultSet.next()) {  //FIXME Only read the first result. There should only be one, after all...
                 posting = new PostingBuilder()
@@ -57,46 +61,31 @@ public class PostingHandles implements RouteProvider {
         return Collections.singletonList(posting);
     }
 
-    private List<Posting> createPosting(final RequestContext requestContext) {
-        String jobTitle = null;
-        String description = null;
-        Location location = null;
-        SkillLevel skillLevel = null;
-        Industry industry = null;
-
+    private List<Posting> createPosting(final RequestContext rc) {
         try {
-            jobTitle = requestContext.pathArgs().get("jobTitle");
-            description = requestContext.pathArgs().get("description");
-            location = Location.valueOf(requestContext.pathArgs().get("location"));
-            skillLevel = SkillLevel.valueOf(requestContext.pathArgs().get("skillLevel"));
-            industry = Industry.valueOf(requestContext.pathArgs().get("industry"));
-        } catch (Exception ex) {
-            System.out.println("Malformed POST request: " + ex.getMessage());
-        }
+            Integer companyId = Integer.valueOf(rc.pathArgs().get("companyId"));
+            String jobTitle = rc.pathArgs().get("jobTitle");
+            String description = rc.pathArgs().get("description");
+            Location location = Location.valueOf(rc.pathArgs().get("location"));
+            SkillLevel skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel"));
+            Industry industry = Industry.valueOf(rc.pathArgs().get("industry"));
 
-        Connection conn = null;
-        Posting posting = null;
-
-        try {
-            conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            String sqlQuery = "INSERT INTO postings (companyId, jobTitle, " +
+                              "description, location, industry, skillLevel, " +
+                              "dateCreated) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            ps.setInt(1, companyId);
+            ps.setString(2, jobTitle);
+            ps.setString(3, description);
+            ps.setString(4, location.toString());
+            ps.setString(5, skillLevel.toString());
+            ps.setString(6, industry.toString());
+            Date date = new Date();
+            ps.setObject(7, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
+            ps.executeUpdate();
         } catch (SQLException ex) {
-            System.out.println("SQL exception on connection: " + ex.getMessage());
-        }
-
-        try {
-            String statement = "INSERT INTO postings (companyId, jobTitle, " +
-                    "description, location, industry, skillLevel, " +
-                    "dateCreated) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            PreparedStatement query = conn.prepareStatement(statement);
-            query.setString(1, jobTitle);
-            query.setString(2, description);
-            query.setString(3, location.toString());
-            query.setString(4, skillLevel.toString());
-            query.setString(5, industry.toString());
-            query.setDate(6, (java.sql.Date) dateCreated);  //FIXME use the current datetime.
-            query.executeUpdate();
-        } catch (SQLException ex) {
-            System.out.println("SQL exception on query: " + ex.getMessage());
+            System.out.println(ex);
         }
 
         return Collections.emptyList();
