@@ -2,15 +2,17 @@ package edu.cooper.ece366.euphoria;
 
 import io.norberg.automatter.AutoMatter;
 
+import java.sql.Blob;
+
 @AutoMatter
-public interface User {
+public interface Application {
     Integer applicationId();
 
     Integer postingId();
 
     Integer userId();
 
-    String resume();  //FIXME need to change this to blob.
+    Blob resume();
 
-    String coverLetter();  //FIXME need to change this to blob.
+    Blob coverLetter();
 }
