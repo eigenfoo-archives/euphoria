@@ -72,8 +72,8 @@ public class PostingHandles implements RouteProvider {
 
             Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
             String sqlQuery = "INSERT INTO postings (companyId, jobTitle, " +
-                              "description, location, industry, skillLevel, " +
-                              "dateCreated) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    "description, location, industry, skillLevel, " +
+                    "dateCreated) VALUES (?, ?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, companyId);
             ps.setString(2, jobTitle);
