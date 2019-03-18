@@ -1,19 +1,19 @@
 -- Initializes database and tables.
 -- To run: `cat create-database.sql | mysql -u root -p`
 
-drop database if exists euphoria;
+DROP DATABASE IF EXISTS euphoria;
 
-drop user if exists 'euphoria'@'localhost';
+DROP USER IF EXISTS 'euphoria'@'localhost';
 
-create database euphoria;
+CREATE DATABASE euphoria;
 
-use euphoria;
+USE euphoria;
 
-set global time_zone = '-5:00';
+SET GLOBAL time_zone = '+0:00';
 
-create user 'euphoria'@'localhost' identified with mysql_native_password by 'euphoria';
+CREATE USER 'euphoria'@'localhost' IDENTIFIED WITH mysql_native_password BY 'euphoria';
 
-grant all privileges on euphoria.* to 'euphoria'@'localhost';
+GRANT ALL PRIVILEGES ON euphoria.* TO 'euphoria'@'localhost';
 
 -- educationLevel is one of: "NOHIGHSCHOOL",
 --                           "HIGHSCHOOL",
@@ -25,7 +25,7 @@ grant all privileges on euphoria.* to 'euphoria'@'localhost';
 --                           "PHD",
 --                           "MD",
 --                           "JD"
-create table users (userId INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE users (userId INT AUTO_INCREMENT PRIMARY KEY,
                     name VARCHAR(40) NOT NULL,
                     email VARCHAR (40) NOT NULL,
                     phoneNumber VARCHAR(20) NOT NULL,
@@ -33,7 +33,7 @@ create table users (userId INT AUTO_INCREMENT PRIMARY KEY,
                     description TEXT NOT NULL,
                     dateCreated DATETIME NOT NULL); 
 
-create table companies (companyId INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE companies (companyId INT AUTO_INCREMENT PRIMARY KEY,
                         name VARCHAR(40) NOT NULL,
                         website VARCHAR (40) NOT NULL,
                         description TEXT NOT NULL,
@@ -63,7 +63,7 @@ create table companies (companyId INT AUTO_INCREMENT PRIMARY KEY,
 --                      "SENIOR",
 --                      "DIRECTOR",
 --                      "EXECUTIVE"
-create table postings (postingId INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE postings (postingId INT AUTO_INCREMENT PRIMARY KEY,
                        companyId INT NOT NULL,  -- FOREIGN KEY(companyId) REFERENCES companies (companyId),
                        jobTitle VARCHAR (30) NOT NULL,
                        description TEXT NOT NULL,
@@ -72,15 +72,19 @@ create table postings (postingId INT AUTO_INCREMENT PRIMARY KEY,
                        skillLevel VARCHAR(20) NOT NULL,
                        dateCreated DATETIME NOT NULL);
 
-insert into postings (companyId, jobTitle, description, location, industry, skillLevel, dateCreated)
-values (123, 'Frontend Developer', 'Must know React.js.', 'NEWYORK', 'TECHNOLOGY', 'INTERNSHIP', "2019-03-16 23:59:59");
+INSERT INTO postings
+    (companyId, jobTitle, description, location, industry, skillLevel, dateCreated)
+VALUES
+    (123, 'Underwater Basket Weaver', 'Must lift.', 'WASHINGTON', 'SERVICES', 'INTERNSHIP', "2018-07-10 02:30:00"),
+    (456, 'Frontend Developer', 'Must know everything about React.js.', 'NEWYORK', 'TECHNOLOGY', 'EXECUTIVE', "2019-02-12 12:00:00"),
+    (789, 'Backend Developer', 'Must know nothing about React.js.', 'NEWYORK', 'TECHNOLOGY', 'INTERNSHIP', "2019-03-16 23:59:59");
 
-create table applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
                            postingId INT NOT NULL,  -- FOREIGN KEY(postingId), REFERENCES postings (postingId),
                            userId INT NOT NULL, -- FOREIGN KEY(userId), REFERENCES users (userID), 
                            resume TEXT NOT NULL,
                            coverLetter TEXT NOT NULL);
 
-create table authentication (username VARCHAR(30) NOT NULL,
+CREATE TABLE authentication (username VARCHAR(30) NOT NULL,
                              passwordHash VARCHAR(40) NOT NULL,
                              userbool BOOLEAN NOT NULL);
