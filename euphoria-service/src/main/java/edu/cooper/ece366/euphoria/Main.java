@@ -15,10 +15,12 @@ public class Main {
     private static void init(final Environment environment) {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new AutoMatterModule());
         PostingHandlers postingHandlers = new PostingHandlers(objectMapper);
+        UserHandlers userHandlers = new UserHandlers(objectMapper);
 
         environment
                 .routingEngine()
                 .registerAutoRoute(Route.sync("GET", "/ping", rc -> "pong"))
-                .registerRoutes(postingHandlers.routes());
+                .registerRoutes(postingHandlers.routes())
+                .registerRoutes(userHandlers.routes());
     }
 }
