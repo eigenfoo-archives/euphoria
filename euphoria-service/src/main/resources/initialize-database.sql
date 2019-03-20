@@ -96,7 +96,8 @@ CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
                            postingId INT NOT NULL,  -- FOREIGN KEY(postingId), REFERENCES postings (postingId),
                            userId INT NOT NULL, -- FOREIGN KEY(userId), REFERENCES users (userID), 
                            resume LONGBLOB NOT NULL,
-                           coverLetter LONGBLOB NOT NULL);
+                           coverLetter LONGBLOB NOT NULL,
+                           dateCreated DATETIME NOT NULL);
 
 CREATE TABLE authentication (username VARCHAR(30) NOT NULL,
                              passwordHash VARCHAR(40) NOT NULL,
