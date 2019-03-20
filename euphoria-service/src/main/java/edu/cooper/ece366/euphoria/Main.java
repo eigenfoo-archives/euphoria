@@ -16,11 +16,13 @@ public class Main {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new AutoMatterModule());
         PostingHandlers postingHandlers = new PostingHandlers(objectMapper);
         UserHandlers userHandlers = new UserHandlers(objectMapper);
+        CompanyHandlers companyHandlers = new CompanyHandlers(objectMapper);
 
         environment
                 .routingEngine()
                 .registerAutoRoute(Route.sync("GET", "/ping", rc -> "pong"))
                 .registerRoutes(postingHandlers.routes())
-                .registerRoutes(userHandlers.routes());
+                .registerRoutes(userHandlers.routes())
+                .registerRoutes(companyHandlers.routes());
     }
 }
