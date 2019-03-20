@@ -46,6 +46,12 @@ CREATE TABLE companies (companyId INT AUTO_INCREMENT PRIMARY KEY,
                         description TEXT NOT NULL,
                         dateCreated DATETIME NOT NULL);
 
+INSERT INTO companies
+    (name, website, description, dateCreated)
+VALUES
+    ("Apple", "apple.com", "Macintoshes.", "2018-02-11 18:50:00"),
+    ("Amazon", "bozo.com", "Not in Queens.", "2019-08-02 01:15:00");
+
 -- location is one of "NEWYORK",
 --                    "LONDON",
 --                    "HONGKONG",
