@@ -46,6 +46,7 @@ public class UserHandlers implements RouteProvider {
 
             if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
                 user = new UserBuilder()
+                        .userId(rs.getInt("userId"))
                         .name(rs.getString("name"))
                         .email(rs.getString("email"))
                         .phoneNumber(rs.getString("phoneNumber"))
