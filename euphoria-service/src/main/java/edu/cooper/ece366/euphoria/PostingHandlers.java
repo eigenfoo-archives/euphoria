@@ -42,16 +42,16 @@ public class PostingHandlers implements RouteProvider {
             String sqlQuery = "SELECT * FROM postings WHERE postingId = ?";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, postingId);
-            ResultSet resultSet = ps.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
-            if (resultSet.next()) {  //FIXME Only read the first result. There should only be one, after all...
+            if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
                 posting = new PostingBuilder()
-                        .postingId(resultSet.getInt("postingId"))
-                        .jobTitle(resultSet.getString("jobTitle"))
-                        .description(resultSet.getString("description"))
-                        .location(Location.valueOf(resultSet.getString("location")))
-                        .skillLevel(SkillLevel.valueOf(resultSet.getString("skillLevel")))
-                        .industry(Industry.valueOf(resultSet.getString("industry")))
+                        .postingId(rs.getInt("postingId"))
+                        .jobTitle(rs.getString("jobTitle"))
+                        .description(rs.getString("description"))
+                        .location(Location.valueOf(rs.getString("location")))
+                        .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
+                        .industry(Industry.valueOf(rs.getString("industry")))
                         .build();
             }
         } catch (SQLException ex) {
