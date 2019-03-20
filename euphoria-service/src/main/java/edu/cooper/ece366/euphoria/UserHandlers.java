@@ -72,7 +72,7 @@ public class UserHandlers implements RouteProvider {
             Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
             String sqlQuery = "INSERT INTO users (name, email, phoneNumber, " +
                     "educationLevel, description, dateCreated) " +
-                    "(?, ?, ?, ?, ?, ?)";
+                    "VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, name);
             ps.setString(2, email);
