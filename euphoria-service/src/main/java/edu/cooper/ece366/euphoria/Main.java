@@ -17,12 +17,14 @@ public class Main {
         PostingHandlers postingHandlers = new PostingHandlers(objectMapper);
         UserHandlers userHandlers = new UserHandlers(objectMapper);
         CompanyHandlers companyHandlers = new CompanyHandlers(objectMapper);
+        ApplicationHandlers applicationHandlers = new ApplicationHandlers(objectMapper);
 
         environment
                 .routingEngine()
                 .registerAutoRoute(Route.sync("GET", "/ping", rc -> "pong"))
                 .registerRoutes(postingHandlers.routes())
                 .registerRoutes(userHandlers.routes())
-                .registerRoutes(companyHandlers.routes());
+                .registerRoutes(companyHandlers.routes())
+                .registerRoutes(applicationHandlers.routes());
     }
 }

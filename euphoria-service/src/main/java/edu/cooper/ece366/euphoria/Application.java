@@ -12,7 +12,7 @@ public interface Application {
 
     Integer userId();
 
-    Blob resume();
+    String resume();
 
-    Blob coverLetter();
+    String coverLetter();
 }
