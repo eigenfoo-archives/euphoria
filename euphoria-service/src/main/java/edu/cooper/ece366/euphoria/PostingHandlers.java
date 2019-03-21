@@ -67,8 +67,9 @@ public class PostingHandlers implements RouteProvider {
             String jobTitle = rc.pathArgs().get("jobTitle");
             String description = rc.pathArgs().get("description");
             Location location = Location.valueOf(rc.pathArgs().get("location"));
-            SkillLevel skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel"));
             Industry industry = Industry.valueOf(rc.pathArgs().get("industry"));
+            SkillLevel skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel"));
+
 
             Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
             String sqlQuery = "INSERT INTO postings (companyId, jobTitle, " +

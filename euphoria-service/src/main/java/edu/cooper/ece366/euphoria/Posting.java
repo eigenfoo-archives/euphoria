@@ -12,7 +12,7 @@ public interface Posting {
 
     Location location();
 
-    SkillLevel skillLevel();
-
     Industry industry();
+
+    SkillLevel skillLevel();
 }
