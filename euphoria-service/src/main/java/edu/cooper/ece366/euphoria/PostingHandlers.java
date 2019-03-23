@@ -28,7 +28,7 @@ public class PostingHandlers implements RouteProvider {
         return Stream.of(
                 Route.sync("GET", "/posting/<postingId>", this::getPosting),
                 Route.sync("POST",
-                        "/posting/<companyId>/<jobTitle>/<description>/<location>/<skillLevel>/<industry>",
+                        "/posting/<companyId>/<jobTitle>/<description>/<location>/<industry>/<skillLevel>",
                         this::createPosting)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
@@ -50,8 +50,8 @@ public class PostingHandlers implements RouteProvider {
                         .jobTitle(rs.getString("jobTitle"))
                         .description(rs.getString("description"))
                         .location(Location.valueOf(rs.getString("location")))
-                        .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
                         .industry(Industry.valueOf(rs.getString("industry")))
+                        .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
                         .build();
             }
         } catch (SQLException ex) {
@@ -67,8 +67,9 @@ public class PostingHandlers implements RouteProvider {
             String jobTitle = rc.pathArgs().get("jobTitle");
             String description = rc.pathArgs().get("description");
             Location location = Location.valueOf(rc.pathArgs().get("location"));
-            SkillLevel skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel"));
             Industry industry = Industry.valueOf(rc.pathArgs().get("industry"));
+            SkillLevel skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel"));
+
 
             Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
             String sqlQuery = "INSERT INTO postings (companyId, jobTitle, " +
@@ -79,8 +80,8 @@ public class PostingHandlers implements RouteProvider {
             ps.setString(2, jobTitle);
             ps.setString(3, description);
             ps.setString(4, location.toString());
-            ps.setString(5, skillLevel.toString());
-            ps.setString(6, industry.toString());
+            ps.setString(5, industry.toString());
+            ps.setString(6, skillLevel.toString());
             Date date = new Date();
             ps.setObject(7, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
             ps.executeUpdate();

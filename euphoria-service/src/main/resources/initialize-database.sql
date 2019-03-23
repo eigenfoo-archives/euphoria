@@ -96,7 +96,16 @@ CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
                            postingId INT NOT NULL,  -- FOREIGN KEY(postingId), REFERENCES postings (postingId),
                            userId INT NOT NULL, -- FOREIGN KEY(userId), REFERENCES users (userID), 
                            resume LONGBLOB NOT NULL,
-                           coverLetter LONGBLOB NOT NULL);
+                           coverLetter LONGBLOB NOT NULL,
+                           dateCreated DATETIME NOT NULL);
+
+INSERT INTO applications
+    (postingId, userId, resume, coverLetter, dateCreated)
+VALUES
+	(123, 1, x'4920616d20612067656e6965', x'553d7a34', "2018-07-11 05:30:00"),
+	(123, 2, x'453d7a38', x'453d7a39', "2018-07-13 3:22:00"),
+	(456, 3, x'653d7a38', x'653e7a39', "2019-02-13 11:40:33");
+
 
 CREATE TABLE authentication (username VARCHAR(30) NOT NULL,
                              passwordHash VARCHAR(40) NOT NULL,
