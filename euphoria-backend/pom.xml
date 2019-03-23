@@ -34,7 +34,6 @@
             <artifactId>slf4j-simple</artifactId>
             <version>1.7.25</version>
         </dependency>
-
         <dependency>
             <groupId>io.norberg</groupId>
             <artifactId>auto-matter</artifactId>
@@ -44,6 +43,11 @@
             <groupId>io.norberg</groupId>
             <artifactId>auto-matter-jackson</artifactId>
             <version>0.15.1</version>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>8.0.11</version>
         </dependency>
 
         <!-- test only -->
@@ -65,7 +69,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>edu.cooper.ece366.bookstore.Main</mainClass>
+                            <mainClass>edu.cooper.ece366.euphoria.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
