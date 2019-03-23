@@ -2,8 +2,6 @@ package edu.cooper.ece366.euphoria;
 
 import io.norberg.automatter.AutoMatter;
 
-import java.sql.Blob;
-
 @AutoMatter
 public interface Application {
     Integer applicationId();
@@ -12,7 +10,7 @@ public interface Application {
 
     Integer userId();
 
-    String resume();
+    byte[] resume();
 
-    String coverLetter();
+    byte[] coverLetter();
 }
