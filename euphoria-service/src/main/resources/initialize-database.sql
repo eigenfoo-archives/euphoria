@@ -118,5 +118,3 @@ VALUES
     ("jeffbozo", "hash", TRUE),
     ("apple", "hash", FALSE),
     ("amazon", "hash", FALSE);
-
-
