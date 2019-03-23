@@ -10,9 +10,8 @@ import javax.sql.rowset.serial.SerialBlob;
 import java.math.BigInteger;
 import java.sql.*;
 import java.time.ZoneId;
-import java.util.Collections;
+import java.util.*;
 import java.util.Date;
-import java.util.List;
 import java.util.stream.Stream;
 
 
@@ -31,6 +30,7 @@ public class ApplicationHandlers implements RouteProvider {
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
                 Route.sync("GET", "/application/<applicationId>", this::getApplication),
+                Route.sync("GET", "/application/matchPosting/<postingId>", this::getApplicationsForPosting),
                 Route.sync("POST",
                         "/application/<postingId>/<userId>/<resume>/<coverLetter>",
                         this::createApplication)
@@ -63,6 +63,37 @@ public class ApplicationHandlers implements RouteProvider {
 
         return Collections.singletonList(application);
     }
+
+    private  List<Application>  getApplicationsForPosting(final RequestContext rc) {
+        Application application = null;
+        ArrayList<Application> applicationList = new ArrayList<Application>();
+
+        try {
+            Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
+            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            String sqlQuery = "SELECT * FROM applications WHERE postingId = ?";
+            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            ps.setInt(1, postingId);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
+                application = new ApplicationBuilder()
+                        .applicationId(rs.getInt("applicationId"))
+                        .postingId(rs.getInt("postingId"))
+                        .userId(rs.getInt("userId"))
+                        .resume((rs.getBlob("resume")).toString())            //TODO figure out blob to return bytes
+                        .coverLetter((rs.getBlob("coverLetter")).toString())  //TODO figure out blob to return bytes
+                        .build();
+
+                applicationList.add(application);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+
+        return applicationList;
+    }
+
 
     private List<Application> createApplication(final RequestContext rc) {
         try {
