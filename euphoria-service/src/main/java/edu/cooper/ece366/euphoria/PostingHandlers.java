@@ -8,6 +8,7 @@ import okio.ByteString;
 
 import java.sql.*;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
@@ -27,6 +28,7 @@ public class PostingHandlers implements RouteProvider {
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
                 Route.sync("GET", "/posting/<postingId>", this::getPosting),
+                Route.sync("GET", "/posting/getAll", this::getAllPostings),
                 Route.sync("POST",
                         "/posting/<companyId>/<jobTitle>/<description>/<location>/<industry>/<skillLevel>",
                         this::createPosting)
@@ -59,6 +61,34 @@ public class PostingHandlers implements RouteProvider {
         }
 
         return Collections.singletonList(posting);
+    }
+
+    private List<Posting> getAllPostings(final RequestContext rc) {
+        ArrayList<Posting> postingList = new ArrayList<Posting>();
+
+        try {
+            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            String sqlQuery = "SELECT * FROM postings";
+            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Posting posting = new PostingBuilder()
+                        .postingId(rs.getInt("postingId"))
+                        .jobTitle(rs.getString("jobTitle"))
+                        .description(rs.getString("description"))
+                        .location(Location.valueOf(rs.getString("location")))
+                        .industry(Industry.valueOf(rs.getString("industry")))
+                        .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
+                        .build();
+
+                postingList.add(posting);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+
+        return postingList;
     }
 
     private List<Posting> createPosting(final RequestContext rc) {
