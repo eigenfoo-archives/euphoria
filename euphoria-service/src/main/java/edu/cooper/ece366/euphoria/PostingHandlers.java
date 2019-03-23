@@ -28,6 +28,7 @@ public class PostingHandlers implements RouteProvider {
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
                 Route.sync("GET", "/posting/<postingId>", this::getPosting),
+                Route.sync("GET", "/posting/<location>/<industry>/<skillLevel>", this::searchPostings),
                 Route.sync("GET", "/posting/getAll", this::getAllPostings),
                 Route.sync("POST",
                         "/posting/<companyId>/<jobTitle>/<description>/<location>/<industry>/<skillLevel>",
@@ -65,6 +66,63 @@ public class PostingHandlers implements RouteProvider {
         }
 
         return Collections.singletonList(posting);
+    }
+
+    private List<Posting> searchPostings(final RequestContext rc) {
+        ArrayList<Posting> postingList = new ArrayList<Posting>();
+        String location = "%";
+        String industry = "%";
+        String skillLevel = "%";
+
+        try {
+            location = Location.valueOf(rc.pathArgs().get("location")).toString();
+        }
+        catch (Exception ex) {
+            System.out.println(ex);
+        }
+
+        try {
+            industry = Industry.valueOf(rc.pathArgs().get("industry")).toString();
+        }
+        catch (Exception ex) {
+            System.out.println(ex);
+        }
+
+        try {
+            skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel")).toString();
+        }
+        catch (Exception ex) {
+            System.out.println(ex);
+        }
+
+        try {
+            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            String sqlQuery = "SELECT * FROM postings WHERE location LIKE ? " +
+                    "AND industry LIKE ? AND skillLevel LIKE ?";
+            System.out.println(sqlQuery);
+            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            ps.setString(1, location);
+            ps.setString(2, industry);
+            ps.setString(3, skillLevel);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Posting posting = new PostingBuilder()
+                        .postingId(rs.getInt("postingId"))
+                        .jobTitle(rs.getString("jobTitle"))
+                        .description(rs.getString("description"))
+                        .location(Location.valueOf(rs.getString("location")))
+                        .industry(Industry.valueOf(rs.getString("industry")))
+                        .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
+                        .build();
+
+                postingList.add(posting);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+
+        return postingList;
     }
 
     private List<Posting> getAllPostings(final RequestContext rc) {
