@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch } from "react-router-dom";
+import { BrowserRouter as Router, Route} from "react-router-dom";
 
 import Apply from './views/Apply.jsx';
 import Dashboard from './views/Dashboard';
@@ -10,12 +10,9 @@ import Login from './views/Login/Login';
 import Post from './views/Post';
 import Signup from './views/Signup/Signup';
 import Splash from './views/Splash/Splash';
-import NotFound from './views/NotFound';
 
 import './index.css';
 import * as serviceWorker from './serviceWorker';
-import Bootstrap from 'bootstrap/dist/css/bootstrap.css';
-
 
 const routing = (
   <Router>
@@ -27,7 +24,6 @@ const routing = (
     <Route path="/listings/apply" component={Apply} />
     <Route exact path="/dashboard" component={Dashboard} />
     <Route path="/dashboard/post" component={Post} />
-    {/*<Route component={NotFound} />*/}
   </Router>
 )
 

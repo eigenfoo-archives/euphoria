@@ -1,20 +1,32 @@
 import React from 'react'
-import {Navbar, Image, Form, Button} from 'react-bootstrap';
+//import {withRouter} from 'react-router-dom';
+import {Image, Form, Button} from 'react-bootstrap';
 import './Login.css'
 
 class Login extends React.Component {
+
+  constructor(props, context) {
+    super(props);
+
+    this.handleRedirect = this.handleRedirect.bind(this);
+  }
+
+  handleRedirect(path) {
+    this.props.history.push(path);
+  }
+
   render() {
     return(
       <body>
-        <div class="logo">
+        <div className="logo">
           <Image src={require('../../images/Logo.png')} fluid/>
         </div>
 
-        <div class="container" style={{width:"600px"}}>
-          <div class="input">
+        <div className="container" style={{width:"600px"}}>
+          <div className="input">
             <h1>Login</h1>
             <hr></hr>
-            <Form>
+            <Form onSubmit={e => this.handleSubmit(e)}>
               <Form.Group controlId="formBasicEmail">
                 <Form.Label>Email address</Form.Label>
                 <Form.Control type="email" placeholder="Enter email" />
@@ -28,7 +40,7 @@ class Login extends React.Component {
               <Button variant="info" type="submit">
                 Submit
               </Button>
-              <Button variant="link" type="button">
+              <Button variant="link" type="button" onClick={() => this.handleRedirect("/signup")}>
                 Sign up...
               </Button>
             </Form>

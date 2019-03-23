@@ -1,12 +1,11 @@
 import React from 'react'
-import {Image, Form, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, Container, Row, Col} from 'react-bootstrap';
-import './Splash.css'
+import {Image, Button, Container, Row, Col} from 'react-bootstrap';
 
 class Splash extends React.Component {
   render() {
     return(
       <body>
-        <div className="container" style={{width:"600px"}}>
+        <div style={{width:"600px"}}>
           <Container>
             <Row>
               <Col></Col>
