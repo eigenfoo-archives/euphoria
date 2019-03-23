@@ -7,6 +7,8 @@ import com.spotify.apollo.route.*;
 import okio.ByteString;
 
 import javax.sql.rowset.serial.SerialBlob;
+import javax.xml.bind.DatatypeConverter;
+import java.math.BigInteger;
 import java.sql.*;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -14,7 +16,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
-
 
 public class ApplicationHandlers implements RouteProvider {
     private static final String dbUrl = "jdbc:mysql://localhost:3306/euphoria";
@@ -53,8 +54,8 @@ public class ApplicationHandlers implements RouteProvider {
                         .applicationId(rs.getInt("applicationId"))
                         .postingId(rs.getInt("postingId"))
                         .userId(rs.getInt("userId"))
-                        .resume((rs.getBlob("resume")).toString())            //TODO figure out blob to return bytes
-                        .coverLetter((rs.getBlob("coverLetter")).toString())  //TODO figure out blob to return bytes
+                        .resume (rs.getBytes("resume"))            //returns BASE64
+                        .coverLetter(rs.getBytes("coverLetter"))   //returns BASE64
                         .build();
             }
         } catch (SQLException ex) {
@@ -80,8 +81,8 @@ public class ApplicationHandlers implements RouteProvider {
                         .applicationId(rs.getInt("applicationId"))
                         .postingId(rs.getInt("postingId"))
                         .userId(rs.getInt("userId"))
-                        .resume((rs.getBlob("resume")).toString())            //TODO figure out blob to return bytes
-                        .coverLetter((rs.getBlob("coverLetter")).toString())  //TODO figure out blob to return bytes
+                        .resume (rs.getBytes("resume"))            //returns BASE64
+                        .coverLetter(rs.getBytes("coverLetter"))   //returns BASE64
                         .build();
 
                 applicationList.add(application);
@@ -98,12 +99,8 @@ public class ApplicationHandlers implements RouteProvider {
         try {
             Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
             Integer userId = Integer.valueOf(rc.pathArgs().get("userId"));
-            Blob resume = new SerialBlob(String.valueOf(rc.pathArgs().get("resume")).getBytes());
-            Blob coverLetter = new SerialBlob(String.valueOf(rc.pathArgs().get("coverLetter")).getBytes());
-            /*byte[] byteArrayRes = "testResume".getBytes();
-            byte[] byteArrayCov = "testCoverLetter".getBytes();
-            Blob resume = new SerialBlob(byteArrayRes);      //TODO figure out cover letter blob source (HTTP req body?)
-            Blob coverLetter = new SerialBlob(byteArrayCov); //TODO figure out resume blob source (HTTP req body?)*/
+            byte[]resume = DatatypeConverter.parseHexBinary(rc.pathArgs().get("resume"));              //HTTP req body
+            byte[] coverLetter = DatatypeConverter.parseHexBinary(rc.pathArgs().get("coverLetter"));  //HTTP req body
 
             Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
             String sqlQuery = "INSERT INTO applications (postingId, userId, " +
@@ -111,8 +108,8 @@ public class ApplicationHandlers implements RouteProvider {
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, postingId);
             ps.setInt(2, userId);
-            ps.setObject(3, resume);
-            ps.setObject(4, coverLetter);
+            ps.setBytes(3, resume);
+            ps.setBytes(4, coverLetter);
             Date date = new Date();
             ps.setObject(5, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
             ps.executeUpdate();
