@@ -14,6 +14,7 @@ public class Main {
 
     private static void init(final Environment environment) {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new AutoMatterModule());
+        AuthenticationHandlers authenticationHandlers = new AuthenticationHandlers(objectMapper);
         PostingHandlers postingHandlers = new PostingHandlers(objectMapper);
         UserHandlers userHandlers = new UserHandlers(objectMapper);
         CompanyHandlers companyHandlers = new CompanyHandlers(objectMapper);
@@ -22,6 +23,7 @@ public class Main {
         environment
                 .routingEngine()
                 .registerAutoRoute(Route.sync("GET", "/ping", rc -> "pong"))
+                .registerRoutes(authenticationHandlers.routes())
                 .registerRoutes(postingHandlers.routes())
                 .registerRoutes(userHandlers.routes())
                 .registerRoutes(companyHandlers.routes())
