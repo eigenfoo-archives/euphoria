@@ -101,6 +101,11 @@ public class PostingHandlers implements RouteProvider {
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, postingId);
             ps.executeUpdate();
+
+            sqlQuery = "DELETE FROM applications WHERE postingId = ?";
+            ps = conn.prepareStatement(sqlQuery);
+            ps.setInt(1, postingId);
+            ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex);
         }
