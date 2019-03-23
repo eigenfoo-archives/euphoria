@@ -7,13 +7,13 @@ import com.spotify.apollo.route.*;
 import okio.ByteString;
 
 import javax.sql.rowset.serial.SerialBlob;
-import java.math.BigInteger;
 import java.sql.*;
 import java.time.ZoneId;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
+import java.util.List;
 import java.util.stream.Stream;
-
 
 
 public class ApplicationHandlers implements RouteProvider {
@@ -64,8 +64,7 @@ public class ApplicationHandlers implements RouteProvider {
         return Collections.singletonList(application);
     }
 
-    private  List<Application>  getApplicationsForPosting(final RequestContext rc) {
-        Application application = null;
+    private List<Application> getApplicationsForPosting(final RequestContext rc) {
         ArrayList<Application> applicationList = new ArrayList<Application>();
 
         try {
@@ -76,8 +75,8 @@ public class ApplicationHandlers implements RouteProvider {
             ps.setInt(1, postingId);
             ResultSet rs = ps.executeQuery();
 
-            while (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
-                application = new ApplicationBuilder()
+            while (rs.next()) {
+                Application application = new ApplicationBuilder()
                         .applicationId(rs.getInt("applicationId"))
                         .postingId(rs.getInt("postingId"))
                         .userId(rs.getInt("userId"))
@@ -99,8 +98,8 @@ public class ApplicationHandlers implements RouteProvider {
         try {
             Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
             Integer userId = Integer.valueOf(rc.pathArgs().get("userId"));
-            Blob resume = new SerialBlob (String.valueOf(rc.pathArgs().get("resume")).getBytes());
-            Blob coverLetter = new SerialBlob (String.valueOf(rc.pathArgs().get("coverLetter")).getBytes());
+            Blob resume = new SerialBlob(String.valueOf(rc.pathArgs().get("resume")).getBytes());
+            Blob coverLetter = new SerialBlob(String.valueOf(rc.pathArgs().get("coverLetter")).getBytes());
             /*byte[] byteArrayRes = "testResume".getBytes();
             byte[] byteArrayCov = "testCoverLetter".getBytes();
             Blob resume = new SerialBlob(byteArrayRes);      //TODO figure out cover letter blob source (HTTP req body?)
