@@ -29,7 +29,8 @@ public class PostingHandlers implements RouteProvider {
                 Route.sync("GET", "/posting/<postingId>", this::getPosting),
                 Route.sync("POST",
                         "/posting/<companyId>/<jobTitle>/<description>/<location>/<industry>/<skillLevel>",
-                        this::createPosting)
+                        this::createPosting),
+                Route.sync("DELETE", "/posting/<postingId>", this::deletePosting)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -70,7 +71,6 @@ public class PostingHandlers implements RouteProvider {
             Industry industry = Industry.valueOf(rc.pathArgs().get("industry"));
             SkillLevel skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel"));
 
-
             Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
             String sqlQuery = "INSERT INTO postings (companyId, jobTitle, " +
                     "description, location, industry, skillLevel, " +
@@ -84,6 +84,22 @@ public class PostingHandlers implements RouteProvider {
             ps.setString(6, skillLevel.toString());
             Date date = new Date();
             ps.setObject(7, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
+            ps.executeUpdate();
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+
+        return Collections.emptyList();
+    }
+
+    private List<Posting> deletePosting(final RequestContext rc) {
+        try {
+            Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
+
+            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            String sqlQuery = "DELETE FROM postings WHERE postingId = ?";
+            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            ps.setInt(1, postingId);
             ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex);
