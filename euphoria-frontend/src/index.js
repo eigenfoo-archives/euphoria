@@ -6,12 +6,13 @@ import Apply from './views/Apply.jsx';
 import Dashboard from './views/Dashboard';
 import Description from './views/Description';
 import Listings from './views/Listings';
-import Login from './views/Login/Login';
+import Login from './views/Login';
 import Post from './views/Post';
-import Signup from './views/Signup/Signup';
-import Splash from './views/Splash/Splash';
+import Signup from './views/Signup';
+import Splash from './views/Splash';
 
 import './index.css';
+import './views/Styles.css';
 import * as serviceWorker from './serviceWorker';
 
 const routing = (

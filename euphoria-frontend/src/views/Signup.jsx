@@ -1,8 +1,6 @@
-import React from 'react'
+import React from "react";
 //import {withRouter} from 'react-router-dom';
-import {Image, Form, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, Col} from 'react-bootstrap';
-import axios from 'axios'
-import './Signup.css'
+import {Image, Form, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, Col} from "react-bootstrap";
 
 class Signup extends React.Component {
 
@@ -10,13 +8,13 @@ class Signup extends React.Component {
     super(props);
 
     this.state = {
-          username: '',
-          password: '',
-          fullname: '',
-          education: '',
-          email: '',
-          phonenumber: '',
-          description: ''
+          username: "",
+          password: "",
+          fullname: "",
+          education: "",
+          email: "",
+          phonenumber: "",
+          description: ""
     }
 
     this.handleChange = this.handleChange.bind(this);
@@ -28,10 +26,9 @@ class Signup extends React.Component {
 
   handleChange(event) {
 
-    if(["username","fullname","email"].includes(event.target.name)){
-      event.target.value.toUpperCase();
-      console.log(event.target.name);
-    }
+    var data = event.target.value;
+
+    data = data.replace(/ /g, "%20");
 
     this.setState({ [event.target.name]: event.target.value});
   }
@@ -58,17 +55,17 @@ class Signup extends React.Component {
       description
     } = this.state;
 
-    axios.post("localhost:8080", {
-      username,
-      password,
-      fullname,
-      education,
-      email,
-      phonenumber,
-      description})
-        .then((result) => {
-          this.handleRedirect("/login")
-      });
+
+    const user_url = "http://localhost:8080/user/" + fullname + "/" + email + "/" + phonenumber + "/" + education.toUpperCase() + "/"  + description;
+    const authentication_url = "http://localhost:8080/authentication/" + username + "/"  + password;
+
+    fetch(user_url, {method: "POST"})
+      /*.then(function() {
+        fetch(authentication_url, {method: "POST"});
+      })*/ //FIXME add support for authentication posting when its implemented
+      .then(this.handleRedirect("/login"));
+
+
 
     //this.setState({ validated: true });
   }
@@ -85,9 +82,9 @@ class Signup extends React.Component {
     } = this.state;
 
     return(
-      <body>
+      <div>
         <div className="logo">
-          <Image src={require('../../images/Logo.png')} fluid/>
+          <Image src={require('../images/Logo.png')} fluid/>
         </div>
 
         <div className="container" style={{width:"600px"}}>
@@ -164,14 +161,14 @@ class Signup extends React.Component {
                     value={education}
                     onChange={this.handleChange}>
                     <option>Choose...</option>
-                    <option>NOHIGHSCHOOL</option>
-                    <option>HIGHSCHOOL</option>
+                    <option>NoHighschool</option>
+                    <option>Highschool</option>
                     <option>GED</option>
-                    <option>SOMECOLLEGE</option>
-                    <option>ASSOCIATES</option>
-                    <option>BACHELORS</option>
-                    <option>MASTERS</option>
-                    <option>PHD</option>
+                    <option>SomeCollege</option>
+                    <option>Associates</option>
+                    <option>Bachelors</option>
+                    <option>Masters</option>
+                    <option>PhD</option>
                     <option>MD</option>
                     <option>JD</option>
                   </Form.Control>
@@ -204,7 +201,7 @@ class Signup extends React.Component {
               </Form.Row>
 
               <Form.Group controlId="formGridDescription">
-                <Form.Label>Descrption</Form.Label>
+                <Form.Label>Description</Form.Label>
                 <Form.Control
                   required
                   as="textarea"
@@ -226,7 +223,7 @@ class Signup extends React.Component {
             </Form>
           </div>
         </div>
-      </body>
+      </div>
     );
   }
 }

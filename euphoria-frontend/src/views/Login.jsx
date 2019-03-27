@@ -1,7 +1,6 @@
-import React from 'react'
-//import {withRouter} from 'react-router-dom';
-import {Image, Form, Button} from 'react-bootstrap';
-import './Login.css'
+import React from "react"
+//import {withRouter} from "react-router-dom";
+import {Image, Form, Button} from "react-bootstrap";
 
 class Login extends React.Component {
 
@@ -17,9 +16,11 @@ class Login extends React.Component {
 
   render() {
     return(
-      <body>
-        <div className="logo">
-          <Image src={require('../../images/Logo.png')} fluid/>
+      <div>
+        <div className="navbar">
+          <div className="logo">
+            <Image src={require("../images/Logo.png")} fluid/>
+          </div>
         </div>
 
         <div className="container" style={{width:"600px"}}>
@@ -46,7 +47,7 @@ class Login extends React.Component {
             </Form>
           </div>
         </div>
-      </body>
+      </div>
     );
   }
 }
