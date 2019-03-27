@@ -6,7 +6,7 @@ import Apply from './views/Apply.jsx';
 import Dashboard from './views/Dashboard';
 import Description from './views/Description';
 import Listings from './views/Listings';
-import Login from './views/Login';
+import Signin from './views/Signin';
 import Post from './views/Post';
 import Signup from './views/Signup';
 import Splash from './views/Splash';
@@ -18,7 +18,7 @@ import * as serviceWorker from './serviceWorker';
 const routing = (
   <Router>
     <Route exact path="/" component={Splash} />
-    <Route path="/login" component={Login} />
+    <Route path="/signin" component={Signin} />
     <Route path="/signup" component={Signup} />
     <Route exact path="/listings" component={Listings} />
     <Route path="/listings/description" component={Description} />
