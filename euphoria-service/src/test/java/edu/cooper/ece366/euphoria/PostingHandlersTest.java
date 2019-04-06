@@ -52,7 +52,7 @@ public class PostingHandlersTest {
                 .build();
 
         // Mock dependencies and inputs
-        when(rc.pathArgs()).thenReturn(Collections.singletonMap("id", "1"));
+        when(rc.pathArgs()).thenReturn(Collections.singletonMap("postingId", "1"));
         when(rs.getString("postingId")).thenReturn(expected.postingId().toString());
         when(rs.getString("jobTitle")).thenReturn(expected.jobTitle());
         when(rs.getString("description")).thenReturn(expected.description());
