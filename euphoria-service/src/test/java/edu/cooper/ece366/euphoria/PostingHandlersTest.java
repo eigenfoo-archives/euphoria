@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -37,7 +38,7 @@ public class PostingHandlersTest {
     }
 
     @Test
-    public void getPosting() throws SQLException {
+    public void getPostingAndAllPostings() throws SQLException {
         // Setup variables
         Posting expected = new PostingBuilder()
                 .postingId(1)
@@ -59,37 +60,50 @@ public class PostingHandlersTest {
         when(ps.executeQuery()).thenReturn(rs);
 
         // Call test class
-        Posting actual = testClass.getPosting(rc).get(0);
+        Posting actualSingle = testClass.getPosting(rc).get(0);
+        Posting actualAll = testClass.getAllPostings(rc).get(0);
 
         // Assert and verify
-        assertEquals(expected, actual);
+        assertEquals(expected, actualSingle);
+        assertEquals(expected, actualAll);
 
         verifyZeroInteractions(objectMapper);
     }
 
     @Test
-    public void getAllPostings() throws SQLException {
+    public void createAndEditPosting() throws SQLException {
         // Setup variables
-        Posting expected = new PostingBuilder()
-                .postingId(1)
-                .jobTitle("Underwater Basket Weaver")
-                .description("What it sounds like.")
-                .location(Location.valueOf("NEWYORK"))
-                .industry(Industry.valueOf("FINANCE"))
-                .skillLevel(SkillLevel.valueOf("INTERNSHIP"))
-                .build();
+        List<Posting> expected = Collections.emptyList();
 
         // Mock dependencies and inputs
-        when(rs.getString("postingId")).thenReturn(expected.postingId().toString());
-        when(rs.getString("jobTitle")).thenReturn(expected.jobTitle());
-        when(rs.getString("description")).thenReturn(expected.description());
-        when(rs.getString("location")).thenReturn(expected.location().toString());
-        when(rs.getString("industry")).thenReturn(expected.industry().toString());
-        when(rs.getString("skillLevel")).thenReturn(expected.skillLevel().toString());
-        when(ps.executeQuery()).thenReturn(rs);
+        when(rs.getString("postingId")).thenReturn("1");
+        when(rs.getString("jobTitle")).thenReturn("Underwater Basket Weaver");
+        when(rs.getString("description")).thenReturn("What it sounds like.");
+        when(rs.getString("location")).thenReturn("NEWYORK");
+        when(rs.getString("industry")).thenReturn("FINANCE");
+        when(rs.getString("skillLevel")).thenReturn("INTERNSHIP");
 
         // Call test class
-        Posting actual = testClass.getAllPostings(rc).get(0);
+        List<Posting> actualCreated = testClass.createPosting(rc);
+        List<Posting> actualEdited = testClass.editPosting(rc);
+
+        // Assert and verify
+        assertEquals(expected, actualCreated);
+        assertEquals(expected, actualEdited);
+
+        verifyZeroInteractions(objectMapper);
+    }
+
+    @Test
+    public void deletePosting() throws SQLException {
+        // Setup variables
+        List<Posting> expected = Collections.emptyList();
+
+        // Mock dependencies and inputs
+        when(rs.getString("postingId")).thenReturn("1");
+
+        // Call test class
+        List<Posting> actual = testClass.deletePosting(rc);
 
         // Assert and verify
         assertEquals(expected, actual);
