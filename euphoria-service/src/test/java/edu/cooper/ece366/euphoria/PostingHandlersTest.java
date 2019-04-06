@@ -37,7 +37,7 @@ public class PostingHandlersTest {
     }
 
     @Test
-    public void getBook() throws SQLException {
+    public void getPosting() throws SQLException {
         // Setup variables
         Posting expected = new PostingBuilder()
                 .postingId(1)
@@ -60,6 +60,36 @@ public class PostingHandlersTest {
 
         // Call test class
         Posting actual = testClass.getPosting(rc).get(0);
+
+        // Assert and verify
+        assertEquals(expected, actual);
+
+        verifyZeroInteractions(objectMapper);
+    }
+
+    @Test
+    public void getAllPostings() throws SQLException {
+        // Setup variables
+        Posting expected = new PostingBuilder()
+                .postingId(1)
+                .jobTitle("Underwater Basket Weaver")
+                .description("What it sounds like.")
+                .location(Location.valueOf("NEWYORK"))
+                .industry(Industry.valueOf("FINANCE"))
+                .skillLevel(SkillLevel.valueOf("INTERNSHIP"))
+                .build();
+
+        // Mock dependencies and inputs
+        when(rs.getString("postingId")).thenReturn(expected.postingId().toString());
+        when(rs.getString("jobTitle")).thenReturn(expected.jobTitle());
+        when(rs.getString("description")).thenReturn(expected.description());
+        when(rs.getString("location")).thenReturn(expected.location().toString());
+        when(rs.getString("industry")).thenReturn(expected.industry().toString());
+        when(rs.getString("skillLevel")).thenReturn(expected.skillLevel().toString());
+        when(ps.executeQuery()).thenReturn(rs);
+
+        // Call test class
+        Posting actual = testClass.getAllPostings(rc).get(0);
 
         // Assert and verify
         assertEquals(expected, actual);
