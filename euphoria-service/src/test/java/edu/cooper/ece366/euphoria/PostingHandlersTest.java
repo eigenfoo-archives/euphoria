@@ -12,7 +12,9 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -66,6 +68,41 @@ public class PostingHandlersTest {
         // Assert and verify
         assertEquals(expected, actualSingle);
         assertEquals(expected, actualAll);
+
+        verifyZeroInteractions(objectMapper);
+    }
+
+    @Test
+    public void searchPostings() throws SQLException {
+        // Setup variables
+        Posting expected = new PostingBuilder()
+                .postingId(1)
+                .jobTitle("Underwater Basket Weaver")
+                .description("What it sounds like.")
+                .location(Location.valueOf("NEWYORK"))
+                .industry(Industry.valueOf("FINANCE"))
+                .skillLevel(SkillLevel.valueOf("INTERNSHIP"))
+                .build();
+
+        // Mock dependencies and inputs
+        Map<String, String> rcMap = new HashMap<>();
+        rcMap.put("location", "NEWYORK");
+        rcMap.put("industry", "FINANCE");
+        rcMap.put("skillLevel", "INTERNSHIP");
+        when(rc.pathArgs()).thenReturn(rcMap);
+        when(rs.getString("postingId")).thenReturn(expected.postingId().toString());
+        when(rs.getString("jobTitle")).thenReturn(expected.jobTitle());
+        when(rs.getString("description")).thenReturn(expected.description());
+        when(rs.getString("location")).thenReturn(expected.location().toString());
+        when(rs.getString("industry")).thenReturn(expected.industry().toString());
+        when(rs.getString("skillLevel")).thenReturn(expected.skillLevel().toString());
+        when(ps.executeQuery()).thenReturn(rs);
+
+        // Call test class
+        Posting actualSingle = testClass.searchPostings(rc).get(0);
+
+        // Assert and verify
+        assertEquals(expected, actualSingle);
 
         verifyZeroInteractions(objectMapper);
     }
