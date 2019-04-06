@@ -94,6 +94,9 @@ public class UserHandlers implements RouteProvider {
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {
         return JsonSerializerMiddlewares.<T>jsonSerialize(objectMapper.writer())
-                .and(Middlewares::httpPayloadSemantics);
+                .and(Middlewares::httpPayloadSemantics)
+                .and(responseAsyncHandler -> requestContext ->
+                        responseAsyncHandler.invoke(requestContext)
+                                .thenApply(response -> response.withHeader("Access-Control-Allow-Origin", "*")));
     }
 }
