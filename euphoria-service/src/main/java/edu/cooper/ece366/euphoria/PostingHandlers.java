@@ -79,22 +79,19 @@ public class PostingHandlers implements RouteProvider {
 
         try {
             location = Location.valueOf(rc.pathArgs().get("location")).toString();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             System.out.println(ex);
         }
 
         try {
             industry = Industry.valueOf(rc.pathArgs().get("industry")).toString();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             System.out.println(ex);
         }
 
         try {
             skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel")).toString();
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             System.out.println(ex);
         }
 
