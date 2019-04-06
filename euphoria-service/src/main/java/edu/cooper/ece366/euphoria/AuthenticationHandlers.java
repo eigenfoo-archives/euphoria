@@ -67,7 +67,7 @@ public class AuthenticationHandlers implements RouteProvider {
 
             Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
             String sqlQuery = "INSERT INTO authentications (username, passwordHash, isUser)" +
-                              "VALUES (?, ?, ?)";
+                    "VALUES (?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, username);
             ps.setString(2, passwordHash);
