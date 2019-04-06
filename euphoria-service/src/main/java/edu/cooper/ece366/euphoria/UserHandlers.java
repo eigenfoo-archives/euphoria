@@ -1,6 +1,7 @@
 package edu.cooper.ece366.euphoria;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
@@ -33,7 +34,8 @@ public class UserHandlers implements RouteProvider {
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
-    private List<User> getUser(final RequestContext rc) {
+    @VisibleForTesting
+    public List<User> getUser(final RequestContext rc) {
         User user = null;
 
         try {
@@ -61,7 +63,8 @@ public class UserHandlers implements RouteProvider {
         return Collections.singletonList(user);
     }
 
-    private List<User> createUser(final RequestContext rc) {
+    @VisibleForTesting
+    public List<User> createUser(final RequestContext rc) {
         try {
             String name = rc.pathArgs().get("name");
             String email = rc.pathArgs().get("email");

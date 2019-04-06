@@ -6,9 +6,7 @@ import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
 import okio.ByteString;
 
-import javax.sql.rowset.serial.SerialBlob;
 import javax.xml.bind.DatatypeConverter;
-import java.math.BigInteger;
 import java.sql.*;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -54,7 +52,7 @@ public class ApplicationHandlers implements RouteProvider {
                         .applicationId(rs.getInt("applicationId"))
                         .postingId(rs.getInt("postingId"))
                         .userId(rs.getInt("userId"))
-                        .resume (rs.getBytes("resume"))            //returns BASE64
+                        .resume(rs.getBytes("resume"))            //returns BASE64
                         .coverLetter(rs.getBytes("coverLetter"))   //returns BASE64
                         .build();
             }
@@ -81,7 +79,7 @@ public class ApplicationHandlers implements RouteProvider {
                         .applicationId(rs.getInt("applicationId"))
                         .postingId(rs.getInt("postingId"))
                         .userId(rs.getInt("userId"))
-                        .resume (rs.getBytes("resume"))            //returns BASE64
+                        .resume(rs.getBytes("resume"))            //returns BASE64
                         .coverLetter(rs.getBytes("coverLetter"))   //returns BASE64
                         .build();
 
@@ -99,7 +97,7 @@ public class ApplicationHandlers implements RouteProvider {
         try {
             Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
             Integer userId = Integer.valueOf(rc.pathArgs().get("userId"));
-            byte[]resume = DatatypeConverter.parseHexBinary(rc.pathArgs().get("resume"));              //HTTP req body
+            byte[] resume = DatatypeConverter.parseHexBinary(rc.pathArgs().get("resume"));              //HTTP req body
             byte[] coverLetter = DatatypeConverter.parseHexBinary(rc.pathArgs().get("coverLetter"));  //HTTP req body
 
             Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
