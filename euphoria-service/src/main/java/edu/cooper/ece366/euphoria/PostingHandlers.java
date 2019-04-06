@@ -1,6 +1,7 @@
 package edu.cooper.ece366.euphoria;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
@@ -40,7 +41,8 @@ public class PostingHandlers implements RouteProvider {
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
-    private List<Posting> getPosting(final RequestContext rc) {
+    @VisibleForTesting
+    public List<Posting> getPosting(final RequestContext rc) {
         Posting posting = null;
 
         try {
@@ -68,7 +70,8 @@ public class PostingHandlers implements RouteProvider {
         return Collections.singletonList(posting);
     }
 
-    private List<Posting> searchPostings(final RequestContext rc) {
+    @VisibleForTesting
+    public List<Posting> searchPostings(final RequestContext rc) {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
         String location = "%";
         String industry = "%";
@@ -125,7 +128,8 @@ public class PostingHandlers implements RouteProvider {
         return postingList;
     }
 
-    private List<Posting> getAllPostings(final RequestContext rc) {
+    @VisibleForTesting
+    public List<Posting> getAllPostings(final RequestContext rc) {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
 
         try {
@@ -153,7 +157,8 @@ public class PostingHandlers implements RouteProvider {
         return postingList;
     }
 
-    private List<Posting> createPosting(final RequestContext rc) {
+    @VisibleForTesting
+    public List<Posting> createPosting(final RequestContext rc) {
         try {
             Integer companyId = Integer.valueOf(rc.pathArgs().get("companyId"));
             String jobTitle = rc.pathArgs().get("jobTitle");
@@ -183,7 +188,8 @@ public class PostingHandlers implements RouteProvider {
         return Collections.emptyList();
     }
 
-    private List<Posting> editPosting(final RequestContext rc) {
+    @VisibleForTesting
+    public List<Posting> editPosting(final RequestContext rc) {
         try {
             Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
             String jobTitle = rc.pathArgs().get("jobTitle");
@@ -210,7 +216,8 @@ public class PostingHandlers implements RouteProvider {
         return Collections.emptyList();
     }
 
-    private List<Posting> deletePosting(final RequestContext rc) {
+    @VisibleForTesting
+    public List<Posting> deletePosting(final RequestContext rc) {
         try {
             Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
 
