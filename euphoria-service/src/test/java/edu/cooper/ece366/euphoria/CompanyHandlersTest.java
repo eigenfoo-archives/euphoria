@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -65,22 +66,15 @@ public class CompanyHandlersTest {
     @Test
     public void createCompany() throws SQLException {
         // Setup variables
-        Company expected = new CompanyBuilder()
-                .companyId(1)
-                .name("BigCorp")
-                .website("bigcorp.com")
-                .description("The biggest of corps.")
-                .build();
+        List<Company> expected = Collections.emptyList();
 
         // Mock dependencies and inputs
-        when(rc.pathArgs()).thenReturn(Collections.singletonMap("companyId", "1"));
-        when(rs.getInt("companyId")).thenReturn(expected.companyId());
-        when(rs.getString("name")).thenReturn(expected.name());
-        when(rs.getString("description")).thenReturn(expected.description());
-        when(ps.executeQuery()).thenReturn(rs);
+        when(rs.getString("name")).thenReturn("BigCorp");
+        when(rs.getString("website")).thenReturn("bigcorp.com");
+        when(rs.getString("description")).thenReturn("The biggest of corps.");
 
         // Call test class
-        Company actual = testClass.getCompany(rc).get(0);
+        List<Company> actual = testClass.createCompany(rc);
 
         // Assert and verify
         assertEquals(expected, actual);

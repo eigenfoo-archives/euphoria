@@ -113,7 +113,6 @@ public class PostingHandlersTest {
         List<Posting> expected = Collections.emptyList();
 
         // Mock dependencies and inputs
-        when(rs.getString("postingId")).thenReturn("1");
         when(rs.getString("jobTitle")).thenReturn("Underwater Basket Weaver");
         when(rs.getString("description")).thenReturn("What it sounds like.");
         when(rs.getString("location")).thenReturn("NEWYORK");

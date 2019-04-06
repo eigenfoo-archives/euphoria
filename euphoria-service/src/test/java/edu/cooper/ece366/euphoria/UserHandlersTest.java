@@ -12,6 +12,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -59,6 +60,26 @@ public class UserHandlersTest {
 
         // Call test class
         User actual = testClass.getUser(rc).get(0);
+
+        // Assert and verify
+        assertEquals(expected, actual);
+
+        verifyZeroInteractions(objectMapper);
+    }
+
+    @Test
+    public void createCompany() throws SQLException {
+        // Setup variables
+        List<User> expected = Collections.emptyList();
+
+        // Mock dependencies and inputs
+        when(rs.getString("name")).thenReturn("John Smith");
+        when(rs.getString("email")).thenReturn("john@smith.com");
+        when(rs.getString("phoneNumber")).thenReturn("1234567890");
+        when(rs.getString("description")).thenReturn("Am engineer pls hire.");
+
+        // Call test class
+        List<User> actual = testClass.createUser(rc);
 
         // Assert and verify
         assertEquals(expected, actual);
