@@ -1,6 +1,7 @@
 package edu.cooper.ece366.euphoria;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
@@ -36,7 +37,8 @@ public class ApplicationHandlers implements RouteProvider {
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
-    private List<Application> getApplication(final RequestContext rc) {
+    @VisibleForTesting
+    public List<Application> getApplication(final RequestContext rc) {
         Application application = null;
 
         try {
@@ -63,7 +65,8 @@ public class ApplicationHandlers implements RouteProvider {
         return Collections.singletonList(application);
     }
 
-    private List<Application> getApplicationsForPosting(final RequestContext rc) {
+    @VisibleForTesting
+    public List<Application> getApplicationsForPosting(final RequestContext rc) {
         ArrayList<Application> applicationList = new ArrayList<Application>();
 
         try {
@@ -92,8 +95,8 @@ public class ApplicationHandlers implements RouteProvider {
         return applicationList;
     }
 
-
-    private List<Application> createApplication(final RequestContext rc) {
+    @VisibleForTesting
+    public List<Application> createApplication(final RequestContext rc) {
         try {
             Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
             Integer userId = Integer.valueOf(rc.pathArgs().get("userId"));
@@ -122,7 +125,7 @@ public class ApplicationHandlers implements RouteProvider {
         return JsonSerializerMiddlewares.<T>jsonSerialize(objectMapper.writer())
                 .and(Middlewares::httpPayloadSemantics)
                 .and(responseAsyncHandler -> requestContext ->
-                responseAsyncHandler.invoke(requestContext)
-                        .thenApply(response -> response.withHeader("Access-Control-Allow-Origin", "*")));
+                        responseAsyncHandler.invoke(requestContext)
+                                .thenApply(response -> response.withHeader("Access-Control-Allow-Origin", "*")));
     }
 }
