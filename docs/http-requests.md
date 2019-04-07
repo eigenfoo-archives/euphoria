@@ -36,6 +36,7 @@ To hexdump any file:
 ```bash
 xxd -p resume.txt | tr -d '\n'
 ```
+
 To decode base64 into files save base64 string in document example then run:   
 ```bash
 base64 --decode example > resumeretreived.txt   

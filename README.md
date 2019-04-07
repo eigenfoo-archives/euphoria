@@ -1,6 +1,9 @@
 # Euphoria
 
-A simple recruiting platform web application, written for ECE366 at The Cooper Union.
+A simple recruiting platform: a [Spotify
+Apollo](https://github.com/spotify/apollo) Java service and a
+[React.js](https://github.com/facebook/create-react-app) JavaScript web
+application. Written for ECE366 at The Cooper Union.
 
 Team members:
 - [George Ho](https://github.com/eigenfoo)
@@ -18,26 +21,39 @@ Team members:
 
 1. Clone this repository from GitHub
 
-```bash
-git clone https://github.com/eigenfoo/euphoria.git
-```
+   ```bash
+   git clone https://github.com/eigenfoo/euphoria.git
+   ```
 
 2. Initialize the database with the provided `initialize-database.sql` script.
 
-```bash
-cat euphoria-service/src/main/resources/initialize-database.sql | mysql -u root -p
-```
+   ```bash
+   cat euphoria-service/src/main/resources/initialize-database.sql | mysql -u root -p
+   ```
 
-3. Download dependencies for the frontend:
+3. Download dependencies for the frontend.
 
-```bash
-cd euphoria-frontend
-npm install
-npm start
-```
+   ```bash
+   cd euphoria-frontend
+   npm install
+   ```
+   
+   To run the web app in development mode, run `npm start`. Open
+   [http://localhost:3000/](http://localhost:3000/) to view it in the browswer. See
+   the [Create React App
+   README](https://github.com/eigenfoo/euphoria/blob/master/euphoria-frontend/README.md)
+   for more information.
 
-4. Test, compile and package the backend:
+4. Test, compile and package the backend.
 
-```bash
-TODO
-```
+   The simplest way to do this is to simply use an IDE, such as IntelliJ.
+
+   ```bash
+   TODO
+   ```
+
+## Documentation
+
+See [the `docs/`
+subdirectory](https://github.com/eigenfoo/euphoria/tree/master/docs) for more
+documentation.
