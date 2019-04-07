@@ -1,9 +1,13 @@
 # Euphoria
 
-A simple recruiting platform: a [Spotify
-Apollo](https://github.com/spotify/apollo) Java service and a
+A simple recruiting platform, written as a project for ECE366 (Software
+Engineering & Large Systems Design) at The Cooper Union.
+
+Euphoria's tech stack consists of a [Spotify
+Apollo](https://github.com/spotify/apollo) Java service with a
+[MySQL](https://www.mysql.com/) database and a
 [React.js](https://github.com/facebook/create-react-app) JavaScript web
-application. Written for ECE366 at The Cooper Union.
+application. 
 
 Team members:
 - [George Ho](https://github.com/eigenfoo)
@@ -14,8 +18,8 @@ Team members:
 ## Requirements
 
 - JDK 8
-- MySQL
 - Maven
+- MySQL
 
 ## Installation and Setup
 
@@ -54,6 +58,6 @@ Team members:
 
 ## Documentation
 
-See [the `docs/`
+See the [`docs/`
 subdirectory](https://github.com/eigenfoo/euphoria/tree/master/docs) for more
 documentation.
