@@ -1,11 +1,9 @@
 # Euphoria
 
 A simple recruiting platform, written as a project for ECE366 (Software
-Engineering & Large Systems Design) at The Cooper Union.
-
-Euphoria's tech stack consists of a [Spotify
-Apollo](https://github.com/spotify/apollo) Java service with a
-[MySQL](https://www.mysql.com/) database and a
+Engineering & Large Systems Design) at The Cooper Union. Euphoria's tech stack
+consists of a [Spotify Apollo](https://github.com/spotify/apollo) Java service
+with a [MySQL](https://www.mysql.com/) database and a
 [React.js](https://github.com/facebook/create-react-app) JavaScript web
 application. 
 
@@ -53,7 +51,9 @@ Team members:
    The simplest way to do this is to simply use an IDE, such as IntelliJ.
 
    ```bash
-   TODO
+   mvn compile   # Compile service
+   mvn test      # Run unit tests
+   mvn package   # Package service into deployable artifact
    ```
 
 ## Documentation
