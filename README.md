@@ -48,13 +48,8 @@ Team members:
 
 4. Test, compile and package the backend.
 
-   The simplest way to do this is to simply use an IDE, such as IntelliJ.
-
-   ```bash
-   mvn compile   # Compile service
-   mvn test      # Run unit tests
-   mvn package   # Package service into deployable artifact
-   ```
+   The simplest way to do this is to use an IDE, such as IntelliJ, which will
+   correctly configure the classpath and other dependencies for you.
 
 ## Documentation
 
