@@ -1,6 +1,7 @@
 package edu.cooper.ece366.euphoria;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
@@ -31,7 +32,8 @@ public class AuthenticationHandlers implements RouteProvider {
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
-    private List<Authentication> getAuthentication(final RequestContext rc) {
+    @VisibleForTesting
+    public List<Authentication> getAuthentication(final RequestContext rc) {
         Authentication authentication = null;
 
         try {
@@ -59,7 +61,8 @@ public class AuthenticationHandlers implements RouteProvider {
         return Collections.singletonList(authentication);
     }
 
-    private List<Authentication> createAuthentication(final RequestContext rc) {
+    @VisibleForTesting
+    public List<Authentication> createAuthentication(final RequestContext rc) {
         try {
             String username = rc.pathArgs().get("username");
             String passwordHash = rc.pathArgs().get("passwordHash");
@@ -85,7 +88,7 @@ public class AuthenticationHandlers implements RouteProvider {
         return JsonSerializerMiddlewares.<T>jsonSerialize(objectMapper.writer())
                 .and(Middlewares::httpPayloadSemantics)
                 .and(responseAsyncHandler -> requestContext ->
-                responseAsyncHandler.invoke(requestContext)
-                        .thenApply(response -> response.withHeader("Access-Control-Allow-Origin", "*")));
+                        responseAsyncHandler.invoke(requestContext)
+                                .thenApply(response -> response.withHeader("Access-Control-Allow-Origin", "*")));
     }
 }
