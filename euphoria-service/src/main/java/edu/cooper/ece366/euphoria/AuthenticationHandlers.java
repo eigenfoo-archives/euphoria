@@ -5,6 +5,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
+import com.typesafe.config.Config;
 import okio.ByteString;
 
 import java.sql.*;
@@ -13,13 +14,12 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class AuthenticationHandlers implements RouteProvider {
-    private static final String dbUrl = "jdbc:mysql://localhost:3306/euphoria";
-    private static final String dbUsername = "euphoria";
-    private static final String dbPassword = "euphoria";
     private final ObjectMapper objectMapper;
+    private final Config config;
 
-    public AuthenticationHandlers(final ObjectMapper objectMapper) {
+    public AuthenticationHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
+        this.config = config;
     }
 
     @Override
@@ -40,7 +40,10 @@ public class AuthenticationHandlers implements RouteProvider {
             String username = rc.pathArgs().get("username");
             String passwordHash = rc.pathArgs().get("passwordHash");
 
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, username);
@@ -68,7 +71,10 @@ public class AuthenticationHandlers implements RouteProvider {
             String passwordHash = rc.pathArgs().get("passwordHash");
             Boolean isUser = Boolean.valueOf(rc.pathArgs().get("isUser"));
 
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "INSERT INTO authentications (username, passwordHash, isUser)" +
                     "VALUES (?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);

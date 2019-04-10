@@ -1,5 +1,6 @@
 package edu.cooper.ece366.euphoria;
 
+import com.typesafe.config.Config;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
@@ -17,13 +18,12 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class ApplicationHandlers implements RouteProvider {
-    private static final String dbUrl = "jdbc:mysql://localhost:3306/euphoria";
-    private static final String dbUsername = "euphoria";
-    private static final String dbPassword = "euphoria";
     private final ObjectMapper objectMapper;
+    private final Config config;
 
-    public ApplicationHandlers(final ObjectMapper objectMapper) {
+    public ApplicationHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
+        this.config = config;
     }
 
     @Override
@@ -43,7 +43,10 @@ public class ApplicationHandlers implements RouteProvider {
 
         try {
             Integer applicationId = Integer.valueOf(rc.pathArgs().get("applicationId"));
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "SELECT * FROM applications WHERE applicationId = ?";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, applicationId);
@@ -71,7 +74,10 @@ public class ApplicationHandlers implements RouteProvider {
 
         try {
             Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "SELECT * FROM applications WHERE postingId = ?";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, postingId);
@@ -103,7 +109,10 @@ public class ApplicationHandlers implements RouteProvider {
             byte[] resume = DatatypeConverter.parseHexBinary(rc.pathArgs().get("resume"));              //HTTP req body
             byte[] coverLetter = DatatypeConverter.parseHexBinary(rc.pathArgs().get("coverLetter"));  //HTTP req body
 
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "INSERT INTO applications (postingId, userId, " +
                     "resume, coverLetter, dateCreated) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
