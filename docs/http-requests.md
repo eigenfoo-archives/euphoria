@@ -36,29 +36,51 @@
 
 6. Create a new user (`POST` request).
 
+   `/api/user/create/`
 
+   Payload contains `name` (e.g. `"John Smith"`), `email` (e.g.
+   `"john@smith.com"`), `phoneNumber` (e.g. `"123-456-7890"`; careful that this
+   is a string, not a number!), `educationLevel` (e.g. `"BACHELORS"`) and
+   `description` (e.g. `"Am engineer pls hire."`).
 
-```bash
-# Create a new user
-curl -X POST http://localhost:8080/user/John%20Smith/jsmith@gmail.com/8773934448/BACHELORS/Am%20engineer%20pls%20hire.
+7. Create a new company (`POST` request).
 
-# Create a new company
-curl -X POST http://localhost:8080/company/Boeing/boeing.com/Oops
+   `/api/company/create/`
 
-# Create a new application
-curl -X POST http://localhost:8080/application/123/400/1/hexstring1/hexstring2  --hex string MUST be even numbers of chars. Use hex representation of a file.
+   Payload contains `name` (e.g. `"Boeing"`), `website` (e.g. `"boeing.com"`)
+   and `description` (e.g. `"Only the safest airplanes."`).
 
-# Create a new authentication
-curl -X POST http://localhost:8080/authentication/janedoe/hash/TRUE
-    
-# Edit a posting
-curl -X PUT http://localhost:8080/posting/1/Intern/Updated%20description./NEWYORK/FINANCE/ENTRYLEVEL
-```
+8. Create a new application (`POST` request).
+
+   `/api/application/create/`
+
+   Payload contains `postingId` (e.g. `1`), `userId` (e.g. `1`), `resume` (some
+   hex representation of a file) and `coverLetter` (another hex string string
+   representation of a file).
+
+9. Create a new authentication (`POST` request).
+
+   `/api/authentication/create/`
+
+   Payload contains `username` (e.g. `"timapple"`), `passwordHash` (e.g.
+   `"10vfcma3"`) and `isUser` (e.g. `True`).
+
+10. Edit a posting (`PUT` request).
+
+    `/api/posting/edit/`
+
+   Payload contains `companyId` (e.g. `1`), `jobTitle` (e.g. `"Software
+   Engineer"`), `description` (e.g. `"Engineering the softest of wares."`),
+   `location` (e.g. `"NEWYORK"`), `industry` (e.g. `"FINANCE"`) and `skillLevel`
+   (e.g. `"INTERNSHIP"`).
+
+---
 
 To hexdump any file:
 ```bash
 xxd -p resume.txt | tr -d '\n'
 ```
+
 To decode base64 into files save base64 string in document example then run:   
 ```bash
 base64 --decode example > resumeretreived.txt   
