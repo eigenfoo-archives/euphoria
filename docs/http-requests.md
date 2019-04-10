@@ -1,21 +1,44 @@
 # Example http requests
 
+1. Authenticate user (`GET` request).
+
+   ` /api/authentication/ `
+
+   Payload contains `username` (e.g. `"timapple"`) and `passwordHash` (e.g.
+   `"10vfcma3"`).
+
+2. Get posting (`GET` request).
+
+   `/api/posting/single/`
+
+   Payload contains `postingId` (e.g. `1`)
+
+3. Get all postings (`GET` request).
+
+   `/api/posting/all/`
+
+   Payload contains nothing.
+
+4. Get all applications to a certain posting (`GET` request).
+
+   `/api/application/forPosting/`
+
+   Payload contains `postingId` (e.g. `1`).
+
+5. Create a new posting (`POST` request).
+
+   `/api/posting/create/`
+
+   Payload contains `companyId` (e.g. `1`), `jobTitle` (e.g. `"Software
+   Engineer"`), `description` (e.g. `"Engineering the softest of wares."`),
+   `location` (e.g. `"NEWYORK"`), `industry` (e.g. `"FINANCE"`) and `skillLevel`
+   (e.g. `"INTERNSHIP"`).
+
+6. Create a new user (`POST` request).
+
+
+
 ```bash
-# Get user with username timapple and passwordHash hash.
-curl -X GET http://localhost:8080/authentication/timapple/hash
-
-# Get posting with postingId 1:
-curl -X GET http://localhost:8080/posting/1
-
-# Get all postings:
-curl -X GET http://localhost:8080/posting/getAll
-
-# Get all postings to posting with postingId 1
-curl -X GET http://localhost:8080/application/matchPosting/1
-
-# Create a new posting
-curl -X POST http://localhost:8080/posting/420/Hello/there/NEWYORK/FINANCE/INTERNSHIP
-
 # Create a new user
 curl -X POST http://localhost:8080/user/John%20Smith/jsmith@gmail.com/8773934448/BACHELORS/Am%20engineer%20pls%20hire.
 
