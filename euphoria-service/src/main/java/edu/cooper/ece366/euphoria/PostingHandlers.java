@@ -5,6 +5,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
+import com.typesafe.config.Config;
 import okio.ByteString;
 
 import java.sql.*;
@@ -16,13 +17,12 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class PostingHandlers implements RouteProvider {
-    private static final String dbUrl = "jdbc:mysql://localhost:3306/euphoria";
-    private static final String dbUsername = "euphoria";
-    private static final String dbPassword = "euphoria";
     private final ObjectMapper objectMapper;
+    private final Config config;
 
-    public PostingHandlers(final ObjectMapper objectMapper) {
+    public PostingHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
+        this.config = config;
     }
 
     @Override
@@ -47,7 +47,10 @@ public class PostingHandlers implements RouteProvider {
 
         try {
             Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "SELECT * FROM postings WHERE postingId = ?";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, postingId);
@@ -96,7 +99,10 @@ public class PostingHandlers implements RouteProvider {
         }
 
         try {
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "SELECT * FROM postings WHERE location LIKE ? " +
                     "AND industry LIKE ? AND skillLevel LIKE ?";
             System.out.println(sqlQuery);
@@ -130,7 +136,10 @@ public class PostingHandlers implements RouteProvider {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
 
         try {
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "SELECT * FROM postings";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ResultSet rs = ps.executeQuery();
@@ -164,7 +173,10 @@ public class PostingHandlers implements RouteProvider {
             Industry industry = Industry.valueOf(rc.pathArgs().get("industry"));
             SkillLevel skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel"));
 
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "INSERT INTO postings (companyId, jobTitle, " +
                     "description, location, industry, skillLevel, " +
                     "dateCreated) VALUES (?, ?, ?, ?, ?, ?, ?)";
@@ -195,7 +207,10 @@ public class PostingHandlers implements RouteProvider {
             Industry industry = Industry.valueOf(rc.pathArgs().get("industry"));
             SkillLevel skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel"));
 
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "UPDATE postings SET jobTitle = ?, description = ?, " +
                     "location = ?, industry = ?, skillLevel = ? WHERE postingId = ?";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
@@ -218,7 +233,10 @@ public class PostingHandlers implements RouteProvider {
         try {
             Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
 
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "DELETE FROM postings WHERE postingId = ?";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, postingId);

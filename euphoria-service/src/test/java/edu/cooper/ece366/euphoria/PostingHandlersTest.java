@@ -2,6 +2,7 @@ package edu.cooper.ece366.euphoria;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotify.apollo.RequestContext;
+import com.typesafe.config.Config;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,6 +27,8 @@ public class PostingHandlersTest {
     @Mock
     ObjectMapper objectMapper;
     @Mock
+    Config config;
+    @Mock
     RequestContext rc;
     @Mock
     PreparedStatement ps;
@@ -36,7 +39,7 @@ public class PostingHandlersTest {
 
     @Before
     public void setup() {
-        testClass = new PostingHandlers(objectMapper);
+        testClass = new PostingHandlers(objectMapper, config);
     }
 
     @Test

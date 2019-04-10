@@ -5,6 +5,7 @@ import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
+import com.typesafe.config.Config;
 import okio.ByteString;
 
 import java.sql.*;
@@ -15,13 +16,12 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class CompanyHandlers implements RouteProvider {
-    private static final String dbUrl = "jdbc:mysql://localhost:3306/euphoria";
-    private static final String dbUsername = "euphoria";
-    private static final String dbPassword = "euphoria";
     private final ObjectMapper objectMapper;
+    private final Config config;
 
-    public CompanyHandlers(final ObjectMapper objectMapper) {
+    public CompanyHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
+        this.config = config;
     }
 
     @Override
@@ -39,7 +39,10 @@ public class CompanyHandlers implements RouteProvider {
 
         try {
             Integer companyId = Integer.valueOf(rc.pathArgs().get("companyId"));
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "SELECT * FROM companies WHERE companyId = ?";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, companyId);
@@ -67,7 +70,10 @@ public class CompanyHandlers implements RouteProvider {
             String website = rc.pathArgs().get("website");
             String description = rc.pathArgs().get("description");
 
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "INSERT INTO companies (name, website, description, " +
                     "dateCreated) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
