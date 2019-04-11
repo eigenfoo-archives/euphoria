@@ -30,9 +30,9 @@ public class PostingHandlers implements RouteProvider {
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
                 Route.sync("GET", "/api/posting/<postingId>", this::getPosting),
+                Route.sync("GET", "/api/posting/all", this::getAllPostings),
                 // FIXME this http request should use query parameters instead of path arguments
                 Route.sync("GET", "/api/posting/<location>/<industry>/<skillLevel>", this::searchPostings),
-                Route.sync("GET", "/api/posting/all", this::getAllPostings),
                 Route.sync("POST", "/api/posting/", this::createPosting),
                 Route.sync("PUT", "/api/posting/", this::editPosting),
                 Route.sync("DELETE", "/api/posting/<postingId>", this::deletePosting)
