@@ -8,7 +8,7 @@ import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
 
-import javax.xml.bind.DatatypeConverter;
+import java.io.IOException;
 import java.sql.*;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -29,11 +29,9 @@ public class ApplicationHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/application/<applicationId>", this::getApplication),
-                Route.sync("GET", "/application/matchPosting/<postingId>", this::getApplicationsForPosting),
-                Route.sync("POST",
-                        "/application/<postingId>/<userId>/<resume>/<coverLetter>",
-                        this::createApplication)
+                Route.sync("GET", "/api/application/<applicationId>", this::getApplication),
+                Route.sync("GET", "/api/application/posting/<postingId>", this::getApplicationsForPosting),
+                Route.sync("POST", "/api/application", this::createApplication)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -104,10 +102,11 @@ public class ApplicationHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Application> createApplication(final RequestContext rc) {
         try {
-            Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
-            Integer userId = Integer.valueOf(rc.pathArgs().get("userId"));
-            byte[] resume = DatatypeConverter.parseHexBinary(rc.pathArgs().get("resume"));              //HTTP req body
-            byte[] coverLetter = DatatypeConverter.parseHexBinary(rc.pathArgs().get("coverLetter"));  //HTTP req body
+            Application application = objectMapper.readValue(rc.request().payload().get().toByteArray(), Application.class);
+            Integer postingId = Integer.valueOf(application.postingId());
+            Integer userId = Integer.valueOf(application.userId());
+            byte[] resume = application.resume();
+            byte[] coverLetter = application.coverLetter();
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
@@ -123,7 +122,7 @@ public class ApplicationHandlers implements RouteProvider {
             Date date = new Date();
             ps.setObject(5, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
             ps.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 
