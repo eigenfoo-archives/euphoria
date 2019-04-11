@@ -2,16 +2,15 @@
 
 1. Authenticate user (`GET` request).
 
-   ` /api/authentication/ `
+   ` /api/authentication/<username>/<passwordHash>`
 
-   Payload contains `username` (e.g. `"timapple"`) and `passwordHash` (e.g.
-   `"10vfcma3"`).
+   Payload contains nothing.
 
 2. Get posting (`GET` request).
 
-   `/api/posting/single/`
+   `/api/posting/<postingId>/`
 
-   Payload contains `postingId` (e.g. `1`)
+   Payload contains nothing.
 
 3. Get all postings (`GET` request).
 
@@ -21,9 +20,9 @@
 
 4. Get all applications to a certain posting (`GET` request).
 
-   `/api/application/forPosting/`
+   `/api/application/forPosting/<postingId>/`
 
-   Payload contains `postingId` (e.g. `1`).
+   Payload contains nothing.
 
 5. Create a new posting (`POST` request).
 
