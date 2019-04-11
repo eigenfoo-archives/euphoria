@@ -8,6 +8,7 @@ import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
 
+import java.io.IOException;
 import java.sql.*;
 import java.time.ZoneId;
 import java.util.ArrayList;
@@ -28,16 +29,13 @@ public class PostingHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/posting/<postingId>", this::getPosting),
-                Route.sync("GET", "/posting/<location>/<industry>/<skillLevel>", this::searchPostings),
-                Route.sync("GET", "/posting/getAll", this::getAllPostings),
-                Route.sync("POST",
-                        "/posting/<companyId>/<jobTitle>/<description>/<location>/<industry>/<skillLevel>",
-                        this::createPosting),
-                Route.sync("PUT",
-                        "/posting/<postingId>/<jobTitle>/<description>/<location>/<industry>/<skillLevel>",
-                        this::editPosting),
-                Route.sync("DELETE", "/posting/<postingId>", this::deletePosting)
+                Route.sync("GET", "/api/posting/<postingId>", this::getPosting),
+                // FIXME this http request should use query parameters instead of path arguments
+                Route.sync("GET", "/api/posting/<location>/<industry>/<skillLevel>", this::searchPostings),
+                Route.sync("GET", "/api/posting/all", this::getAllPostings),
+                Route.sync("POST", "/api/posting/", this::createPosting),
+                Route.sync("PUT", "/api/posting/", this::editPosting),
+                Route.sync("DELETE", "/api/posting/<postingId>", this::deletePosting)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -166,12 +164,13 @@ public class PostingHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Posting> createPosting(final RequestContext rc) {
         try {
-            Integer companyId = Integer.valueOf(rc.pathArgs().get("companyId"));
-            String jobTitle = rc.pathArgs().get("jobTitle");
-            String description = rc.pathArgs().get("description");
-            Location location = Location.valueOf(rc.pathArgs().get("location"));
-            Industry industry = Industry.valueOf(rc.pathArgs().get("industry"));
-            SkillLevel skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel"));
+            Posting posting = objectMapper.readValue(rc.request().payload().get().toByteArray(), Posting.class);
+            Integer companyId = posting.companyId();
+            String jobTitle = posting.jobTitle();
+            String description = posting.description();
+            Location location = posting.location();
+            Industry industry = posting.industry();
+            SkillLevel skillLevel = posting.skillLevel();
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
@@ -190,7 +189,7 @@ public class PostingHandlers implements RouteProvider {
             Date date = new Date();
             ps.setObject(7, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
             ps.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 

@@ -6,6 +6,8 @@ import io.norberg.automatter.AutoMatter;
 public interface Posting {
     Integer postingId();
 
+    Integer companyId();
+
     String jobTitle();
 
     String description();
