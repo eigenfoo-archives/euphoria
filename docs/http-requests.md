@@ -2,7 +2,7 @@
 
 1. Authenticate user (`GET` request).
 
-   ` /api/authentication/<username>/<passwordHash>`
+   ` /api/authentication/<username>/<passwordHash>/`
 
    Payload contains nothing.
 
