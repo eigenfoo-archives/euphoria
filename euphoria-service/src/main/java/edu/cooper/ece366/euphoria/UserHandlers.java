@@ -8,6 +8,7 @@ import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
 
+import java.io.IOException;
 import java.sql.*;
 import java.time.ZoneId;
 import java.util.Collections;
@@ -27,10 +28,8 @@ public class UserHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/user/<userId>", this::getUser),
-                Route.sync("POST",
-                        "/user/<name>/<email>/<phoneNumber>/<educationLevel>/<description>",
-                        this::createUser)
+                Route.sync("GET", "/api/user/<userId>", this::getUser),
+                Route.sync("POST", "/api/user", this::createUser)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -69,11 +68,12 @@ public class UserHandlers implements RouteProvider {
     @VisibleForTesting
     public List<User> createUser(final RequestContext rc) {
         try {
-            String name = rc.pathArgs().get("name");
-            String email = rc.pathArgs().get("email");
-            String phoneNumber = rc.pathArgs().get("phoneNumber");
-            EducationLevel educationLevel = EducationLevel.valueOf(rc.pathArgs().get("educationLevel"));
-            String description = rc.pathArgs().get("description");
+            User user = objectMapper.readValue(rc.request().payload().get().toByteArray(), User.class);
+            String name = user.name();
+            String email = user.email();
+            String phoneNumber = user.phoneNumber();
+            EducationLevel educationLevel = user.educationLevel();
+            String description = user.description();
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
@@ -91,7 +91,7 @@ public class UserHandlers implements RouteProvider {
             Date date = new Date();
             ps.setObject(6, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
             ps.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 
