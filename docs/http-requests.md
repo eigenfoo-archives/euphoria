@@ -18,59 +18,44 @@
 
    Payload contains nothing.
 
-4. Get all applications to a certain posting (`GET` request).
+4. Search postings by location, industry and skill level (`GET` request).
+
+   `/api/posting/<location>/<industry>/<skillLevel>`
+
+   Payload contains nothing.
+
+5. Get application (`GET` request).
+
+   `/api/application/<applicationId>`
+
+   Payload contains nothing.
+
+6. Get all applications to a certain posting (`GET` request).
 
    `/api/application/posting/<postingId>`
 
    Payload contains nothing.
 
-5. Get a company (`GET` request).
+7. Get a user (`GET` request).
+
+   `/api/user/<userId>`
+
+   Payload contains nothing.
+
+8. Get a company (`GET` request).
 
    `/api/company/<companyId>`
 
    Payload contains nothing.
 
-6. Create a new posting (`POST` request).
+9. Create a new authentication (`POST` request).
 
-   `/api/posting`
+   `/api/authentication`
 
-   Payload contains `companyId` (e.g. `1`), `jobTitle` (e.g. `"Software
-   Engineer"`), `description` (e.g. `"Engineering the softest of wares."`),
-   `location` (e.g. `"NEWYORK"`), `industry` (e.g. `"FINANCE"`) and `skillLevel`
-   (e.g. `"INTERNSHIP"`).
+   Payload contains `username` (e.g. `"timapple"`), `passwordHash` (e.g.
+   `"10vfcma3"`) and `isUser` (e.g. `True`).
 
-7. Create a new user (`POST` request).
-
-   `/api/user`
-
-   Payload contains `name` (e.g. `"John Smith"`), `email` (e.g.
-   `"john@smith.com"`), `phoneNumber` (e.g. `"123-456-7890"`; careful that this
-   is a string, not a number!), `educationLevel` (e.g. `"BACHELORS"`) and
-   `description` (e.g. `"Am engineer pls hire."`).
-
-8. Create a new company (`POST` request).
-
-   `/api/company`
-
-   Payload contains `name` (e.g. `"Boeing"`), `website` (e.g. `"boeing.com"`)
-   and `description` (e.g. `"Only the safest airplanes."`).
-
-9. Create a new application (`POST` request).
-
-   `/api/application`
-
-   Payload contains `postingId` (e.g. `1`), `userId` (e.g. `1`), `resume` (some
-   hex representation of a file) and `coverLetter` (another hex string string
-   representation of a file).
-
-10. Create a new authentication (`POST` request).
-
-    `/api/authentication`
-
-    Payload contains `username` (e.g. `"timapple"`), `passwordHash` (e.g.
-    `"10vfcma3"`) and `isUser` (e.g. `True`).
-
-11. Edit a posting (`PUT` request).
+10. Create a new posting (`POST` request).
 
     `/api/posting`
 
@@ -78,6 +63,45 @@
     Engineer"`), `description` (e.g. `"Engineering the softest of wares."`),
     `location` (e.g. `"NEWYORK"`), `industry` (e.g. `"FINANCE"`) and `skillLevel`
     (e.g. `"INTERNSHIP"`).
+
+11. Create a new application (`POST` request).
+
+    `/api/application`
+
+    Payload contains `postingId` (e.g. `1`), `userId` (e.g. `1`), `resume` (some
+    hex representation of a file) and `coverLetter` (another hex string string
+    representation of a file).
+
+12. Create a new user (`POST` request).
+
+    `/api/user`
+
+    Payload contains `name` (e.g. `"John Smith"`), `email` (e.g.
+    `"john@smith.com"`), `phoneNumber` (e.g. `"123-456-7890"`; careful that this
+    is a string, not a number!), `educationLevel` (e.g. `"BACHELORS"`) and
+    `description` (e.g. `"Am engineer pls hire."`).
+
+13. Create a new company (`POST` request).
+
+    `/api/company`
+
+    Payload contains `name` (e.g. `"Boeing"`), `website` (e.g. `"boeing.com"`)
+    and `description` (e.g. `"Only the safest of airplanes."`).
+
+14. Edit a posting (`PUT` request).
+
+    `/api/posting`
+
+    Payload contains `companyId` (e.g. `1`), `jobTitle` (e.g. `"Software
+    Engineer"`), `description` (e.g. `"Engineering the softest of wares."`),
+    `location` (e.g. `"NEWYORK"`), `industry` (e.g. `"FINANCE"`) and `skillLevel`
+    (e.g. `"INTERNSHIP"`).
+
+15. Delete a posting (`DELETE` request).
+
+    `/api/posting/<postingId>`
+
+    Payload contains nothing.
 
 ---
 
