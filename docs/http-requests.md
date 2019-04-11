@@ -24,7 +24,13 @@
 
    Payload contains nothing.
 
-5. Create a new posting (`POST` request).
+5. Get a company (`GET` request).
+
+   `/api/company/<companyId>`
+
+   Payload contains nothing.
+
+6. Create a new posting (`POST` request).
 
    `/api/posting`
 
@@ -33,7 +39,7 @@
    `location` (e.g. `"NEWYORK"`), `industry` (e.g. `"FINANCE"`) and `skillLevel`
    (e.g. `"INTERNSHIP"`).
 
-6. Create a new user (`POST` request).
+7. Create a new user (`POST` request).
 
    `/api/user`
 
@@ -42,14 +48,14 @@
    is a string, not a number!), `educationLevel` (e.g. `"BACHELORS"`) and
    `description` (e.g. `"Am engineer pls hire."`).
 
-7. Create a new company (`POST` request).
+8. Create a new company (`POST` request).
 
    `/api/company`
 
    Payload contains `name` (e.g. `"Boeing"`), `website` (e.g. `"boeing.com"`)
    and `description` (e.g. `"Only the safest airplanes."`).
 
-8. Create a new application (`POST` request).
+9. Create a new application (`POST` request).
 
    `/api/application`
 
@@ -57,21 +63,21 @@
    hex representation of a file) and `coverLetter` (another hex string string
    representation of a file).
 
-9. Create a new authentication (`POST` request).
+10. Create a new authentication (`POST` request).
 
-   `/api/authentication`
+    `/api/authentication`
 
-   Payload contains `username` (e.g. `"timapple"`), `passwordHash` (e.g.
-   `"10vfcma3"`) and `isUser` (e.g. `True`).
+    Payload contains `username` (e.g. `"timapple"`), `passwordHash` (e.g.
+    `"10vfcma3"`) and `isUser` (e.g. `True`).
 
-10. Edit a posting (`PUT` request).
+11. Edit a posting (`PUT` request).
 
     `/api/posting`
 
-   Payload contains `companyId` (e.g. `1`), `jobTitle` (e.g. `"Software
-   Engineer"`), `description` (e.g. `"Engineering the softest of wares."`),
-   `location` (e.g. `"NEWYORK"`), `industry` (e.g. `"FINANCE"`) and `skillLevel`
-   (e.g. `"INTERNSHIP"`).
+    Payload contains `companyId` (e.g. `1`), `jobTitle` (e.g. `"Software
+    Engineer"`), `description` (e.g. `"Engineering the softest of wares."`),
+    `location` (e.g. `"NEWYORK"`), `industry` (e.g. `"FINANCE"`) and `skillLevel`
+    (e.g. `"INTERNSHIP"`).
 
 ---
 

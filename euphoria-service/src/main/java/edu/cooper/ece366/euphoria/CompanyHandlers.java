@@ -8,6 +8,7 @@ import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
 
+import java.io.IOException;
 import java.sql.*;
 import java.time.ZoneId;
 import java.util.Collections;
@@ -27,9 +28,8 @@ public class CompanyHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/company/<companyId>", this::getCompany),
-                Route.sync("POST", "/company/<name>/<website>/<description>",
-                        this::createCompany)
+                Route.sync("GET", "/api/company/<companyId>", this::getCompany),
+                Route.sync("POST", "/api/company", this::createCompany)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -66,9 +66,10 @@ public class CompanyHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Company> createCompany(final RequestContext rc) {
         try {
-            String name = rc.pathArgs().get("name");
-            String website = rc.pathArgs().get("website");
-            String description = rc.pathArgs().get("description");
+            Company company = objectMapper.readValue(rc.request().payload().get().toByteArray(), Company.class);
+            String name = company.name();
+            String website = company.website();
+            String description = company.description();
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
@@ -83,7 +84,7 @@ public class CompanyHandlers implements RouteProvider {
             Date date = new Date();
             ps.setObject(4, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
             ps.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 
