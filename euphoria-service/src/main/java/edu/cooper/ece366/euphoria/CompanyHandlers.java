@@ -28,7 +28,7 @@ public class CompanyHandlers implements RouteProvider {
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
                 Route.sync("GET", "/company/<companyId>", this::getCompany),
-                Route.sync("POST", "/company/<name>/<website>/<description>",
+                Route.sync("POST", "/company/<name>/<website>/<description>/<username>/<passwordHash>/<isUser>",
                         this::createCompany)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
@@ -82,7 +82,19 @@ public class CompanyHandlers implements RouteProvider {
             ps.setString(3, description);
             Date date = new Date();
             ps.setObject(4, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
-            ps.executeUpdate();
+            int UpdateStatus = ps.executeUpdate();
+            if (UpdateStatus != 0){
+                String username = rc.pathArgs().get("username");
+                String passwordHash = rc.pathArgs().get("passwordHash");
+                Boolean isUser = Boolean.valueOf(rc.pathArgs().get("isUser"));
+                String sqlQueryAuth = "INSERT INTO authentications (Id, username, passwordHash, isUser)" +
+                        "VALUES (LAST_INSERT_ID(),?, ?, ?)";
+                PreparedStatement psAuth = conn.prepareStatement(sqlQueryAuth);
+                psAuth.setString(1, username);
+                psAuth.setString(2, passwordHash);
+                psAuth.setBoolean(3, isUser);
+                psAuth.executeUpdate();
+            }
         } catch (SQLException ex) {
             System.out.println(ex);
         }

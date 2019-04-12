@@ -59,6 +59,7 @@ public class ApplicationHandlers implements RouteProvider {
                         .userId(rs.getInt("userId"))
                         .resume(rs.getBytes("resume"))            //returns BASE64
                         .coverLetter(rs.getBytes("coverLetter"))   //returns BASE64
+                        .dateCreated(rs.getString("dateCreated"))
                         .build();
             }
         } catch (SQLException ex) {
@@ -90,6 +91,7 @@ public class ApplicationHandlers implements RouteProvider {
                         .userId(rs.getInt("userId"))
                         .resume(rs.getBytes("resume"))            //returns BASE64
                         .coverLetter(rs.getBytes("coverLetter"))   //returns BASE64
+                        .dateCreated(rs.getString("dateCreated"))
                         .build();
 
                 applicationList.add(application);
@@ -114,14 +116,13 @@ public class ApplicationHandlers implements RouteProvider {
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
             String sqlQuery = "INSERT INTO applications (postingId, userId, " +
-                    "resume, coverLetter, dateCreated) VALUES (?, ?, ?, ?, ?)";
+                    "resume, coverLetter) VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, postingId);
             ps.setInt(2, userId);
             ps.setBytes(3, resume);
             ps.setBytes(4, coverLetter);
-            Date date = new Date();
-            ps.setObject(5, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
+            //timestamped automatically in UTC by mysql database
             ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex);
