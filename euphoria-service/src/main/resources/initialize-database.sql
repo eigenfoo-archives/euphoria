@@ -31,7 +31,7 @@ CREATE TABLE users (userId INT AUTO_INCREMENT PRIMARY KEY,
                     phoneNumber VARCHAR(20) NOT NULL,
                     educationLevel VARCHAR(20) NOT NULL,
                     description TEXT NOT NULL,
-                    dateCreated DATETIME NOT NULL); 
+                    dateCreated TIMESTAMP NOT NULL);
 
 INSERT INTO users
     (name, email, phoneNumber, educationLevel, description, dateCreated)
@@ -83,7 +83,7 @@ CREATE TABLE postings (postingId INT AUTO_INCREMENT PRIMARY KEY,
                        location VARCHAR(20) NOT NULL,
                        industry VARCHAR(20) NOT NULL,
                        skillLevel VARCHAR(20) NOT NULL,
-                       dateCreated DATETIME NOT NULL);
+                       dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 INSERT INTO postings
     (companyId, jobTitle, description, location, industry, skillLevel, dateCreated)
@@ -97,7 +97,7 @@ CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
                            userId INT NOT NULL, -- FOREIGN KEY(userId), REFERENCES users (userID), 
                            resume LONGBLOB NOT NULL,
                            coverLetter LONGBLOB NOT NULL,
-                           dateCreated DATETIME NOT NULL);
+                           dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 INSERT INTO applications
     (postingId, userId, resume, coverLetter, dateCreated)
@@ -106,15 +106,32 @@ VALUES
 	(1, 2, x'453d7a38', x'453d7a39', "2018-07-13 03:22:00"),
 	(3, 3, x'653d7a38', x'653e7a39', "2019-02-13 11:40:33");
 
-CREATE TABLE authentications (username VARCHAR(30) NOT NULL,
+
+CREATE TABLE authentications (Id INT NOT NULL,
+                              username VARCHAR(30) NOT NULL,
                               passwordHash VARCHAR(40) NOT NULL,
                               isUser BOOLEAN NOT NULL);
 
 INSERT INTO authentications
-    (username, passwordHash, isUser)
+    (Id, username, passwordHash, isUser)
 VALUES
-    ("johnnyappleseed", "hash", TRUE),
-    ("timapple", "hash", TRUE),
-    ("jeffbozo", "hash", TRUE),
-    ("apple", "hash", FALSE),
-    ("amazon", "hash", FALSE);
+    (1, "johnnyappleseed", "hash", TRUE),
+    (2, "timapple", "hash", TRUE),
+    (3, "jeffbozo", "hash", TRUE),
+    (1, "apple", "hash", FALSE),
+    (2, "amazon", "hash", FALSE);
+
+
+CREATE TABLE cookies (Id INT NOT NULL,
+                      isUser BOOLEAN NOT NULL,
+                      cookie VARCHAR(36) NOT NULL,
+                      dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
+
+SET GLOBAL event_scheduler = ON;
+
+CREATE EVENT expireCookie
+ON SCHEDULE EVERY 1 DAY
+DO
+DELETE FROM cookies
+WHERE TIMESTAMPDIFF(DAY, dateCreated , NOW()) > 2
+;

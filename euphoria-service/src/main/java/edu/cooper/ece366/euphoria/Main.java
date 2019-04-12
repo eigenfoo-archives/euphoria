@@ -21,6 +21,7 @@ public class Main {
         UserHandlers userHandlers = new UserHandlers(objectMapper, config);
         CompanyHandlers companyHandlers = new CompanyHandlers(objectMapper, config);
         ApplicationHandlers applicationHandlers = new ApplicationHandlers(objectMapper, config);
+        CookieHandlers cookieHandlers = new CookieHandlers(objectMapper, config);
 
         environment
                 .routingEngine()
@@ -29,6 +30,7 @@ public class Main {
                 .registerRoutes(postingHandlers.routes())
                 .registerRoutes(userHandlers.routes())
                 .registerRoutes(companyHandlers.routes())
-                .registerRoutes(applicationHandlers.routes());
+                .registerRoutes(applicationHandlers.routes())
+                .registerRoutes(cookieHandlers.routes());
     }
 }

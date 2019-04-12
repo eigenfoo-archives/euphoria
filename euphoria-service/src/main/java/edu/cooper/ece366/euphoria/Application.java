@@ -13,4 +13,6 @@ public interface Application {
     byte[] resume();
 
     byte[] coverLetter();
+
+    String dateCreated();
 }
