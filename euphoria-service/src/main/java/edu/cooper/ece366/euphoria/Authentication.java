@@ -4,7 +4,7 @@ import io.norberg.automatter.AutoMatter;
 
 @AutoMatter
 public interface Authentication {
-    Integer Id(); // Either userId or companyId
+    Integer id(); // Either userId or companyId
 
     String username();
 

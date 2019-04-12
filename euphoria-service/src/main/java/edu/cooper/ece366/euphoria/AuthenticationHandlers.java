@@ -51,7 +51,7 @@ public class AuthenticationHandlers implements RouteProvider {
 
             if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
                 authentication = new AuthenticationBuilder()
-                        .Id(rs.getInt("Id"))
+                        .id(rs.getInt("id"))
                         .username(rs.getString("username"))
                         .passwordHash(rs.getString("passwordHash"))
                         .isUser(rs.getBoolean("isUser"))
@@ -68,7 +68,7 @@ public class AuthenticationHandlers implements RouteProvider {
     public List<Authentication> createAuthentication(final RequestContext rc) {
         try {
             Authentication authentication = objectMapper.readValue(rc.request().payload().get().toByteArray(), Authentication.class);
-            Integer Id = authentication.Id();
+            Integer id = authentication.id();
             String username = authentication.username();
             String passwordHash = authentication.passwordHash();
             Boolean isUser = authentication.isUser();
@@ -77,10 +77,10 @@ public class AuthenticationHandlers implements RouteProvider {
                     config.getString("mysql.jdbc"),
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
-            String sqlQuery = "INSERT INTO authentications (Id, username, passwordHash, isUser)" +
+            String sqlQuery = "INSERT INTO authentications (id, username, passwordHash, isUser)" +
                     "VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setInt(1, Id);
+            ps.setInt(1, id);
             ps.setString(2, username);
             ps.setString(3, passwordHash);
             ps.setBoolean(4, isUser);

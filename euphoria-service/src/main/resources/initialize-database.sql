@@ -94,7 +94,7 @@ VALUES
 
 CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
                            postingId INT NOT NULL,  -- FOREIGN KEY(postingId), REFERENCES postings (postingId),
-                           userId INT NOT NULL, -- FOREIGN KEY(userId), REFERENCES users (userID), 
+                           userId INT NOT NULL, -- FOREIGN KEY(userId), REFERENCES users (userId),
                            resume LONGBLOB NOT NULL,
                            coverLetter LONGBLOB NOT NULL,
                            dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
@@ -107,13 +107,13 @@ VALUES
 	(3, 3, x'653d7a38', x'653e7a39', "2019-02-13 11:40:33");
 
 
-CREATE TABLE authentications (Id INT NOT NULL,
+CREATE TABLE authentications (id INT NOT NULL,
                               username VARCHAR(30) NOT NULL,
                               passwordHash VARCHAR(40) NOT NULL,
                               isUser BOOLEAN NOT NULL);
 
 INSERT INTO authentications
-    (Id, username, passwordHash, isUser)
+    (id, username, passwordHash, isUser)
 VALUES
     (1, "johnnyappleseed", "hash", TRUE),
     (2, "timapple", "hash", TRUE),
@@ -122,7 +122,7 @@ VALUES
     (2, "amazon", "hash", FALSE);
 
 
-CREATE TABLE cookies (Id INT NOT NULL,
+CREATE TABLE cookies (id INT NOT NULL,
                       isUser BOOLEAN NOT NULL,
                       cookie VARCHAR(36) NOT NULL,
                       dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
