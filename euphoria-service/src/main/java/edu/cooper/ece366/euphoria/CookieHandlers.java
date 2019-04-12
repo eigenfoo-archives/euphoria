@@ -42,14 +42,14 @@ public class CookieHandlers implements RouteProvider {
                     config.getString("mysql.jdbc"),
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
-            String sqlQuery = "SELECT * FROM coookies WHERE (cookie) IN ((?))";
+            String sqlQuery = "SELECT * FROM cookies WHERE (cookie) IN ((?))";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, cookieCheck);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
                 cookie = new CookieBuilder()
-                        //.Id(rs.getInt("Id"))
+                        //.Id(rs.getInt("Id")) // Either userId or companyId
                         //.isUser(rs.getBoolean("isUser"))
                         .cookie(rs.getString("cookie"))
                         .build();
@@ -86,7 +86,7 @@ public class CookieHandlers implements RouteProvider {
                     String cookieNew = "abc" + username + "1234" + passwordHash.substring(0, 3); //TODO: make a better cookie hashing function
                     String sqlQueryIns = "INSERT INTO cookies (Id, isUser, cookie) VALUES (?, ?, ?)";
                     PreparedStatement psIns = conn.prepareStatement(sqlQueryIns);
-                    psIns.setInt(1, Id);
+                    psIns.setInt(1, Id); // Either userId or companyId
                     psIns.setBoolean(2, isUser);
                     psIns.setString(3, cookieNew);
                     psIns.executeUpdate();

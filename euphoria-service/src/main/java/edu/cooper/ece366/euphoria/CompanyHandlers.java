@@ -82,8 +82,8 @@ public class CompanyHandlers implements RouteProvider {
             ps.setString(3, description);
             Date date = new Date();
             ps.setObject(4, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
-            int UpdateStatus = ps.executeUpdate();
-            if (UpdateStatus != 0){
+            int updateStatus = ps.executeUpdate();
+            if (updateStatus != 0){
                 String username = rc.pathArgs().get("username");
                 String passwordHash = rc.pathArgs().get("passwordHash");
                 Boolean isUser = Boolean.valueOf(rc.pathArgs().get("isUser"));

@@ -91,8 +91,8 @@ public class UserHandlers implements RouteProvider {
             //did not set to auto-timestamp by mysql in case want to salt. Does put correct UMT timestamp now, though
             java.sql.Timestamp date = new java.sql.Timestamp(new java.util.Date().getTime());
             ps.setTimestamp(6, date);
-            int UpdateStatus = ps.executeUpdate();
-            if (UpdateStatus != 0){
+            int updateStatus = ps.executeUpdate();
+            if (updateStatus != 0){
                     String username = rc.pathArgs().get("username");
                     String passwordHash = rc.pathArgs().get("passwordHash");
                     Boolean isUser = Boolean.valueOf(rc.pathArgs().get("isUser"));
