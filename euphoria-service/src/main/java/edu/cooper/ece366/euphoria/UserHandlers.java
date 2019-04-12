@@ -10,9 +10,7 @@ import okio.ByteString;
 
 import java.io.IOException;
 import java.sql.*;
-import java.time.ZoneId;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -94,7 +92,7 @@ public class UserHandlers implements RouteProvider {
             ps.setTimestamp(6, date);
             int rowsAffected = ps.executeUpdate();
 
-            if (rowsAffected==0) {
+            if (rowsAffected == 0) {
                 throw new SQLException("Creating new user failed, no rows affected.");
             }
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {

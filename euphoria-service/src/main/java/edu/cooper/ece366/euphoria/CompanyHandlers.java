@@ -86,7 +86,7 @@ public class CompanyHandlers implements RouteProvider {
             ps.setObject(4, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
             int rowsAffected = ps.executeUpdate();
 
-            if (rowsAffected==0) {
+            if (rowsAffected == 0) {
                 throw new SQLException("Creating new company failed, no rows affected.");
             }
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {

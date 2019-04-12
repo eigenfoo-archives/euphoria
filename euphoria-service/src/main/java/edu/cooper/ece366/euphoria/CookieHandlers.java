@@ -94,8 +94,8 @@ public class CookieHandlers implements RouteProvider {
                     cookie = new CookieBuilder()
                             .cookie(cookieNew)
                             .build();
-                    }
                 }
+            }
         } catch (SQLException ex) {
             System.out.println(ex);
         }
