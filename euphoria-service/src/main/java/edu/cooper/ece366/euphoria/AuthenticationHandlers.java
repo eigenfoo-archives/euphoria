@@ -25,10 +25,10 @@ public class AuthenticationHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/authentication/<username>/<passwordHash>", this::getAuthentication)
-                /*Route.sync("POST",
-                        "/authentication/<username>/<passwordHash>/<isUser>",
-                        this::createAuthentication)*/
+                Route.sync("GET", "/authentication/<username>/<passwordHash>", this::getAuthentication),
+                Route.sync("POST",
+                        "/authentication/<Id>/<username>/<passwordHash>/<isUser>",
+                        this::createAuthentication)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -65,10 +65,10 @@ public class AuthenticationHandlers implements RouteProvider {
         return Collections.singletonList(authentication);
     }
 
-    //Commented out for now since implemented in createUser or createCompany
-    /*@VisibleForTesting
+    @VisibleForTesting
     public List<Authentication> createAuthentication(final RequestContext rc) {
         try {
+            Integer Id = Integer.valueOf(rc.pathArgs().get("Id"));  //Either userId or companyId
             String username = rc.pathArgs().get("username");
             String passwordHash = rc.pathArgs().get("passwordHash");
             Boolean isUser = Boolean.valueOf(rc.pathArgs().get("isUser"));
@@ -77,19 +77,20 @@ public class AuthenticationHandlers implements RouteProvider {
                     config.getString("mysql.jdbc"),
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
-            String sqlQuery = "INSERT INTO authentications (username, passwordHash, isUser)" +
-                    "VALUES (?, ?, ?)";
+            String sqlQuery = "INSERT INTO authentications (Id, username, passwordHash, isUser)" +
+                    "VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setString(1, username);
-            ps.setString(2, passwordHash);
-            ps.setBoolean(3, isUser);
+            ps.setInt(1, Id);
+            ps.setString(2, username);
+            ps.setString(3, passwordHash);
+            ps.setBoolean(4, isUser);
             ps.executeUpdate();
         } catch (SQLException ex) {
             System.out.println(ex);
         }
 
         return Collections.emptyList();
-    }*/
+    }
 
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {

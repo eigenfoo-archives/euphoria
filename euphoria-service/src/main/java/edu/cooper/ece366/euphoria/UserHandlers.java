@@ -29,7 +29,7 @@ public class UserHandlers implements RouteProvider {
         return Stream.of(
                 Route.sync("GET", "/user/<userId>", this::getUser),
                 Route.sync("POST",
-                        "/user/<name>/<email>/<phoneNumber>/<educationLevel>/<description>/<username>/<passwordHash>/<isUser>",
+                        "/user/<name>/<email>/<phoneNumber>/<educationLevel>/<description>",
                         this::createUser)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
@@ -68,6 +68,7 @@ public class UserHandlers implements RouteProvider {
 
     @VisibleForTesting
     public List<User> createUser(final RequestContext rc) {
+        User user = null;
         try {
             String name = rc.pathArgs().get("name");
             String email = rc.pathArgs().get("email");
@@ -82,7 +83,7 @@ public class UserHandlers implements RouteProvider {
             String sqlQuery = "INSERT INTO users (name, email, phoneNumber, " +
                     "educationLevel, description, dateCreated) " +
                     "VALUES (?, ?, ?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, email);
             ps.setString(3, phoneNumber);
@@ -91,24 +92,32 @@ public class UserHandlers implements RouteProvider {
             //did not set to auto-timestamp by mysql in case want to salt. Does put correct UTC timestamp now, though
             java.sql.Timestamp date = new java.sql.Timestamp(new java.util.Date().getTime());
             ps.setTimestamp(6, date);
-            int updateStatus = ps.executeUpdate();
-            if (updateStatus != 0){
-                    String username = rc.pathArgs().get("username");
-                    String passwordHash = rc.pathArgs().get("passwordHash");
-                    Boolean isUser = Boolean.valueOf(rc.pathArgs().get("isUser"));
-                    String sqlQueryAuth = "INSERT INTO authentications (Id, username, passwordHash, isUser)" +
-                            "VALUES (LAST_INSERT_ID(),?, ?, ?)";
-                    PreparedStatement psAuth = conn.prepareStatement(sqlQueryAuth);
-                    psAuth.setString(1, username);
-                    psAuth.setString(2, passwordHash);
-                    psAuth.setBoolean(3, isUser);
-                    psAuth.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected==0) {
+                throw new SQLException("Creating new user failed, no rows affected.");
+            }
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    System.out.println("the generated key was" + generatedKeys.getLong(1));
+                    user = new UserBuilder()
+                            .userId(generatedKeys.getInt(1))
+                            //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
+                            .name("namefield")
+                            .email("emailfield")
+                            .phoneNumber("phoneNumfield")
+                            .educationLevel(EducationLevel.valueOf("PHD"))
+                            .description("descriptonfield")
+                            .build();
+                } else {
+                    throw new SQLException("Creating new user failed, no ID obtained.");
+                }
             }
         } catch (SQLException ex) {
             System.out.println(ex);
         }
 
-        return Collections.emptyList();
+        return Collections.singletonList(user);
     }
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {

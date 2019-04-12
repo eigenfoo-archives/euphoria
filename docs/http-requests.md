@@ -61,7 +61,7 @@
 
    `/api/authentication/create/`
 
-   Payload contains `username` (e.g. `"timapple"`), `passwordHash` (e.g.
+   Payload contains `Id` (e.g. the assocaited userId or companyId), `username` (e.g. `"timapple"`), `passwordHash` (e.g.
    `"10vfcma3"`) and `isUser` (e.g. `True`).
 
 10. Edit a posting (`PUT` request).

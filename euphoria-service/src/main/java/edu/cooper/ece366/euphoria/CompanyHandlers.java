@@ -28,7 +28,7 @@ public class CompanyHandlers implements RouteProvider {
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
                 Route.sync("GET", "/company/<companyId>", this::getCompany),
-                Route.sync("POST", "/company/<name>/<website>/<description>/<username>/<passwordHash>/<isUser>",
+                Route.sync("POST", "/company/<name>/<website>/<description>",
                         this::createCompany)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
@@ -65,6 +65,7 @@ public class CompanyHandlers implements RouteProvider {
 
     @VisibleForTesting
     public List<Company> createCompany(final RequestContext rc) {
+        Company company = null;
         try {
             String name = rc.pathArgs().get("name");
             String website = rc.pathArgs().get("website");
@@ -76,30 +77,35 @@ public class CompanyHandlers implements RouteProvider {
                     config.getString("mysql.password"));
             String sqlQuery = "INSERT INTO companies (name, website, description, " +
                     "dateCreated) VALUES (?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, website);
             ps.setString(3, description);
             Date date = new Date();
             ps.setObject(4, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
-            int updateStatus = ps.executeUpdate();
-            if (updateStatus != 0){
-                String username = rc.pathArgs().get("username");
-                String passwordHash = rc.pathArgs().get("passwordHash");
-                Boolean isUser = Boolean.valueOf(rc.pathArgs().get("isUser"));
-                String sqlQueryAuth = "INSERT INTO authentications (Id, username, passwordHash, isUser)" +
-                        "VALUES (LAST_INSERT_ID(),?, ?, ?)";
-                PreparedStatement psAuth = conn.prepareStatement(sqlQueryAuth);
-                psAuth.setString(1, username);
-                psAuth.setString(2, passwordHash);
-                psAuth.setBoolean(3, isUser);
-                psAuth.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected==0) {
+                throw new SQLException("Creating new company failed, no rows affected.");
+            }
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    company = new CompanyBuilder()
+                            .companyId(generatedKeys.getInt(1))
+                            //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
+                            .name("namefield")
+                            .website("websitefield")
+                            .description("descriptonfield")
+                            .build();
+                } else {
+                    throw new SQLException("Creating new company failed, no ID obtained.");
+                }
             }
         } catch (SQLException ex) {
             System.out.println(ex);
         }
 
-        return Collections.emptyList();
+        return Collections.singletonList(company);
     }
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {
