@@ -88,7 +88,7 @@ public class UserHandlers implements RouteProvider {
             ps.setString(3, phoneNumber);
             ps.setString(4, educationLevel.toString());
             ps.setString(5, description);
-            //did not set to auto-timestamp by mysql in case want to salt. Does put correct UMT timestamp now, though
+            //did not set to auto-timestamp by mysql in case want to salt. Does put correct UTC timestamp now, though
             java.sql.Timestamp date = new java.sql.Timestamp(new java.util.Date().getTime());
             ps.setTimestamp(6, date);
             int updateStatus = ps.executeUpdate();
