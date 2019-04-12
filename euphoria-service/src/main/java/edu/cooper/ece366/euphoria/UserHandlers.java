@@ -67,7 +67,7 @@ public class UserHandlers implements RouteProvider {
     public List<User> createUser(final RequestContext rc) {
         User user = null;
         try {
-            User user = objectMapper.readValue(rc.request().payload().get().toByteArray(), User.class);
+            user = objectMapper.readValue(rc.request().payload().get().toByteArray(), User.class);
             String name = user.name();
             String email = user.email();
             String phoneNumber = user.phoneNumber();

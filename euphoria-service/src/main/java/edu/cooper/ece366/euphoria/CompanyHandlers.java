@@ -67,7 +67,7 @@ public class CompanyHandlers implements RouteProvider {
     public List<Company> createCompany(final RequestContext rc) {
         Company company = null;
         try {
-            Company company = objectMapper.readValue(rc.request().payload().get().toByteArray(), Company.class);
+            company = objectMapper.readValue(rc.request().payload().get().toByteArray(), Company.class);
             String name = company.name();
             String website = company.website();
             String description = company.description();
