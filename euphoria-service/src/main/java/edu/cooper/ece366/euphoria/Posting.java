@@ -17,4 +17,6 @@ public interface Posting {
     Industry industry();
 
     SkillLevel skillLevel();
+
+    String dateCreated();
 }

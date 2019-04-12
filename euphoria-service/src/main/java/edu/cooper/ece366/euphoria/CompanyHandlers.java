@@ -65,6 +65,7 @@ public class CompanyHandlers implements RouteProvider {
 
     @VisibleForTesting
     public List<Company> createCompany(final RequestContext rc) {
+        Company company = null;
         try {
             Company company = objectMapper.readValue(rc.request().payload().get().toByteArray(), Company.class);
             String name = company.name();
@@ -77,18 +78,35 @@ public class CompanyHandlers implements RouteProvider {
                     config.getString("mysql.password"));
             String sqlQuery = "INSERT INTO companies (name, website, description, " +
                     "dateCreated) VALUES (?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, website);
             ps.setString(3, description);
             Date date = new Date();
             ps.setObject(4, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected==0) {
+                throw new SQLException("Creating new company failed, no rows affected.");
+            }
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    company = new CompanyBuilder()
+                            .companyId(generatedKeys.getInt(1))
+                            //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
+                            .name("namefield")
+                            .website("websitefield")
+                            .description("descriptonfield")
+                            .build();
+                } else {
+                    throw new SQLException("Creating new company failed, no ID obtained.");
+                }
+            }
         } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 
-        return Collections.emptyList();
+        return Collections.singletonList(company);
     }
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {

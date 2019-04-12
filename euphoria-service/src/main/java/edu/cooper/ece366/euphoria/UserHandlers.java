@@ -67,6 +67,7 @@ public class UserHandlers implements RouteProvider {
 
     @VisibleForTesting
     public List<User> createUser(final RequestContext rc) {
+        User user = null;
         try {
             User user = objectMapper.readValue(rc.request().payload().get().toByteArray(), User.class);
             String name = user.name();
@@ -82,20 +83,41 @@ public class UserHandlers implements RouteProvider {
             String sqlQuery = "INSERT INTO users (name, email, phoneNumber, " +
                     "educationLevel, description, dateCreated) " +
                     "VALUES (?, ?, ?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, email);
             ps.setString(3, phoneNumber);
             ps.setString(4, educationLevel.toString());
             ps.setString(5, description);
-            Date date = new Date();
-            ps.setObject(6, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
-            ps.executeUpdate();
+            //did not set to auto-timestamp by mysql in case want to salt. Does put correct UTC timestamp now, though
+            java.sql.Timestamp date = new java.sql.Timestamp(new java.util.Date().getTime());
+            ps.setTimestamp(6, date);
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected==0) {
+                throw new SQLException("Creating new user failed, no rows affected.");
+            }
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    System.out.println("the generated key was" + generatedKeys.getLong(1));
+                    user = new UserBuilder()
+                            .userId(generatedKeys.getInt(1))
+                            //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
+                            .name("namefield")
+                            .email("emailfield")
+                            .phoneNumber("phoneNumfield")
+                            .educationLevel(EducationLevel.valueOf("PHD"))
+                            .description("descriptonfield")
+                            .build();
+                } else {
+                    throw new SQLException("Creating new user failed, no ID obtained.");
+                }
+            }
         } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 
-        return Collections.emptyList();
+        return Collections.singletonList(user);
     }
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {

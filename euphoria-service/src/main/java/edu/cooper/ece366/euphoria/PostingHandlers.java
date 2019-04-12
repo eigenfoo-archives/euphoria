@@ -62,6 +62,7 @@ public class PostingHandlers implements RouteProvider {
                         .location(Location.valueOf(rs.getString("location")))
                         .industry(Industry.valueOf(rs.getString("industry")))
                         .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
+                        .dateCreated(rs.getString("dateCreated"))
                         .build();
             }
         } catch (SQLException ex) {
@@ -118,6 +119,7 @@ public class PostingHandlers implements RouteProvider {
                         .location(Location.valueOf(rs.getString("location")))
                         .industry(Industry.valueOf(rs.getString("industry")))
                         .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
+                        .dateCreated(rs.getString("dateCreated"))
                         .build();
 
                 postingList.add(posting);
@@ -150,6 +152,40 @@ public class PostingHandlers implements RouteProvider {
                         .location(Location.valueOf(rs.getString("location")))
                         .industry(Industry.valueOf(rs.getString("industry")))
                         .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
+                        .dateCreated(rs.getString("dateCreated"))
+                        .build();
+
+                postingList.add(posting);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+
+        return postingList;
+    }
+
+    @VisibleForTesting
+    public List<Posting> getRandomPostings(final RequestContext rc) {
+        ArrayList<Posting> postingList = new ArrayList<Posting>();
+
+        try {
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
+            String sqlQuery = "SELECT * FROM postings ORDER BY RAND() LIMIT 10";
+            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Posting posting = new PostingBuilder()
+                        .postingId(rs.getInt("postingId"))
+                        .jobTitle(rs.getString("jobTitle"))
+                        .description(rs.getString("description"))
+                        .location(Location.valueOf(rs.getString("location")))
+                        .industry(Industry.valueOf(rs.getString("industry")))
+                        .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
+                        .dateCreated(rs.getString("dateCreated"))
                         .build();
 
                 postingList.add(posting);
@@ -177,8 +213,7 @@ public class PostingHandlers implements RouteProvider {
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
             String sqlQuery = "INSERT INTO postings (companyId, jobTitle, " +
-                    "description, location, industry, skillLevel, " +
-                    "dateCreated) VALUES (?, ?, ?, ?, ?, ?, ?)";
+                    "description, location, industry, skillLevel) VALUES (?, ?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, companyId);
             ps.setString(2, jobTitle);
@@ -186,8 +221,7 @@ public class PostingHandlers implements RouteProvider {
             ps.setString(4, location.toString());
             ps.setString(5, industry.toString());
             ps.setString(6, skillLevel.toString());
-            Date date = new Date();
-            ps.setObject(7, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
+            //timestamped automatically in UTC by mysql database
             ps.executeUpdate();
         } catch (SQLException | IOException ex) {
             System.out.println(ex);
