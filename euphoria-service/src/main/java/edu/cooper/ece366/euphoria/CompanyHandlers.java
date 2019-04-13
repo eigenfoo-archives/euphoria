@@ -14,6 +14,7 @@ import java.time.ZoneId;
 import java.util.Collections;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class CompanyHandlers implements RouteProvider {
@@ -67,10 +68,10 @@ public class CompanyHandlers implements RouteProvider {
     public List<Company> createCompany(final RequestContext rc) {
         Company company = null;
         try {
-            company = objectMapper.readValue(rc.request().payload().get().toByteArray(), Company.class);
-            String name = company.name();
-            String website = company.website();
-            String description = company.description();
+            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            String name = jsonMap.get("name").toString();
+            String website = jsonMap.get("website").toString();
+            String description = jsonMap.get("description").toString();
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),

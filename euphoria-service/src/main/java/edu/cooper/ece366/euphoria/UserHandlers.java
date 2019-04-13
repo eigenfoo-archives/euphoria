@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class UserHandlers implements RouteProvider {
@@ -67,12 +68,12 @@ public class UserHandlers implements RouteProvider {
     public List<User> createUser(final RequestContext rc) {
         User user = null;
         try {
-            user = objectMapper.readValue(rc.request().payload().get().toByteArray(), User.class);
-            String name = user.name();
-            String email = user.email();
-            String phoneNumber = user.phoneNumber();
-            EducationLevel educationLevel = user.educationLevel();
-            String description = user.description();
+            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            String name = jsonMap.get("name").toString();
+            String email = jsonMap.get("email").toString();
+            String phoneNumber = jsonMap.get("phoneNumber").toString();
+            EducationLevel educationLevel = EducationLevel.valueOf(jsonMap.get("educationLevel").toString());
+            String description = jsonMap.get("description").toString();
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),

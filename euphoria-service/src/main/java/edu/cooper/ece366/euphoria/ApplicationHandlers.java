@@ -13,6 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class ApplicationHandlers implements RouteProvider {
@@ -102,11 +103,11 @@ public class ApplicationHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Application> createApplication(final RequestContext rc) {
         try {
-            Application application = objectMapper.readValue(rc.request().payload().get().toByteArray(), Application.class);
-            Integer postingId = Integer.valueOf(application.postingId());
-            Integer userId = Integer.valueOf(application.userId());
-            byte[] resume = application.resume();
-            byte[] coverLetter = application.coverLetter();
+            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            Integer postingId = Integer.valueOf(jsonMap.get("postingId").toString());
+            Integer userId = Integer.valueOf(jsonMap.get("userId").toString());
+            byte[] resume = jsonMap.get("resume").toString().getBytes();
+            byte[] coverLetter = jsonMap.get("coverLetter").toString().getBytes();
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),

@@ -13,6 +13,7 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class PostingHandlers implements RouteProvider {
@@ -55,6 +56,7 @@ public class PostingHandlers implements RouteProvider {
             if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
                 posting = new PostingBuilder()
                         .postingId(rs.getInt("postingId"))
+                        .companyId(rs.getInt("companyId"))
                         .jobTitle(rs.getString("jobTitle"))
                         .description(rs.getString("description"))
                         .location(Location.valueOf(rs.getString("location")))
@@ -198,13 +200,13 @@ public class PostingHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Posting> createPosting(final RequestContext rc) {
         try {
-            Posting posting = objectMapper.readValue(rc.request().payload().get().toByteArray(), Posting.class);
-            Integer companyId = posting.companyId();
-            String jobTitle = posting.jobTitle();
-            String description = posting.description();
-            Location location = posting.location();
-            Industry industry = posting.industry();
-            SkillLevel skillLevel = posting.skillLevel();
+            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            Integer companyId = (Integer) jsonMap.get("companyId");
+            String jobTitle = jsonMap.get("companyId").toString();
+            String description = jsonMap.get("description").toString();
+            Location location = Location.valueOf(jsonMap.get("location").toString());
+            Industry industry = Industry.valueOf(jsonMap.get("industry").toString());
+            SkillLevel skillLevel = SkillLevel.valueOf(jsonMap.get("skillLevel").toString());
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
