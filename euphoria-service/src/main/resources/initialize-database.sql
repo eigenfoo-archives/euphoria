@@ -31,14 +31,14 @@ CREATE TABLE users (userId INT AUTO_INCREMENT PRIMARY KEY,
                     phoneNumber VARCHAR(20) NOT NULL,
                     educationLevel VARCHAR(20) NOT NULL,
                     description TEXT NOT NULL,
-                    dateCreated TIMESTAMP NOT NULL);
+                    dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 INSERT INTO users
-    (name, email, phoneNumber, educationLevel, description, dateCreated)
+    (name, email, phoneNumber, educationLevel, description)
 VALUES
-    ("Johnny Appleseed", "john@appleseed.com", "123-456-7890", "JD", "I like Macintoshes.", "2017-03-06 15:20:00"),
-    ("Tim Apple", "tim@apple.com", "456-123-7890", "MASTERS", "I also like Macintoshes.", "2018-02-10 18:45:00"),
-    ("Jeff Bozo", "jeff@bozo.com", "890-123-4567", "BACHELORS", "I will not work in Queens.", "2019-08-01 01:00:00");
+    ("Johnny Appleseed", "john@appleseed.com", "123-456-7890", "JD", "I like Macintoshes."),
+    ("Tim Apple", "tim@apple.com", "456-123-7890", "MASTERS", "I also like Macintoshes."),
+    ("Jeff Bozo", "jeff@bozo.com", "890-123-4567", "BACHELORS", "I will not work in Queens.");
 
 CREATE TABLE companies (companyId INT AUTO_INCREMENT PRIMARY KEY,
                         name VARCHAR(40) NOT NULL,

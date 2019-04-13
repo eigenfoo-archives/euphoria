@@ -79,8 +79,7 @@ public class UserHandlers implements RouteProvider {
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
             String sqlQuery = "INSERT INTO users (name, email, phoneNumber, " +
-                    "educationLevel, description, dateCreated) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+                    "educationLevel, description) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, email);
