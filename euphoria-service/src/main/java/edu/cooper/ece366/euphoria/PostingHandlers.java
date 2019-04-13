@@ -30,6 +30,7 @@ public class PostingHandlers implements RouteProvider {
         return Stream.of(
                 Route.sync("GET", "/api/posting/<postingId>", this::getPosting),
                 Route.sync("GET", "/api/posting/all", this::getAllPostings),
+                Route.sync("GET", "/api/posting/random", this::getRandomPostings),
                 // FIXME this http request should use query parameters instead of path arguments
                 Route.sync("GET", "/api/posting/<location>/<industry>/<skillLevel>", this::searchPostings),
                 Route.sync("POST", "/api/posting/", this::createPosting),
@@ -201,8 +202,8 @@ public class PostingHandlers implements RouteProvider {
     public List<Posting> createPosting(final RequestContext rc) {
         try {
             Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
-            Integer companyId = (Integer) jsonMap.get("companyId");
-            String jobTitle = jsonMap.get("companyId").toString();
+            Integer companyId = Integer.parseInt(jsonMap.get("companyId").toString());
+            String jobTitle = jsonMap.get("jobTitle").toString();
             String description = jsonMap.get("description").toString();
             Location location = Location.valueOf(jsonMap.get("location").toString());
             Industry industry = Industry.valueOf(jsonMap.get("industry").toString());
