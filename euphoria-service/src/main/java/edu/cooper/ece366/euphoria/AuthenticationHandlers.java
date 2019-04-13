@@ -8,6 +8,7 @@ import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.Collections;
 import java.util.List;
@@ -25,10 +26,8 @@ public class AuthenticationHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/authentication/<username>/<passwordHash>", this::getAuthentication),
-                Route.sync("POST",
-                        "/authentication/<Id>/<username>/<passwordHash>/<isUser>",
-                        this::createAuthentication)
+                Route.sync("GET", "/api/authentication/<username>/<passwordHash>", this::getAuthentication),
+                Route.sync("POST", "/api/authentication", this::createAuthentication)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -52,7 +51,7 @@ public class AuthenticationHandlers implements RouteProvider {
 
             if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
                 authentication = new AuthenticationBuilder()
-                        .Id(rs.getInt("Id"))
+                        .id(rs.getInt("id"))
                         .username(rs.getString("username"))
                         .passwordHash(rs.getString("passwordHash"))
                         .isUser(rs.getBoolean("isUser"))
@@ -68,24 +67,25 @@ public class AuthenticationHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Authentication> createAuthentication(final RequestContext rc) {
         try {
-            Integer Id = Integer.valueOf(rc.pathArgs().get("Id"));  //Either userId or companyId
-            String username = rc.pathArgs().get("username");
-            String passwordHash = rc.pathArgs().get("passwordHash");
-            Boolean isUser = Boolean.valueOf(rc.pathArgs().get("isUser"));
+            Authentication authentication = objectMapper.readValue(rc.request().payload().get().toByteArray(), Authentication.class);
+            Integer id = authentication.id();
+            String username = authentication.username();
+            String passwordHash = authentication.passwordHash();
+            Boolean isUser = authentication.isUser();
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
-            String sqlQuery = "INSERT INTO authentications (Id, username, passwordHash, isUser)" +
+            String sqlQuery = "INSERT INTO authentications (id, username, passwordHash, isUser)" +
                     "VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setInt(1, Id);
+            ps.setInt(1, id);
             ps.setString(2, username);
             ps.setString(3, passwordHash);
             ps.setBoolean(4, isUser);
             ps.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 

@@ -8,9 +8,11 @@ import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class CookieHandlers implements RouteProvider {
@@ -25,10 +27,8 @@ public class CookieHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/cookie/<cookieCheck>", this::getCookie),
-                Route.sync("POST",
-                        "/cookie/<username>/<passwordHash>",
-                        this::createCookie)
+                Route.sync("GET", "/api/cookie/<cookieCheck>", this::getCookie),
+                Route.sync("POST", "/api/cookie", this::createCookie)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -49,7 +49,7 @@ public class CookieHandlers implements RouteProvider {
 
             if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
                 cookie = new CookieBuilder()
-                        //.Id(rs.getInt("Id")) // Either userId or companyId
+                        //.id(rs.getInt("id")) // Either userId or companyId
                         //.isUser(rs.getBoolean("isUser"))
                         .cookie(rs.getString("cookie"))
                         .build();
@@ -65,9 +65,10 @@ public class CookieHandlers implements RouteProvider {
     public List<Cookie> createCookie(final RequestContext rc) {
         Cookie cookie = null;
         try {
-            String username = rc.pathArgs().get("username");
-            String passwordHash = rc.pathArgs().get("passwordHash");
-            Integer Id;
+            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            String username = jsonMap.get("username").toString();
+            String passwordHash = jsonMap.get("passwordHash").toString();
+            Integer id;
             Boolean isUser;
 
             Connection conn = DriverManager.getConnection(
@@ -79,14 +80,15 @@ public class CookieHandlers implements RouteProvider {
             ps.setString(1, username);
             ps.setString(2, passwordHash);
             ResultSet rs = ps.executeQuery();
+
             if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
-                Id = rs.getInt("Id");
+                id = rs.getInt("id");
                 isUser = rs.getBoolean("isUser");
                 if (rs != null) {
                     String cookieNew = "abc" + username + "1234" + passwordHash.substring(0, 3); //TODO: make a better cookie hashing function
-                    String sqlQueryIns = "INSERT INTO cookies (Id, isUser, cookie) VALUES (?, ?, ?)";
+                    String sqlQueryIns = "INSERT INTO cookies (id, isUser, cookie) VALUES (?, ?, ?)";
                     PreparedStatement psIns = conn.prepareStatement(sqlQueryIns);
-                    psIns.setInt(1, Id); // Either userId or companyId
+                    psIns.setInt(1, id); // Either userId or companyId
                     psIns.setBoolean(2, isUser);
                     psIns.setString(3, cookieNew);
                     psIns.executeUpdate();
@@ -94,9 +96,9 @@ public class CookieHandlers implements RouteProvider {
                     cookie = new CookieBuilder()
                             .cookie(cookieNew)
                             .build();
-                    }
                 }
-        } catch (SQLException ex) {
+            }
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 

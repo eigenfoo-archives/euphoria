@@ -31,26 +31,26 @@ CREATE TABLE users (userId INT AUTO_INCREMENT PRIMARY KEY,
                     phoneNumber VARCHAR(20) NOT NULL,
                     educationLevel VARCHAR(20) NOT NULL,
                     description TEXT NOT NULL,
-                    dateCreated TIMESTAMP NOT NULL);
+                    dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 INSERT INTO users
-    (name, email, phoneNumber, educationLevel, description, dateCreated)
+    (name, email, phoneNumber, educationLevel, description)
 VALUES
-    ("Johnny Appleseed", "john@appleseed.com", "123-456-7890", "JD", "I like Macintoshes.", "2017-03-06 15:20:00"),
-    ("Tim Apple", "tim@apple.com", "456-123-7890", "MASTERS", "I also like Macintoshes.", "2018-02-10 18:45:00"),
-    ("Jeff Bozo", "jeff@bozo.com", "890-123-4567", "BACHELORS", "I will not work in Queens.", "2019-08-01 01:00:00");
+    ("Johnny Appleseed", "john@appleseed.com", "123-456-7890", "JD", "I like Macintoshes."),
+    ("Tim Apple", "tim@apple.com", "456-123-7890", "MASTERS", "I also like Macintoshes."),
+    ("Jeff Bozo", "jeff@bozo.com", "890-123-4567", "BACHELORS", "I will not work in Queens.");
 
 CREATE TABLE companies (companyId INT AUTO_INCREMENT PRIMARY KEY,
                         name VARCHAR(40) NOT NULL,
                         website VARCHAR (40) NOT NULL,
                         description TEXT NOT NULL,
-                        dateCreated DATETIME NOT NULL);
+                        dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 INSERT INTO companies
-    (name, website, description, dateCreated)
+    (name, website, description)
 VALUES
-    ("Apple", "apple.com", "Macintoshes.", "2018-02-11 18:50:00"),
-    ("Amazon", "bozo.com", "Not in Queens.", "2019-08-02 01:15:00");
+    ("Apple", "apple.com", "Macintoshes."),
+    ("Amazon", "bozo.com", "Not in Queens.");
 
 -- location is one of "NEWYORK",
 --                    "LONDON",
@@ -94,7 +94,7 @@ VALUES
 
 CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
                            postingId INT NOT NULL,  -- FOREIGN KEY(postingId), REFERENCES postings (postingId),
-                           userId INT NOT NULL, -- FOREIGN KEY(userId), REFERENCES users (userID), 
+                           userId INT NOT NULL, -- FOREIGN KEY(userId), REFERENCES users (userId),
                            resume LONGBLOB NOT NULL,
                            coverLetter LONGBLOB NOT NULL,
                            dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
@@ -102,18 +102,18 @@ CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
 INSERT INTO applications
     (postingId, userId, resume, coverLetter, dateCreated)
 VALUES
-	(1, 1, x'5468697320697320616e206578616d706c6520726573756d652e0a4e616d653a204a6f686e6e79204170706c65736565640a50726576696f757320576f726b20457870657269656e63653a204170706c65204661726d0a536b696c6c733a204d6163696e746f736820436f6d7075746572730a0a', x'553d7a34', "2018-07-11 05:30:00"),
+	(1, 1, x'54686973', x'553d7a34', "2018-07-11 05:30:00"),
 	(1, 2, x'453d7a38', x'453d7a39', "2018-07-13 03:22:00"),
 	(3, 3, x'653d7a38', x'653e7a39', "2019-02-13 11:40:33");
 
 
-CREATE TABLE authentications (Id INT NOT NULL,
+CREATE TABLE authentications (id INT NOT NULL,
                               username VARCHAR(30) NOT NULL,
                               passwordHash VARCHAR(40) NOT NULL,
                               isUser BOOLEAN NOT NULL);
 
 INSERT INTO authentications
-    (Id, username, passwordHash, isUser)
+    (id, username, passwordHash, isUser)
 VALUES
     (1, "johnnyappleseed", "hash", TRUE),
     (2, "timapple", "hash", TRUE),
@@ -122,7 +122,7 @@ VALUES
     (2, "amazon", "hash", FALSE);
 
 
-CREATE TABLE cookies (Id INT NOT NULL,
+CREATE TABLE cookies (id INT NOT NULL,
                       isUser BOOLEAN NOT NULL,
                       cookie VARCHAR(36) NOT NULL,
                       dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
