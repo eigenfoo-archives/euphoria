@@ -44,13 +44,13 @@ CREATE TABLE companies (companyId INT AUTO_INCREMENT PRIMARY KEY,
                         name VARCHAR(40) NOT NULL,
                         website VARCHAR (40) NOT NULL,
                         description TEXT NOT NULL,
-                        dateCreated DATETIME NOT NULL);
+                        dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 INSERT INTO companies
-    (name, website, description, dateCreated)
+    (name, website, description)
 VALUES
-    ("Apple", "apple.com", "Macintoshes.", "2018-02-11 18:50:00"),
-    ("Amazon", "bozo.com", "Not in Queens.", "2019-08-02 01:15:00");
+    ("Apple", "apple.com", "Macintoshes."),
+    ("Amazon", "bozo.com", "Not in Queens.");
 
 -- location is one of "NEWYORK",
 --                    "LONDON",
@@ -102,7 +102,7 @@ CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
 INSERT INTO applications
     (postingId, userId, resume, coverLetter, dateCreated)
 VALUES
-	(1, 1, x'5468697320697320616e206578616d706c6520726573756d652e0a4e616d653a204a6f686e6e79204170706c65736565640a50726576696f757320576f726b20457870657269656e63653a204170706c65204661726d0a536b696c6c733a204d6163696e746f736820436f6d7075746572730a0a', x'553d7a34', "2018-07-11 05:30:00"),
+	(1, 1, x'54686973', x'553d7a34', "2018-07-11 05:30:00"),
 	(1, 2, x'453d7a38', x'453d7a39', "2018-07-13 03:22:00"),
 	(3, 3, x'653d7a38', x'653e7a39', "2019-02-13 11:40:33");
 

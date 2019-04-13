@@ -76,14 +76,11 @@ public class CompanyHandlers implements RouteProvider {
                     config.getString("mysql.jdbc"),
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
-            String sqlQuery = "INSERT INTO companies (name, website, description, " +
-                    "dateCreated) VALUES (?, ?, ?, ?)";
+            String sqlQuery = "INSERT INTO companies (name, website, description) VALUES (?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, website);
             ps.setString(3, description);
-            Date date = new Date();
-            ps.setObject(4, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
             int rowsAffected = ps.executeUpdate();
 
             if (rowsAffected == 0) {
@@ -91,6 +88,7 @@ public class CompanyHandlers implements RouteProvider {
             }
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
+                    System.out.println(generatedKeys.getInt(1));
                     company = new CompanyBuilder()
                             .companyId(generatedKeys.getInt(1))
                             //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
