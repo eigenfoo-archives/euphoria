@@ -115,6 +115,7 @@ public class PostingHandlers implements RouteProvider {
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
                         .postingId(rs.getInt("postingId"))
+                        .companyId(rs.getInt("companyId"))
                         .jobTitle(rs.getString("jobTitle"))
                         .description(rs.getString("description"))
                         .location(Location.valueOf(rs.getString("location")))
@@ -148,6 +149,7 @@ public class PostingHandlers implements RouteProvider {
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
                         .postingId(rs.getInt("postingId"))
+                        .companyId(rs.getInt("companyId"))
                         .jobTitle(rs.getString("jobTitle"))
                         .description(rs.getString("description"))
                         .location(Location.valueOf(rs.getString("location")))
@@ -181,6 +183,7 @@ public class PostingHandlers implements RouteProvider {
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
                         .postingId(rs.getInt("postingId"))
+                        .companyId(rs.getInt("companyId"))
                         .jobTitle(rs.getString("jobTitle"))
                         .description(rs.getString("description"))
                         .location(Location.valueOf(rs.getString("location")))
@@ -234,12 +237,13 @@ public class PostingHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Posting> editPosting(final RequestContext rc) {
         try {
-            Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
-            String jobTitle = rc.pathArgs().get("jobTitle");
-            String description = rc.pathArgs().get("description");
-            Location location = Location.valueOf(rc.pathArgs().get("location"));
-            Industry industry = Industry.valueOf(rc.pathArgs().get("industry"));
-            SkillLevel skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel"));
+            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            Integer postingId = Integer.parseInt(jsonMap.get("postingId").toString());
+            String jobTitle = jsonMap.get("jobTitle").toString();
+            String description = jsonMap.get("description").toString();
+            Location location = Location.valueOf(jsonMap.get("location").toString());
+            Industry industry = Industry.valueOf(jsonMap.get("industry").toString());
+            SkillLevel skillLevel = SkillLevel.valueOf(jsonMap.get("skillLevel").toString());
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
@@ -255,7 +259,7 @@ public class PostingHandlers implements RouteProvider {
             ps.setString(5, skillLevel.toString());
             ps.setInt(6, postingId);
             ps.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 

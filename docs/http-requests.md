@@ -18,44 +18,50 @@
 
    Payload contains nothing.
 
-4. Search postings by location, industry and skill level (`GET` request).
+4. Get random postings (`GET` request).
+
+   `/api/posting/random`
+
+   Payload contains nothing.
+
+5. Search postings by location, industry and skill level (`GET` request).
 
    `/api/posting/<location>/<industry>/<skillLevel>`
 
    Payload contains nothing.
 
-5. Get application (`GET` request).
+6. Get application (`GET` request).
 
    `/api/application/<applicationId>`
 
    Payload contains nothing.
 
-6. Get all applications to a certain posting (`GET` request).
+7. Get all applications to a certain posting (`GET` request).
 
    `/api/application/posting/<postingId>`
 
    Payload contains nothing.
 
-7. Get a user (`GET` request).
+8. Get a user (`GET` request).
 
    `/api/user/<userId>`
 
    Payload contains nothing.
 
-8. Get a company (`GET` request).
+9. Get a company (`GET` request).
 
    `/api/company/<companyId>`
 
    Payload contains nothing.
 
-9. Create a new authentication (`POST` request).
+10. Create a new authentication (`POST` request).
 
-   `/api/authentication`
+    `/api/authentication`
 
-   Payload contains `Id` (e.g. the assocaited userId or companyId), `username` (e.g. `"timapple"`), `passwordHash` (e.g.
-   `"10vfcma3"`) and `isUser` (e.g. `True`).
+    Payload contains `id` (e.g. the associated userId or companyId), `username` (e.g. `"timapple"`), `passwordHash` (e.g.
+    `"10vfcma3"`) and `isUser` (e.g. `True`).
 
-10. Create a new posting (`POST` request).
+11. Create a new posting (`POST` request).
 
     `/api/posting`
 
@@ -64,7 +70,7 @@
     `location` (e.g. `"NEWYORK"`), `industry` (e.g. `"FINANCE"`) and `skillLevel`
     (e.g. `"INTERNSHIP"`).
 
-11. Create a new application (`POST` request).
+12. Create a new application (`POST` request).
 
     `/api/application`
 
@@ -72,7 +78,7 @@
     hex representation of a file) and `coverLetter` (another hex string string
     representation of a file).
 
-12. Create a new user (`POST` request).
+13. Create a new user (`POST` request).
 
     `/api/user`
 
@@ -81,33 +87,41 @@
     is a string, not a number!), `educationLevel` (e.g. `"BACHELORS"`) and
     `description` (e.g. `"Am engineer pls hire."`).
 
-13. Create a new company (`POST` request).
+14. Create a new company (`POST` request).
 
     `/api/company`
 
     Payload contains `name` (e.g. `"Boeing"`), `website` (e.g. `"boeing.com"`)
     and `description` (e.g. `"Only the safest of airplanes."`).
 
-14. Edit a posting (`PUT` request).
+15. Edit a posting (`PUT` request).
 
     `/api/posting`
 
-    Payload contains `companyId` (e.g. `1`), `jobTitle` (e.g. `"Software
+    Payload contains `postingId` (e.g. `1`), `jobTitle` (e.g. `"Software
     Engineer"`), `description` (e.g. `"Engineering the softest of wares."`),
-    `location` (e.g. `"NEWYORK"`), `industry` (e.g. `"FINANCE"`) and `skillLevel`
-    (e.g. `"INTERNSHIP"`).
+    `location` (e.g. `"NEWYORK"`), `industry` (e.g. `"FINANCE"`) and
+    `skillLevel` (e.g. `"INTERNSHIP"`). Be careful that unlike creating a
+    posting you must pass the `postingId`, _not_ `companyId`, to edit a posting!
 
-15. Delete a posting (`DELETE` request).
+16. Delete a posting (`DELETE` request).
 
     `/api/posting/<postingId>`
 
     Payload contains nothing.
 
-10. Create a new cookie (`POST` request).
+17. Create a new cookie (`POST` request).
 
-    `/api/cookie/create/`
+    `/api/cookie/`
 
-    Payload contains `username` (e.g. `"timapple"`), `passwordHash` (e.g.`"10vfcma3"`)
+    Payload contains `username` (e.g. `"timapple"`), `passwordHash`
+    (e.g.`"10vfcma3"`)
+
+18. Get a cookie (`GET` request).
+
+    `/api/cookie/<cookieCheck>`
+
+    Payload contains nothing.
 
 ---
 

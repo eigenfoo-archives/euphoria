@@ -8,9 +8,11 @@ import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class CookieHandlers implements RouteProvider {
@@ -25,10 +27,8 @@ public class CookieHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/cookie/<cookieCheck>", this::getCookie),
-                Route.sync("POST",
-                        "/cookie/<username>/<passwordHash>",
-                        this::createCookie)
+                Route.sync("GET", "/api/cookie/<cookieCheck>", this::getCookie),
+                Route.sync("POST", "/api/cookie", this::createCookie)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -65,8 +65,9 @@ public class CookieHandlers implements RouteProvider {
     public List<Cookie> createCookie(final RequestContext rc) {
         Cookie cookie = null;
         try {
-            String username = rc.pathArgs().get("username");
-            String passwordHash = rc.pathArgs().get("passwordHash");
+            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            String username = jsonMap.get("username").toString();
+            String passwordHash = jsonMap.get("passwordHash").toString();
             Integer id;
             Boolean isUser;
 
@@ -97,7 +98,7 @@ public class CookieHandlers implements RouteProvider {
                             .build();
                 }
             }
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 
