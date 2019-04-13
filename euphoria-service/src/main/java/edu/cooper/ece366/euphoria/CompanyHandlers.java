@@ -88,7 +88,6 @@ public class CompanyHandlers implements RouteProvider {
             }
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
-                    System.out.println(generatedKeys.getInt(1));
                     company = new CompanyBuilder()
                             .companyId(generatedKeys.getInt(1))
                             //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
