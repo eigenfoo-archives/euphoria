@@ -8,12 +8,12 @@ import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
 
+import java.io.IOException;
 import java.sql.*;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class PostingHandlers implements RouteProvider {
@@ -28,17 +28,14 @@ public class PostingHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/posting/<postingId>", this::getPosting),
-                Route.sync("GET", "/posting/<location>/<industry>/<skillLevel>", this::searchPostings),
-                Route.sync("GET", "/posting/getAll", this::getAllPostings),
-                Route.sync("GET", "/posting/getRandom", this::getRandomPostings),
-                Route.sync("POST",
-                        "/posting/<companyId>/<jobTitle>/<description>/<location>/<industry>/<skillLevel>",
-                        this::createPosting),
-                Route.sync("PUT",
-                        "/posting/<postingId>/<jobTitle>/<description>/<location>/<industry>/<skillLevel>",
-                        this::editPosting),
-                Route.sync("DELETE", "/posting/<postingId>", this::deletePosting)
+                Route.sync("GET", "/api/posting/<postingId>", this::getPosting),
+                Route.sync("GET", "/api/posting/all", this::getAllPostings),
+                Route.sync("GET", "/api/posting/random", this::getRandomPostings),
+                // FIXME this http request should use query parameters instead of path arguments
+                Route.sync("GET", "/api/posting/<location>/<industry>/<skillLevel>", this::searchPostings),
+                Route.sync("POST", "/api/posting/", this::createPosting),
+                Route.sync("PUT", "/api/posting/", this::editPosting),
+                Route.sync("DELETE", "/api/posting/<postingId>", this::deletePosting)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -60,6 +57,7 @@ public class PostingHandlers implements RouteProvider {
             if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
                 posting = new PostingBuilder()
                         .postingId(rs.getInt("postingId"))
+                        .companyId(rs.getInt("companyId"))
                         .jobTitle(rs.getString("jobTitle"))
                         .description(rs.getString("description"))
                         .location(Location.valueOf(rs.getString("location")))
@@ -117,6 +115,7 @@ public class PostingHandlers implements RouteProvider {
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
                         .postingId(rs.getInt("postingId"))
+                        .companyId(rs.getInt("companyId"))
                         .jobTitle(rs.getString("jobTitle"))
                         .description(rs.getString("description"))
                         .location(Location.valueOf(rs.getString("location")))
@@ -150,6 +149,7 @@ public class PostingHandlers implements RouteProvider {
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
                         .postingId(rs.getInt("postingId"))
+                        .companyId(rs.getInt("companyId"))
                         .jobTitle(rs.getString("jobTitle"))
                         .description(rs.getString("description"))
                         .location(Location.valueOf(rs.getString("location")))
@@ -183,6 +183,7 @@ public class PostingHandlers implements RouteProvider {
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
                         .postingId(rs.getInt("postingId"))
+                        .companyId(rs.getInt("companyId"))
                         .jobTitle(rs.getString("jobTitle"))
                         .description(rs.getString("description"))
                         .location(Location.valueOf(rs.getString("location")))
@@ -203,12 +204,13 @@ public class PostingHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Posting> createPosting(final RequestContext rc) {
         try {
-            Integer companyId = Integer.valueOf(rc.pathArgs().get("companyId"));
-            String jobTitle = rc.pathArgs().get("jobTitle");
-            String description = rc.pathArgs().get("description");
-            Location location = Location.valueOf(rc.pathArgs().get("location"));
-            Industry industry = Industry.valueOf(rc.pathArgs().get("industry"));
-            SkillLevel skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel"));
+            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            Integer companyId = Integer.parseInt(jsonMap.get("companyId").toString());
+            String jobTitle = jsonMap.get("jobTitle").toString();
+            String description = jsonMap.get("description").toString();
+            Location location = Location.valueOf(jsonMap.get("location").toString());
+            Industry industry = Industry.valueOf(jsonMap.get("industry").toString());
+            SkillLevel skillLevel = SkillLevel.valueOf(jsonMap.get("skillLevel").toString());
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
@@ -225,7 +227,7 @@ public class PostingHandlers implements RouteProvider {
             ps.setString(6, skillLevel.toString());
             //timestamped automatically in UTC by mysql database
             ps.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 
@@ -235,12 +237,13 @@ public class PostingHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Posting> editPosting(final RequestContext rc) {
         try {
-            Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
-            String jobTitle = rc.pathArgs().get("jobTitle");
-            String description = rc.pathArgs().get("description");
-            Location location = Location.valueOf(rc.pathArgs().get("location"));
-            Industry industry = Industry.valueOf(rc.pathArgs().get("industry"));
-            SkillLevel skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel"));
+            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            Integer postingId = Integer.parseInt(jsonMap.get("postingId").toString());
+            String jobTitle = jsonMap.get("jobTitle").toString();
+            String description = jsonMap.get("description").toString();
+            Location location = Location.valueOf(jsonMap.get("location").toString());
+            Industry industry = Industry.valueOf(jsonMap.get("industry").toString());
+            SkillLevel skillLevel = SkillLevel.valueOf(jsonMap.get("skillLevel").toString());
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
@@ -256,7 +259,7 @@ public class PostingHandlers implements RouteProvider {
             ps.setString(5, skillLevel.toString());
             ps.setInt(6, postingId);
             ps.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 

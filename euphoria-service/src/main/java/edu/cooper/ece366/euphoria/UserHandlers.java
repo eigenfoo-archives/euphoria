@@ -8,11 +8,11 @@ import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
 
+import java.io.IOException;
 import java.sql.*;
-import java.time.ZoneId;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class UserHandlers implements RouteProvider {
@@ -27,10 +27,8 @@ public class UserHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/user/<userId>", this::getUser),
-                Route.sync("POST",
-                        "/user/<name>/<email>/<phoneNumber>/<educationLevel>/<description>",
-                        this::createUser)
+                Route.sync("GET", "/api/user/<userId>", this::getUser),
+                Route.sync("POST", "/api/user", this::createUser)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -70,31 +68,28 @@ public class UserHandlers implements RouteProvider {
     public List<User> createUser(final RequestContext rc) {
         User user = null;
         try {
-            String name = rc.pathArgs().get("name");
-            String email = rc.pathArgs().get("email");
-            String phoneNumber = rc.pathArgs().get("phoneNumber");
-            EducationLevel educationLevel = EducationLevel.valueOf(rc.pathArgs().get("educationLevel"));
-            String description = rc.pathArgs().get("description");
+            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            String name = jsonMap.get("name").toString();
+            String email = jsonMap.get("email").toString();
+            String phoneNumber = jsonMap.get("phoneNumber").toString();
+            EducationLevel educationLevel = EducationLevel.valueOf(jsonMap.get("educationLevel").toString());
+            String description = jsonMap.get("description").toString();
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
             String sqlQuery = "INSERT INTO users (name, email, phoneNumber, " +
-                    "educationLevel, description, dateCreated) " +
-                    "VALUES (?, ?, ?, ?, ?, ?)";
+                    "educationLevel, description) VALUES (?, ?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, email);
             ps.setString(3, phoneNumber);
             ps.setString(4, educationLevel.toString());
             ps.setString(5, description);
-            //did not set to auto-timestamp by mysql in case want to salt. Does put correct UTC timestamp now, though
-            java.sql.Timestamp date = new java.sql.Timestamp(new java.util.Date().getTime());
-            ps.setTimestamp(6, date);
             int rowsAffected = ps.executeUpdate();
 
-            if (rowsAffected==0) {
+            if (rowsAffected == 0) {
                 throw new SQLException("Creating new user failed, no rows affected.");
             }
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
@@ -113,7 +108,7 @@ public class UserHandlers implements RouteProvider {
                     throw new SQLException("Creating new user failed, no ID obtained.");
                 }
             }
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 

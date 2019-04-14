@@ -8,11 +8,11 @@ import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
 
+import java.io.IOException;
 import java.sql.*;
-import java.time.ZoneId;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class CompanyHandlers implements RouteProvider {
@@ -27,9 +27,8 @@ public class CompanyHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/company/<companyId>", this::getCompany),
-                Route.sync("POST", "/company/<name>/<website>/<description>",
-                        this::createCompany)
+                Route.sync("GET", "/api/company/<companyId>", this::getCompany),
+                Route.sync("POST", "/api/company", this::createCompany)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -67,25 +66,23 @@ public class CompanyHandlers implements RouteProvider {
     public List<Company> createCompany(final RequestContext rc) {
         Company company = null;
         try {
-            String name = rc.pathArgs().get("name");
-            String website = rc.pathArgs().get("website");
-            String description = rc.pathArgs().get("description");
+            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            String name = jsonMap.get("name").toString();
+            String website = jsonMap.get("website").toString();
+            String description = jsonMap.get("description").toString();
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
-            String sqlQuery = "INSERT INTO companies (name, website, description, " +
-                    "dateCreated) VALUES (?, ?, ?, ?)";
+            String sqlQuery = "INSERT INTO companies (name, website, description) VALUES (?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, website);
             ps.setString(3, description);
-            Date date = new Date();
-            ps.setObject(4, date.toInstant().atZone(ZoneId.of("UTC")).toLocalDate());
             int rowsAffected = ps.executeUpdate();
 
-            if (rowsAffected==0) {
+            if (rowsAffected == 0) {
                 throw new SQLException("Creating new company failed, no rows affected.");
             }
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
@@ -101,7 +98,7 @@ public class CompanyHandlers implements RouteProvider {
                     throw new SQLException("Creating new company failed, no ID obtained.");
                 }
             }
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 
