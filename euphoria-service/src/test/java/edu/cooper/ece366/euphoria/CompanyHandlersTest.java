@@ -1,8 +1,10 @@
 package edu.cooper.ece366.euphoria;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spotify.apollo.Request;
 import com.spotify.apollo.RequestContext;
 import com.typesafe.config.Config;
+import okio.ByteString;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,10 +15,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -36,7 +35,9 @@ public class CompanyHandlersTest {
     @Mock
     ResultSet rs;
     @Mock
-    byte[] requestBytes;
+    Request request;
+    @Mock
+    ByteString requestPayloadByteString;
 
     private CompanyHandlers testClass;
 
@@ -50,12 +51,15 @@ public class CompanyHandlersTest {
         // Setup variables
         Company expected = new CompanyBuilder()
                 .companyId(1)
-                .name("BigCorp")
-                .website("bigcorp.com")
-                .description("The biggest of corps.")
+                .name("Apple")
+                .website("apple.com")
+                .description("Macintoshes.")
                 .build();
 
         // Mock dependencies and inputs
+        when(config.getString("mysql.jdbc")).thenReturn("jdbc:mysql://localhost:3306/euphoria");
+        when(config.getString("mysql.user")).thenReturn("euphoria");
+        when(config.getString("mysql.password")).thenReturn("euphoria");
         when(rc.pathArgs()).thenReturn(Collections.singletonMap("companyId", "1"));
         when(rs.getInt("companyId")).thenReturn(expected.companyId());
         when(rs.getString("name")).thenReturn(expected.name());
@@ -67,30 +71,38 @@ public class CompanyHandlersTest {
 
         // Assert and verify
         assertEquals(expected, actual);
-
-        verifyZeroInteractions(objectMapper);
     }
 
     @Test
     public void createCompany() throws IOException {
         // Setup variables
-        List<Company> expected = Collections.emptyList();
-        byte[] foo = new byte[0];
+        Company company = new CompanyBuilder()
+                .companyId(3)
+                .name("namefield")
+                .website("websitefield")
+                .description("descriptonfield")
+                .build();
+        List<Company> expected = Collections.singletonList(company);
+        byte[] byteArray = new byte[0];
 
-        // Mock dependencies and inputs
-        Map<String, Object> request = new HashMap<String, Object>();
-        request.put("name", "BigCorp");
-        request.put("website", "bigcorp.com");
-        request.put("description", "The biggest of corps.");
-        when(rc.request().payload().get().toByteArray()).thenReturn(foo);
-        when(objectMapper.readValue(requestBytes, Map.class)).thenReturn(request);
+        Map<String, Object> map = new HashMap<>();
+        map.put("companyId", 1);
+        map.put("name", "Apple");
+        map.put("website", "apple.com");
+        map.put("description", "Macintoshes.");
+
+        when(config.getString("mysql.jdbc")).thenReturn("jdbc:mysql://localhost:3306/euphoria");
+        when(config.getString("mysql.user")).thenReturn("euphoria");
+        when(config.getString("mysql.password")).thenReturn("euphoria");
+        when(rc.request()).thenReturn(request);
+        when(request.payload()).thenReturn(Optional.of(requestPayloadByteString));
+        when(requestPayloadByteString.toByteArray()).thenReturn(byteArray);
+        when(objectMapper.readValue(byteArray, Map.class)).thenReturn(map);
 
         // Call test class
         List<Company> actual = testClass.createCompany(rc);
 
         // Assert and verify
         assertEquals(expected, actual);
-
-        verifyZeroInteractions(objectMapper);
     }
 }
