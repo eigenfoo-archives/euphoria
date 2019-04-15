@@ -16,17 +16,19 @@
   text-align: center
 }
 
-.form-container{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-
+.floating-container {
   padding: 30px;
   border-radius: 15px;
   box-shadow: 5px 5px #444;
 
   background-color: #FFF
+}
+
+.centered-container{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .scrolling-container {
@@ -64,16 +66,10 @@
   background: #AAA;
 }
 
-.listing-container{
+.listing-container-scrolling{
   display: inline-block;
 
-  width: 900px;
   margin: 10px;
-  padding: 30px;
-  border-radius: 15px;
-  box-shadow: 5px 5px #444;
-
-  background-color: #FFF;
 
   text-overflow: ellipsis;
   overflow: hidden;

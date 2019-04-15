@@ -256,7 +256,7 @@ class Signup extends React.Component {
           </div>
         </div>
 
-        <div className="form-container" style={{width:"600px"}}>
+        <div className="floating-container centered-container" style={{width:"600px"}}>
           <h1>Sign Up</h1>
           <hr></hr>
           <Form onSubmit={event => this.handleSubmit(event)}>

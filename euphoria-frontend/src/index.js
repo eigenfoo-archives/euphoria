@@ -19,7 +19,7 @@ const routing = (
     <Route exact path="/" component={Splash} />
     <Route path="/signin" component={Signin} />
     <Route path="/signup" component={Signup} />
-    <Route path="/listings" component={Listings} />
+    <Route exact path="/listings" component={Listings} />
     <Route path="/listings/apply" component={Apply} />
     <Route exact path="/dashboard" component={Dashboard} />
     <Route path="/dashboard/post" component={Post} />

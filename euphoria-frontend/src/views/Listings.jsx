@@ -28,8 +28,8 @@ class Listings extends React.Component {
 
   Listing(props) {
     return(
-      <div className="listing-container card" style={{width:"600px"}}>
-        <Container fluid>
+      <div className="floating-container listing-container-scrolling" style={{width:"600px"}}>
+        <Container>
           <Row>
             <h1>
               Software Engineer
