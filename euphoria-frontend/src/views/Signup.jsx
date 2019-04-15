@@ -10,12 +10,13 @@ class Signup extends React.Component {
     this.state = {
           isUser: 1,
           username: "",
-          companyname: "",
+          companyName: "",
           password: "",
-          fullname: "",
-          education: "",
+          name: "",
+          educationLevel: "",
           email: "",
-          phonenumber: "",
+          website: "",
+          phoneNumber: "",
           description: ""
     };
 
@@ -46,7 +47,8 @@ class Signup extends React.Component {
 
   handleSubmit(event) {
     const form = event.currentTarget;
-    let url = "";
+    let url = "http://localhost:8080/api/";
+    let data = "";
 
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -56,25 +58,40 @@ class Signup extends React.Component {
     const {
       isUser,
       username,
-      companyname,
+      companyName,
       password,
-      fullname,
-      education,
+      name,
+      educationLevel,
       email,
-      phonenumber,
+      website,
+      phoneNumber,
       description
     } = this.state;
 
-
     if (isUser){
-      url = "http://localhost:8080/user/" + fullname + "/" + email + "/" + phonenumber + "/" + education.toUpperCase() + "/"  + description;
+      url += "user";
+      data = {
+        name,
+        email,
+        phoneNumber,
+        educationLevel,
+        description
+      };
     }
     else{
-      url = "http://localhost:8080/company/" + companyname + "/" + email + "/" + description;
+      url += "company";
+      data = {
+        name: companyName,
+        website,
+        description
+      };
     }
     const authentication_url = "http://localhost:8080/authentication/" + username + "/"  + password;
 
-    fetch(url, {method: "POST"})
+    fetch(url, {
+      method: "POST",
+      body: JSON.stringify(data)
+    })
       /*.then(function() {
         fetch(authentication_url, {method: "POST"});
       })*/ //FIXME add support for authentication posting when its implemented
@@ -86,10 +103,10 @@ class Signup extends React.Component {
 
   User(props){
     const {
-      fullname,
-      education,
+      name,
+      educationLevel,
       email,
-      phonenumber,
+      phoneNumber,
       description
     } = this.state;
 
@@ -101,8 +118,8 @@ class Signup extends React.Component {
             <Form.Control
               required
               type="name"
-              name="fullname"
-              value={fullname}
+              name="name"
+              value={name}
               placeholder="Full Name"
               onChange={this.handleChange}/>
           </Form.Group>
@@ -112,18 +129,18 @@ class Signup extends React.Component {
             <Form.Control
               required
               as="select"
-              name="education"
-              value={education}
+              name="educationLevel"
+              value={educationLevel}
               onChange={this.handleChange}>
               <option>Choose...</option>
-              <option>NoHighschool</option>
-              <option>Highschool</option>
+              <option>NOHIGHSCHOOL</option>
+              <option>HIGHSCHOOL</option>
               <option>GED</option>
-              <option>SomeCollege</option>
-              <option>Associates</option>
-              <option>Bachelors</option>
-              <option>Masters</option>
-              <option>PhD</option>
+              <option>SOMECOLLEGE</option>
+              <option>ASSOCIATES</option>
+              <option>BACHELORS</option>
+              <option>MASTERS</option>
+              <option>PHD</option>
               <option>MD</option>
               <option>JD</option>
             </Form.Control>
@@ -146,9 +163,9 @@ class Signup extends React.Component {
             <Form.Label>Phone Number</Form.Label>
             <Form.Control
               required
-              type="phonenumber"
-              name="phonenumber"
-              value={phonenumber}
+              type="phoneNumber"
+              name="phoneNumber"
+              value={phoneNumber}
               placeholder="5552521956"
               minLength="10"
               onChange={this.handleChange}/>
@@ -174,8 +191,8 @@ class Signup extends React.Component {
 
   Company(props){
     const {
-      companyname,
-      email,
+      companyName,
+      website,
       description
     } = this.state;
 
@@ -186,20 +203,20 @@ class Signup extends React.Component {
           <Form.Control
             required
             type="name"
-            name="companyname"
-            value={companyname}
+            name="companyName"
+            value={companyName}
             placeholder="Company Name"
             onChange={this.handleChange}/>
         </Form.Group>
 
-        <Form.Group controlId="formGridEmail">
+        <Form.Group controlId="formGridWebsite">
           <Form.Label>Email</Form.Label>
           <Form.Control
             required
-            type="email"
-            placeholder="Email"
-            name="email"
-            value={email}
+            type="website"
+            placeholder="Website"
+            name="website"
+            value={website}
             onChange={this.handleChange}/>
         </Form.Group>
 

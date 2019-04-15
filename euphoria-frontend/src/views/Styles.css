@@ -12,6 +12,10 @@
    width: 100%; /* Full width */
 }
 
+.welcome-container{
+  text-align: center
+}
+
 .form-container{
   position: absolute;
   top: 50%;
@@ -25,6 +29,18 @@
   background-color: #FFF
 }
 
-.welcome-container{
-  text-align: center
+.listing-container{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+  padding: 30px;
+  border-radius: 15px;
+  box-shadow: 5px 5px #444;
+
+  background-color: #FFF;
+
+  text-overflow: ellipsis;
+  overflow: hidden;
 }
