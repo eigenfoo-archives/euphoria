@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class ApplicationHandlers implements RouteProvider {
-    private ObjectMapper objectMapper;
-    private Config config;
+    private final ObjectMapper objectMapper;
+    private final Config config;
 
-    public ApplicationHandlers(ObjectMapper objectMapper, Config config) {
+    public ApplicationHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
         this.config = config;
     }
@@ -35,7 +35,7 @@ public class ApplicationHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Application> getApplication(RequestContext rc) {
+    public List<Application> getApplication(final RequestContext rc) {
         Application application = null;
 
         try {
@@ -67,7 +67,7 @@ public class ApplicationHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Application> getApplicationsForPosting(RequestContext rc) {
+    public List<Application> getApplicationsForPosting(final RequestContext rc) {
         ArrayList<Application> applicationList = new ArrayList<Application>();
 
         try {
@@ -86,7 +86,7 @@ public class ApplicationHandlers implements RouteProvider {
                         .applicationId(rs.getInt("applicationId"))
                         .postingId(rs.getInt("postingId"))
                         .userId(rs.getInt("userId"))
-                        .resume(rs.getBytes("resume"))            //returns BASE64
+                        .resume(rs.getBytes("resume"))             //returns BASE64
                         .coverLetter(rs.getBytes("coverLetter"))   //returns BASE64
                         .dateCreated(rs.getString("dateCreated"))
                         .build();
@@ -101,7 +101,7 @@ public class ApplicationHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Application> createApplication(RequestContext rc) {
+    public List<Application> createApplication(final RequestContext rc) {
         try {
             byte[] requestBytes = rc.request().payload().get().toByteArray();
             Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
