@@ -16,10 +16,10 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class CompanyHandlers implements RouteProvider {
-    private ObjectMapper objectMapper;
-    private Config config;
+    private final ObjectMapper objectMapper;
+    private final Config config;
 
-    public CompanyHandlers(ObjectMapper objectMapper, Config config) {
+    public CompanyHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
         this.config = config;
     }
@@ -33,7 +33,7 @@ public class CompanyHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Company> getCompany(RequestContext rc) {
+    public List<Company> getCompany(final RequestContext rc) {
         Company company = null;
 
         try {
@@ -63,7 +63,7 @@ public class CompanyHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Company> createCompany(RequestContext rc) {
+    public List<Company> createCompany(final RequestContext rc) {
         Company company = null;
         try {
             byte[] requestBytes = rc.request().payload().get().toByteArray();

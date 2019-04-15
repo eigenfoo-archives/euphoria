@@ -16,10 +16,10 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class UserHandlers implements RouteProvider {
-    private ObjectMapper objectMapper;
-    private Config config;
+    private final ObjectMapper objectMapper;
+    private final Config config;
 
-    public UserHandlers(ObjectMapper objectMapper, Config config) {
+    public UserHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
         this.config = config;
     }
@@ -33,7 +33,7 @@ public class UserHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<User> getUser(RequestContext rc) {
+    public List<User> getUser(final RequestContext rc) {
         User user = null;
 
         try {
@@ -65,7 +65,7 @@ public class UserHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<User> createUser(RequestContext rc) {
+    public List<User> createUser(final RequestContext rc) {
         User user = null;
         try {
             byte[] requestBytes = rc.request().payload().get().toByteArray();
