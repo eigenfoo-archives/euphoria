@@ -9,6 +9,7 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -34,6 +35,8 @@ public class PostingHandlersTest {
     PreparedStatement ps;
     @Mock
     ResultSet rs;
+    @Mock
+    byte[] requestBytes;
 
     private PostingHandlers testClass;
 
@@ -111,9 +114,20 @@ public class PostingHandlersTest {
     }
 
     @Test
-    public void createAndEditPosting() throws SQLException {
+    public void createAndEditPosting() throws SQLException, IOException {
         // Setup variables
         List<Posting> expected = Collections.emptyList();
+        byte[] foo = new byte[0];
+
+        // Mock dependencies and inputs
+        Map<String, Object> request = new HashMap<String, Object>();
+        request.put("jobTitle", "Underwater Basket Weaver");
+        request.put("description", "What it sounds like.");
+        request.put("location", "NEWYORK");
+        request.put("industry", "FINANCE");
+        request.put("skillLevel", "INTERNSHIP");
+        when(rc.request().payload().get().toByteArray()).thenReturn(foo);
+        when(objectMapper.readValue(requestBytes, Map.class)).thenReturn(request);
 
         // Mock dependencies and inputs
         when(rs.getString("jobTitle")).thenReturn("Underwater Basket Weaver");

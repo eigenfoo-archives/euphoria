@@ -9,11 +9,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -32,6 +35,8 @@ public class ApplicationHandlersTest {
     PreparedStatement ps;
     @Mock
     ResultSet rs;
+    @Mock
+    byte[] requestBytes;
 
     private ApplicationHandlers testClass;
 
@@ -103,19 +108,20 @@ public class ApplicationHandlersTest {
     }
 
     @Test
-    public void createApplication() throws SQLException {
-        byte[] emptyArray = new byte[0];
-
+    public void createApplication() throws IOException {
         // Setup variables
         List<Application> expected = Collections.emptyList();
+        byte[] foo = new byte[0];
 
         // Mock dependencies and inputs
-        when(rs.getString("applicationId")).thenReturn("1");
-        when(rs.getString("postingId")).thenReturn("1");
-        when(rs.getString("userId")).thenReturn("1");
-        when(rs.getBytes("resume")).thenReturn(emptyArray);
-        when(rs.getBytes("coverLetter")).thenReturn(emptyArray);
-        when(ps.executeQuery()).thenReturn(rs);
+        Map<String, Object> request = new HashMap<String, Object>();
+        request.put("applicationId", 1);
+        request.put("postingId", 1);
+        request.put("userId", 1);
+        request.put("resume", "ZT16OA==");
+        request.put("coverLetter", "ZT16OA==");
+        when(rc.request().payload().get().toByteArray()).thenReturn(foo);
+        when(objectMapper.readValue(requestBytes, Map.class)).thenReturn(request);
 
         // Call test class
         List<Application> actual = testClass.createApplication(rc);

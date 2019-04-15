@@ -9,11 +9,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -32,6 +35,8 @@ public class CompanyHandlersTest {
     PreparedStatement ps;
     @Mock
     ResultSet rs;
+    @Mock
+    byte[] requestBytes;
 
     private CompanyHandlers testClass;
 
@@ -67,14 +72,18 @@ public class CompanyHandlersTest {
     }
 
     @Test
-    public void createCompany() throws SQLException {
+    public void createCompany() throws IOException {
         // Setup variables
         List<Company> expected = Collections.emptyList();
+        byte[] foo = new byte[0];
 
         // Mock dependencies and inputs
-        when(rs.getString("name")).thenReturn("BigCorp");
-        when(rs.getString("website")).thenReturn("bigcorp.com");
-        when(rs.getString("description")).thenReturn("The biggest of corps.");
+        Map<String, Object> request = new HashMap<String, Object>();
+        request.put("name", "BigCorp");
+        request.put("website", "bigcorp.com");
+        request.put("description", "The biggest of corps.");
+        when(rc.request().payload().get().toByteArray()).thenReturn(foo);
+        when(objectMapper.readValue(requestBytes, Map.class)).thenReturn(request);
 
         // Call test class
         List<Company> actual = testClass.createCompany(rc);

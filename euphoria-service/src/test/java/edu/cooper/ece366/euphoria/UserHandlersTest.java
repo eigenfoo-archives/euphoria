@@ -9,11 +9,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -32,6 +35,8 @@ public class UserHandlersTest {
     PreparedStatement ps;
     @Mock
     ResultSet rs;
+    @Mock
+    byte[] requestBytes;
 
     private UserHandlers testClass;
 
@@ -71,15 +76,19 @@ public class UserHandlersTest {
     }
 
     @Test
-    public void createCompany() throws SQLException {
+    public void createUser() throws IOException {
         // Setup variables
         List<User> expected = Collections.emptyList();
+        byte[] foo = new byte[0];
 
         // Mock dependencies and inputs
-        when(rs.getString("name")).thenReturn("John Smith");
-        when(rs.getString("email")).thenReturn("john@smith.com");
-        when(rs.getString("phoneNumber")).thenReturn("1234567890");
-        when(rs.getString("description")).thenReturn("Am engineer pls hire.");
+        Map<String, Object> request = new HashMap<String, Object>();
+        request.put("name", "John Smith");
+        request.put("email", "john@smith.com");
+        request.put("phoneNumber", "1234567890");
+        request.put("description", "Am engineer pls hire.");
+        when(rc.request().payload().get().toByteArray()).thenReturn(foo);
+        when(objectMapper.readValue(requestBytes, Map.class)).thenReturn(request);
 
         // Call test class
         List<User> actual = testClass.createUser(rc);

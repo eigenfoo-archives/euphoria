@@ -16,10 +16,10 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class CompanyHandlers implements RouteProvider {
-    private final ObjectMapper objectMapper;
-    private final Config config;
+    private ObjectMapper objectMapper;
+    private Config config;
 
-    public CompanyHandlers(final ObjectMapper objectMapper, final Config config) {
+    public CompanyHandlers(ObjectMapper objectMapper, Config config) {
         this.objectMapper = objectMapper;
         this.config = config;
     }
@@ -33,7 +33,7 @@ public class CompanyHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Company> getCompany(final RequestContext rc) {
+    public List<Company> getCompany(RequestContext rc) {
         Company company = null;
 
         try {
@@ -63,10 +63,11 @@ public class CompanyHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Company> createCompany(final RequestContext rc) {
+    public List<Company> createCompany(RequestContext rc) {
         Company company = null;
         try {
-            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            byte[] requestBytes = rc.request().payload().get().toByteArray();
+            Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
             String name = jsonMap.get("name").toString();
             String website = jsonMap.get("website").toString();
             String description = jsonMap.get("description").toString();

@@ -9,11 +9,14 @@ import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
+import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -32,6 +35,8 @@ public class AuthenticationHandlersTest {
     PreparedStatement ps;
     @Mock
     ResultSet rs;
+    @Mock
+    byte[] requestBytes;
 
     private AuthenticationHandlers testClass;
 
@@ -65,9 +70,18 @@ public class AuthenticationHandlersTest {
     }
 
     @Test
-    public void createAuthentication() throws SQLException {
+    public void createAuthentication() throws SQLException, IOException {
         // Setup variables
         List<Authentication> expected = Collections.emptyList();
+        byte[] foo = new byte[0];
+
+        // Mock dependencies and inputs
+        Map<String, Object> request = new HashMap<String, Object>();
+        request.put("username", "johnsmith");
+        request.put("passwordHash", "hash");
+        request.put("isUser", true);
+        when(rc.request().payload().get().toByteArray()).thenReturn(foo);
+        when(objectMapper.readValue(requestBytes, Map.class)).thenReturn(request);
 
         // Mock dependencies and inputs
         when(rs.getString("username")).thenReturn("johnsmith");

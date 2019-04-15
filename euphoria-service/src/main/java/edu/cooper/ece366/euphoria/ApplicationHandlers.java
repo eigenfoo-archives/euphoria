@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class ApplicationHandlers implements RouteProvider {
-    private final ObjectMapper objectMapper;
-    private final Config config;
+    private ObjectMapper objectMapper;
+    private Config config;
 
-    public ApplicationHandlers(final ObjectMapper objectMapper, final Config config) {
+    public ApplicationHandlers(ObjectMapper objectMapper, Config config) {
         this.objectMapper = objectMapper;
         this.config = config;
     }
@@ -35,7 +35,7 @@ public class ApplicationHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Application> getApplication(final RequestContext rc) {
+    public List<Application> getApplication(RequestContext rc) {
         Application application = null;
 
         try {
@@ -67,7 +67,7 @@ public class ApplicationHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Application> getApplicationsForPosting(final RequestContext rc) {
+    public List<Application> getApplicationsForPosting(RequestContext rc) {
         ArrayList<Application> applicationList = new ArrayList<Application>();
 
         try {
@@ -101,9 +101,10 @@ public class ApplicationHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Application> createApplication(final RequestContext rc) {
+    public List<Application> createApplication(RequestContext rc) {
         try {
-            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            byte[] requestBytes = rc.request().payload().get().toByteArray();
+            Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
             Integer postingId = Integer.valueOf(jsonMap.get("postingId").toString());
             Integer userId = Integer.valueOf(jsonMap.get("userId").toString());
             byte[] resume = jsonMap.get("resume").toString().getBytes();

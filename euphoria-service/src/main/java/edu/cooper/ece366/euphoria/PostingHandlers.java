@@ -17,10 +17,10 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class PostingHandlers implements RouteProvider {
-    private final ObjectMapper objectMapper;
-    private final Config config;
+    private ObjectMapper objectMapper;
+    private Config config;
 
-    public PostingHandlers(final ObjectMapper objectMapper, final Config config) {
+    public PostingHandlers(ObjectMapper objectMapper, Config config) {
         this.objectMapper = objectMapper;
         this.config = config;
     }
@@ -40,7 +40,7 @@ public class PostingHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Posting> getPosting(final RequestContext rc) {
+    public List<Posting> getPosting(RequestContext rc) {
         Posting posting = null;
 
         try {
@@ -74,7 +74,7 @@ public class PostingHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Posting> searchPostings(final RequestContext rc) {
+    public List<Posting> searchPostings(RequestContext rc) {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
         String location = "%";
         String industry = "%";
@@ -134,7 +134,7 @@ public class PostingHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Posting> getAllPostings(final RequestContext rc) {
+    public List<Posting> getAllPostings(RequestContext rc) {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
 
         try {
@@ -168,7 +168,7 @@ public class PostingHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Posting> getRandomPostings(final RequestContext rc) {
+    public List<Posting> getRandomPostings(RequestContext rc) {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
 
         try {
@@ -202,9 +202,10 @@ public class PostingHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Posting> createPosting(final RequestContext rc) {
+    public List<Posting> createPosting(RequestContext rc) {
         try {
-            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            byte[] requestBytes = rc.request().payload().get().toByteArray();
+            Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
             Integer companyId = Integer.parseInt(jsonMap.get("companyId").toString());
             String jobTitle = jsonMap.get("jobTitle").toString();
             String description = jsonMap.get("description").toString();
@@ -235,7 +236,7 @@ public class PostingHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Posting> editPosting(final RequestContext rc) {
+    public List<Posting> editPosting(RequestContext rc) {
         try {
             Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
             Integer postingId = Integer.parseInt(jsonMap.get("postingId").toString());
@@ -267,7 +268,7 @@ public class PostingHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Posting> deletePosting(final RequestContext rc) {
+    public List<Posting> deletePosting(RequestContext rc) {
         try {
             Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
 
