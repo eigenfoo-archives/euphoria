@@ -5,6 +5,7 @@ import com.spotify.apollo.Environment;
 import com.spotify.apollo.httpservice.HttpService;
 import com.spotify.apollo.httpservice.LoadingException;
 import com.spotify.apollo.route.Route;
+import com.typesafe.config.Config;
 import io.norberg.automatter.jackson.AutoMatterModule;
 
 public class Main {
@@ -14,11 +15,13 @@ public class Main {
 
     private static void init(final Environment environment) {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new AutoMatterModule());
-        AuthenticationHandlers authenticationHandlers = new AuthenticationHandlers(objectMapper);
-        PostingHandlers postingHandlers = new PostingHandlers(objectMapper);
-        UserHandlers userHandlers = new UserHandlers(objectMapper);
-        CompanyHandlers companyHandlers = new CompanyHandlers(objectMapper);
-        ApplicationHandlers applicationHandlers = new ApplicationHandlers(objectMapper);
+        Config config = environment.config();
+        AuthenticationHandlers authenticationHandlers = new AuthenticationHandlers(objectMapper, config);
+        PostingHandlers postingHandlers = new PostingHandlers(objectMapper, config);
+        UserHandlers userHandlers = new UserHandlers(objectMapper, config);
+        CompanyHandlers companyHandlers = new CompanyHandlers(objectMapper, config);
+        ApplicationHandlers applicationHandlers = new ApplicationHandlers(objectMapper, config);
+        CookieHandlers cookieHandlers = new CookieHandlers(objectMapper, config);
 
         environment
                 .routingEngine()
@@ -27,6 +30,7 @@ public class Main {
                 .registerRoutes(postingHandlers.routes())
                 .registerRoutes(userHandlers.routes())
                 .registerRoutes(companyHandlers.routes())
-                .registerRoutes(applicationHandlers.routes());
+                .registerRoutes(applicationHandlers.routes())
+                .registerRoutes(cookieHandlers.routes());
     }
 }

@@ -15,11 +15,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
-public class CompanyHandlers implements RouteProvider {
+public class CookieHandlers implements RouteProvider {
     private final ObjectMapper objectMapper;
     private final Config config;
 
-    public CompanyHandlers(final ObjectMapper objectMapper, final Config config) {
+    public CookieHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
         this.config = config;
     }
@@ -27,83 +27,84 @@ public class CompanyHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/api/company/<companyId>", this::getCompany),
-                Route.sync("POST", "/api/company", this::createCompany)
+                Route.sync("GET", "/api/cookie/<cookieCheck>", this::getCookie),
+                Route.sync("POST", "/api/cookie", this::createCookie)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
     @VisibleForTesting
-    public List<Company> getCompany(final RequestContext rc) {
-        Company company = null;
+    public List<Cookie> getCookie(final RequestContext rc) {
+        Cookie cookie = null;
 
         try {
-            Integer companyId = Integer.valueOf(rc.pathArgs().get("companyId"));
+            String cookieCheck = rc.pathArgs().get("cookieCheck");
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
-            String sqlQuery = "SELECT * FROM companies WHERE companyId = ?";
+            String sqlQuery = "SELECT * FROM cookies WHERE (cookie) IN ((?))";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setInt(1, companyId);
+            ps.setString(1, cookieCheck);
             ResultSet rs = ps.executeQuery();
 
             if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
-                company = new CompanyBuilder()
-                        .companyId(rs.getInt("companyId"))
-                        .name(rs.getString("name"))
-                        .website(rs.getString("website"))
-                        .description(rs.getString("description"))
+                cookie = new CookieBuilder()
+                        //.id(rs.getInt("id")) // Either userId or companyId
+                        //.isUser(rs.getBoolean("isUser"))
+                        .cookie(rs.getString("cookie"))
                         .build();
             }
         } catch (SQLException ex) {
             System.out.println(ex);
         }
 
-        return Collections.singletonList(company);
+        return Collections.singletonList(cookie);
     }
 
     @VisibleForTesting
-    public List<Company> createCompany(final RequestContext rc) {
-        Company company = null;
+    public List<Cookie> createCookie(final RequestContext rc) {
+        Cookie cookie = null;
         try {
             Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
-            String name = jsonMap.get("name").toString();
-            String website = jsonMap.get("website").toString();
-            String description = jsonMap.get("description").toString();
+            String username = jsonMap.get("username").toString();
+            String passwordHash = jsonMap.get("passwordHash").toString();
+            Integer id;
+            Boolean isUser;
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
-            String sqlQuery = "INSERT INTO companies (name, website, description) VALUES (?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, name);
-            ps.setString(2, website);
-            ps.setString(3, description);
-            int rowsAffected = ps.executeUpdate();
+            String sqlQuery = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
+            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            ps.setString(1, username);
+            ps.setString(2, passwordHash);
+            ResultSet rs = ps.executeQuery();
 
-            if (rowsAffected == 0) {
-                throw new SQLException("Creating new company failed, no rows affected.");
-            }
-            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    company = new CompanyBuilder()
-                            .companyId(generatedKeys.getInt(1))
-                            //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
-                            .name("namefield")
-                            .website("websitefield")
-                            .description("descriptonfield")
+            if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
+                id = rs.getInt("id");
+                isUser = rs.getBoolean("isUser");
+                if (rs != null) {
+                    String cookieNew = "abc" + username + "1234" + passwordHash.substring(0, 3); //TODO: make a better cookie hashing function
+                    String sqlQueryIns = "INSERT INTO cookies (id, isUser, cookie) VALUES (?, ?, ?)";
+                    PreparedStatement psIns = conn.prepareStatement(sqlQueryIns);
+                    psIns.setInt(1, id); // Either userId or companyId
+                    psIns.setBoolean(2, isUser);
+                    psIns.setString(3, cookieNew);
+                    psIns.executeUpdate();
+                    //send back to front-end
+                    cookie = new CookieBuilder()
+                            .cookie(cookieNew)
                             .build();
-                } else {
-                    throw new SQLException("Creating new company failed, no ID obtained.");
                 }
             }
         } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 
-        return Collections.singletonList(company);
+        return Collections.singletonList(cookie);
     }
+
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {
         return JsonSerializerMiddlewares.<T>jsonSerialize(objectMapper.writer())

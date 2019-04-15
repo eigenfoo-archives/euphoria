@@ -5,30 +5,29 @@ import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
+import com.typesafe.config.Config;
 import okio.ByteString;
 
+import java.io.IOException;
 import java.sql.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class AuthenticationHandlers implements RouteProvider {
-    private static final String dbUrl = "jdbc:mysql://localhost:3306/euphoria";
-    private static final String dbUsername = "euphoria";
-    private static final String dbPassword = "euphoria";
     private final ObjectMapper objectMapper;
+    private final Config config;
 
-    public AuthenticationHandlers(final ObjectMapper objectMapper) {
+    public AuthenticationHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
+        this.config = config;
     }
 
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/authentication/<username>/<passwordHash>", this::getAuthentication),
-                Route.sync("POST",
-                        "/authentication/<username>/<passwordHash>/<isUser>",
-                        this::createAuthentication)
+                Route.sync("GET", "/api/authentication/<username>/<passwordHash>", this::getAuthentication),
+                Route.sync("POST", "/api/authentication", this::createAuthentication)
         ).map(r -> r.withMiddleware(jsonMiddleware()));
     }
 
@@ -40,7 +39,10 @@ public class AuthenticationHandlers implements RouteProvider {
             String username = rc.pathArgs().get("username");
             String passwordHash = rc.pathArgs().get("passwordHash");
 
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
             String sqlQuery = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setString(1, username);
@@ -49,6 +51,7 @@ public class AuthenticationHandlers implements RouteProvider {
 
             if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
                 authentication = new AuthenticationBuilder()
+                        .id(rs.getInt("id"))
                         .username(rs.getString("username"))
                         .passwordHash(rs.getString("passwordHash"))
                         .isUser(rs.getBoolean("isUser"))
@@ -64,19 +67,25 @@ public class AuthenticationHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Authentication> createAuthentication(final RequestContext rc) {
         try {
-            String username = rc.pathArgs().get("username");
-            String passwordHash = rc.pathArgs().get("passwordHash");
-            Boolean isUser = Boolean.valueOf(rc.pathArgs().get("isUser"));
+            Authentication authentication = objectMapper.readValue(rc.request().payload().get().toByteArray(), Authentication.class);
+            Integer id = authentication.id();
+            String username = authentication.username();
+            String passwordHash = authentication.passwordHash();
+            Boolean isUser = authentication.isUser();
 
-            Connection conn = DriverManager.getConnection(dbUrl, dbUsername, dbPassword);
-            String sqlQuery = "INSERT INTO authentications (username, passwordHash, isUser)" +
-                    "VALUES (?, ?, ?)";
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
+            String sqlQuery = "INSERT INTO authentications (id, username, passwordHash, isUser)" +
+                    "VALUES (?, ?, ?, ?)";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setString(1, username);
-            ps.setString(2, passwordHash);
-            ps.setBoolean(3, isUser);
+            ps.setInt(1, id);
+            ps.setString(2, username);
+            ps.setString(3, passwordHash);
+            ps.setBoolean(4, isUser);
             ps.executeUpdate();
-        } catch (SQLException ex) {
+        } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
 
