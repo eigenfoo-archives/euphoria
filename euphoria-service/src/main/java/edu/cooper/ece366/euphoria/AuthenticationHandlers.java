@@ -15,10 +15,10 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class AuthenticationHandlers implements RouteProvider {
-    private ObjectMapper objectMapper;
-    private Config config;
+    private final ObjectMapper objectMapper;
+    private final Config config;
 
-    public AuthenticationHandlers(ObjectMapper objectMapper, Config config) {
+    public AuthenticationHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
         this.config = config;
     }
@@ -32,7 +32,7 @@ public class AuthenticationHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Authentication> getAuthentication(RequestContext rc) {
+    public List<Authentication> getAuthentication(final RequestContext rc) {
         Authentication authentication = null;
 
         try {
@@ -65,7 +65,7 @@ public class AuthenticationHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Authentication> createAuthentication(RequestContext rc) {
+    public List<Authentication> createAuthentication(final RequestContext rc) {
         try {
             byte[] requestBytes = rc.request().payload().get().toByteArray();
             Authentication authentication = objectMapper.readValue(requestBytes, Authentication.class);
