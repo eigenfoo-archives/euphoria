@@ -95,8 +95,8 @@ VALUES
 CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
                            postingId INT NOT NULL,  -- FOREIGN KEY(postingId), REFERENCES postings (postingId),
                            userId INT NOT NULL, -- FOREIGN KEY(userId), REFERENCES users (userId),
-                           resume LONGBLOB NOT NULL,
-                           coverLetter LONGBLOB NOT NULL,
+                           resume VARCHAR(100),
+                           coverLetter VARCHAR(100),
                            dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 INSERT INTO applications

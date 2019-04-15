@@ -8,7 +8,7 @@ import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
 
-import java.io.IOException;
+import java.io.*;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 public class ApplicationHandlers implements RouteProvider {
     private final ObjectMapper objectMapper;
     private final Config config;
+    private final String FileStoragePath = "/home/wendy/Documents/EuphoriaFiles/";
 
     public ApplicationHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
@@ -102,26 +103,54 @@ public class ApplicationHandlers implements RouteProvider {
 
     @VisibleForTesting
     public List<Application> createApplication(final RequestContext rc) {
+        Integer applicationId;
         try {
             Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
             Integer postingId = Integer.valueOf(jsonMap.get("postingId").toString());
             Integer userId = Integer.valueOf(jsonMap.get("userId").toString());
             byte[] resume = jsonMap.get("resume").toString().getBytes();
             byte[] coverLetter = jsonMap.get("coverLetter").toString().getBytes();
-
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
-            String sqlQuery = "INSERT INTO applications (postingId, userId, " +
-                    "resume, coverLetter) VALUES (?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            String sqlQuery = "INSERT INTO applications (postingId, userId) " +
+                              "VALUES (?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, postingId);
             ps.setInt(2, userId);
-            ps.setBytes(3, resume);
-            ps.setBytes(4, coverLetter);
+           // ps.setBytes(3, resume);
+           // ps.setBytes(4, coverLetter);
             //timestamped automatically in UTC by mysql database
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
+
+            if (rowsAffected == 0) {
+                throw new SQLException("Creating new user failed, no rows affected.");
+            }
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                     applicationId = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Creating new user failed, no ID obtained.");
+                }
+            }
+
+            try {
+                FileOutputStream output1 = new FileOutputStream(FileStoragePath + "resume" + "_" + applicationId);
+                output1.write(resume);
+                FileOutputStream output2 = new FileOutputStream(FileStoragePath + "cover" + "_" + applicationId);
+                output2.write(coverLetter);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+
+            String sqlQueryUpdate = "UPDATE applications SET resume = ?, coverletter = ? " +
+                              "WHERE applicationId = ?";
+            PreparedStatement psUpdate = conn.prepareStatement(sqlQueryUpdate);
+            psUpdate.setString(1, "resume" + "_" + applicationId);
+            psUpdate.setString(2, "cover" + "_" + applicationId);
+            psUpdate.setInt(3, applicationId);
+            psUpdate.executeUpdate();
         } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }
