@@ -1,8 +1,10 @@
 package edu.cooper.ece366.euphoria;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spotify.apollo.Request;
 import com.spotify.apollo.RequestContext;
 import com.typesafe.config.Config;
+import okio.ByteString;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,10 +15,7 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -36,7 +35,9 @@ public class PostingHandlersTest {
     @Mock
     ResultSet rs;
     @Mock
-    byte[] requestBytes;
+    Request request;
+    @Mock
+    ByteString requestPayloadByteString;
 
     private PostingHandlers testClass;
 
@@ -83,11 +84,13 @@ public class PostingHandlersTest {
         // Setup variables
         Posting expected = new PostingBuilder()
                 .postingId(1)
+                .companyId(123)
                 .jobTitle("Underwater Basket Weaver")
                 .description("What it sounds like.")
                 .location(Location.valueOf("NEWYORK"))
                 .industry(Industry.valueOf("FINANCE"))
                 .skillLevel(SkillLevel.valueOf("INTERNSHIP"))
+                .dateCreated("2018-07-10 02:30:00")
                 .build();
 
         // Mock dependencies and inputs
@@ -96,6 +99,9 @@ public class PostingHandlersTest {
         rcMap.put("industry", "FINANCE");
         rcMap.put("skillLevel", "INTERNSHIP");
         when(rc.pathArgs()).thenReturn(rcMap);
+        when(config.getString("mysql.jdbc")).thenReturn("jdbc:mysql://localhost:3306/euphoria");
+        when(config.getString("mysql.user")).thenReturn("euphoria");
+        when(config.getString("mysql.password")).thenReturn("euphoria");
         when(rs.getString("postingId")).thenReturn(expected.postingId().toString());
         when(rs.getString("jobTitle")).thenReturn(expected.jobTitle());
         when(rs.getString("description")).thenReturn(expected.description());
@@ -109,32 +115,31 @@ public class PostingHandlersTest {
 
         // Assert and verify
         assertEquals(expected, actualSingle);
-
-        verifyZeroInteractions(objectMapper);
     }
 
     @Test
     public void createAndEditPosting() throws SQLException, IOException {
         // Setup variables
         List<Posting> expected = Collections.emptyList();
-        byte[] foo = new byte[0];
+        byte[] byteArray = new byte[0];
 
         // Mock dependencies and inputs
-        Map<String, Object> request = new HashMap<String, Object>();
-        request.put("jobTitle", "Underwater Basket Weaver");
-        request.put("description", "What it sounds like.");
-        request.put("location", "NEWYORK");
-        request.put("industry", "FINANCE");
-        request.put("skillLevel", "INTERNSHIP");
-        when(rc.request().payload().get().toByteArray()).thenReturn(foo);
-        when(objectMapper.readValue(requestBytes, Map.class)).thenReturn(request);
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("companyId", 1);
+        map.put("postingId", 1);
+        map.put("jobTitle", "Underwater Basket Weaver");
+        map.put("description", "What it sounds like.");
+        map.put("location", "NEWYORK");
+        map.put("industry", "FINANCE");
+        map.put("skillLevel", "INTERNSHIP");
 
-        // Mock dependencies and inputs
-        when(rs.getString("jobTitle")).thenReturn("Underwater Basket Weaver");
-        when(rs.getString("description")).thenReturn("What it sounds like.");
-        when(rs.getString("location")).thenReturn("NEWYORK");
-        when(rs.getString("industry")).thenReturn("FINANCE");
-        when(rs.getString("skillLevel")).thenReturn("INTERNSHIP");
+        when(config.getString("mysql.jdbc")).thenReturn("jdbc:mysql://localhost:3306/euphoria");
+        when(config.getString("mysql.user")).thenReturn("euphoria");
+        when(config.getString("mysql.password")).thenReturn("euphoria");
+        when(rc.request()).thenReturn(request);
+        when(request.payload()).thenReturn(Optional.of(requestPayloadByteString));
+        when(requestPayloadByteString.toByteArray()).thenReturn(byteArray);
+        when(objectMapper.readValue(byteArray, Map.class)).thenReturn(map);
 
         // Call test class
         List<Posting> actualCreated = testClass.createPosting(rc);
@@ -143,8 +148,6 @@ public class PostingHandlersTest {
         // Assert and verify
         assertEquals(expected, actualCreated);
         assertEquals(expected, actualEdited);
-
-        verifyZeroInteractions(objectMapper);
     }
 
     @Test
@@ -160,7 +163,5 @@ public class PostingHandlersTest {
 
         // Assert and verify
         assertEquals(expected, actual);
-
-        verifyZeroInteractions(objectMapper);
     }
 }

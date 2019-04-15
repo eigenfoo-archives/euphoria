@@ -61,10 +61,6 @@ public class CompanyHandlersTest {
         when(config.getString("mysql.user")).thenReturn("euphoria");
         when(config.getString("mysql.password")).thenReturn("euphoria");
         when(rc.pathArgs()).thenReturn(Collections.singletonMap("companyId", "1"));
-        when(rs.getInt("companyId")).thenReturn(expected.companyId());
-        when(rs.getString("name")).thenReturn(expected.name());
-        when(rs.getString("description")).thenReturn(expected.description());
-        when(ps.executeQuery()).thenReturn(rs);
 
         // Call test class
         Company actual = testClass.getCompany(rc).get(0);
