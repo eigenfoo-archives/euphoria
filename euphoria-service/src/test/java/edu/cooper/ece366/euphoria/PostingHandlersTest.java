@@ -51,22 +51,20 @@ public class PostingHandlersTest {
         // Setup variables
         Posting expected = new PostingBuilder()
                 .postingId(1)
+                .companyId(123)
                 .jobTitle("Underwater Basket Weaver")
                 .description("What it sounds like.")
                 .location(Location.valueOf("NEWYORK"))
                 .industry(Industry.valueOf("FINANCE"))
                 .skillLevel(SkillLevel.valueOf("INTERNSHIP"))
+                .dateCreated("2018-07-10 02:30:00")
                 .build();
 
         // Mock dependencies and inputs
+        when(config.getString("mysql.jdbc")).thenReturn("jdbc:mysql://localhost:3306/euphoria");
+        when(config.getString("mysql.user")).thenReturn("euphoria");
+        when(config.getString("mysql.password")).thenReturn("euphoria");
         when(rc.pathArgs()).thenReturn(Collections.singletonMap("postingId", "1"));
-        when(rs.getString("postingId")).thenReturn(expected.postingId().toString());
-        when(rs.getString("jobTitle")).thenReturn(expected.jobTitle());
-        when(rs.getString("description")).thenReturn(expected.description());
-        when(rs.getString("location")).thenReturn(expected.location().toString());
-        when(rs.getString("industry")).thenReturn(expected.industry().toString());
-        when(rs.getString("skillLevel")).thenReturn(expected.skillLevel().toString());
-        when(ps.executeQuery()).thenReturn(rs);
 
         // Call test class
         Posting actualSingle = testClass.getPosting(rc).get(0);
@@ -75,8 +73,6 @@ public class PostingHandlersTest {
         // Assert and verify
         assertEquals(expected, actualSingle);
         assertEquals(expected, actualAll);
-
-        verifyZeroInteractions(objectMapper);
     }
 
     @Test
@@ -102,13 +98,6 @@ public class PostingHandlersTest {
         when(config.getString("mysql.jdbc")).thenReturn("jdbc:mysql://localhost:3306/euphoria");
         when(config.getString("mysql.user")).thenReturn("euphoria");
         when(config.getString("mysql.password")).thenReturn("euphoria");
-        when(rs.getString("postingId")).thenReturn(expected.postingId().toString());
-        when(rs.getString("jobTitle")).thenReturn(expected.jobTitle());
-        when(rs.getString("description")).thenReturn(expected.description());
-        when(rs.getString("location")).thenReturn(expected.location().toString());
-        when(rs.getString("industry")).thenReturn(expected.industry().toString());
-        when(rs.getString("skillLevel")).thenReturn(expected.skillLevel().toString());
-        when(ps.executeQuery()).thenReturn(rs);
 
         // Call test class
         Posting actualSingle = testClass.searchPostings(rc).get(0);
@@ -156,7 +145,7 @@ public class PostingHandlersTest {
         List<Posting> expected = Collections.emptyList();
 
         // Mock dependencies and inputs
-        when(rs.getString("postingId")).thenReturn("1");
+        when(rc.pathArgs()).thenReturn(Collections.singletonMap("postingId", "1"));
 
         // Call test class
         List<Posting> actual = testClass.deletePosting(rc);
