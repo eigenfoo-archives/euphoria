@@ -68,7 +68,7 @@ curl -X GET http://localhost:8080/api/posting/4
 # [null]%
 
 curl -X POST http://localhost:8080/api/cookie -H "Content-Type: application/json" -d '{"username": "timapple", "passwordHash": "hash"}'
-# [{"cookie":"abctimapple1234has"}]%
+# [{"cookie":"random36charUUIDstring"}]%
 
-curl -X GET http://localhost:8080/api/cookie/abctimapple1234has
-# [{"cookie":"abctimapple1234has"}]%
+curl -X GET http://localhost:8080/api/cookie/specific36charUUIDstring
+# [{"cookie":"specific36charUUIDstring"}]%

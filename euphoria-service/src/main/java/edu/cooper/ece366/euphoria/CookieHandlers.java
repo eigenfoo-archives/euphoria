@@ -13,6 +13,7 @@ import java.sql.*;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.stream.Stream;
 
 public class CookieHandlers implements RouteProvider {
@@ -85,7 +86,7 @@ public class CookieHandlers implements RouteProvider {
                 id = rs.getInt("id");
                 isUser = rs.getBoolean("isUser");
                 if (rs != null) {
-                    String cookieNew = "abc" + username + "1234" + passwordHash.substring(0, 3); //TODO: make a better cookie hashing function
+                    String cookieNew = UUID.randomUUID().toString();
                     String sqlQueryIns = "INSERT INTO cookies (id, isUser, cookie) VALUES (?, ?, ?)";
                     PreparedStatement psIns = conn.prepareStatement(sqlQueryIns);
                     psIns.setInt(1, id); // Either userId or companyId
