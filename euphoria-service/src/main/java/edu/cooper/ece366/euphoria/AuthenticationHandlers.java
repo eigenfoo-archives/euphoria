@@ -49,7 +49,7 @@ public class AuthenticationHandlers implements RouteProvider {
             ps.setString(2, passwordHash);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
+            if (rs.first()) {
                 authentication = new AuthenticationBuilder()
                         .id(rs.getInt("id"))
                         .username(rs.getString("username"))

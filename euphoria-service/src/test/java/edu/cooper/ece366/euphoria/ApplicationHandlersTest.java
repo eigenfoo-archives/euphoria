@@ -40,7 +40,7 @@ public class ApplicationHandlersTest {
     }
 
     @Test
-    public void getApplication() throws SQLException {
+    public void getApplication() {
         byte[] emptyArray = new byte[0];
 
         // Setup variables
@@ -67,7 +67,7 @@ public class ApplicationHandlersTest {
     }
 
     @Test
-    public void getApplicationsForPosting() throws SQLException {
+    public void getApplicationsForPosting() {
         byte[] emptyArray = new byte[0];
 
         // Setup variables

@@ -41,7 +41,7 @@ public class AuthenticationHandlersTest {
     }
 
     @Test
-    public void getAuthentication() throws SQLException {
+    public void getAuthentication() {
         // Setup variables
         Authentication expected = new AuthenticationBuilder()
                 .id(1)
@@ -70,7 +70,7 @@ public class AuthenticationHandlersTest {
     }
 
     @Test
-    public void createAuthentication() throws SQLException, IOException {
+    public void createAuthentication() throws IOException {
         // Setup variables
         List<Application> expected = Collections.emptyList();
         byte[] byteArray = new byte[0];

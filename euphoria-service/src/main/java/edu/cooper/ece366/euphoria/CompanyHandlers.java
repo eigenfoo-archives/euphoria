@@ -47,7 +47,7 @@ public class CompanyHandlers implements RouteProvider {
             ps.setInt(1, companyId);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
+            if (rs.first()) {
                 company = new CompanyBuilder()
                         .companyId(rs.getInt("companyId"))
                         .name(rs.getString("name"))
@@ -91,9 +91,9 @@ public class CompanyHandlers implements RouteProvider {
                     company = new CompanyBuilder()
                             .companyId(generatedKeys.getInt(1))
                             //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
-                            .name("namefield")
-                            .website("websitefield")
-                            .description("descriptonfield")
+                            .name("NA")
+                            .website("NA")
+                            .description("NA")
                             .build();
                 } else {
                     throw new SQLException("Creating new company failed, no ID obtained.");
