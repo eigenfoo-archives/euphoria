@@ -124,13 +124,17 @@
     Payload contains nothing.
 
 ---
+To base64 dump any file:
+```bash
+base64 resume.pdf | tr -d '\n'
+```
 
 To hexdump any file:
 ```bash
-xxd -p resume.txt | tr -d '\n'
+xxd -p resume.pdf | tr -d '\n'
 ```
 
 To decode base64 into files save base64 string in document example then run:   
 ```bash
-base64 --decode example > resumeretreived.txt   
+base64 --decode example > resumeretreived.pdf   
 ```

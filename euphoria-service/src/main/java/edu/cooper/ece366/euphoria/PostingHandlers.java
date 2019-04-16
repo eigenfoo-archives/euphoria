@@ -8,6 +8,7 @@ import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
 
+import java.io.File;
 import java.io.IOException;
 import java.sql.*;
 import java.util.ArrayList;
@@ -19,10 +20,12 @@ import java.util.stream.Stream;
 public class PostingHandlers implements RouteProvider {
     private final ObjectMapper objectMapper;
     private final Config config;
+    private final String FileStoragePath;
 
     public PostingHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
         this.config = config;
+        FileStoragePath = config.getString("FileStoragePath");
     }
 
     @Override
@@ -204,7 +207,8 @@ public class PostingHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Posting> createPosting(final RequestContext rc) {
         try {
-            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            byte[] requestBytes = rc.request().payload().get().toByteArray();
+            Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
             Integer companyId = Integer.parseInt(jsonMap.get("companyId").toString());
             String jobTitle = jsonMap.get("jobTitle").toString();
             String description = jsonMap.get("description").toString();
@@ -279,6 +283,19 @@ public class PostingHandlers implements RouteProvider {
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
             ps.setInt(1, postingId);
             ps.executeUpdate();
+
+            //remove associated resumes and cover letters from file system
+            sqlQuery = "SELECT applicationId FROM applications WHERE postingId = ?";
+            ps = conn.prepareStatement(sqlQuery);
+            ps.setInt(1, postingId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Integer applicationId = rs.getInt("applicationId");
+                File fileRes = new File(FileStoragePath + "resume" + "_" + applicationId);
+                File fileCov = new File(FileStoragePath + "cover" + "_" + applicationId);
+                fileRes.delete();
+                fileCov.delete();
+            }
 
             sqlQuery = "DELETE FROM applications WHERE postingId = ?";
             ps = conn.prepareStatement(sqlQuery);

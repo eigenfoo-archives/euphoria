@@ -7,22 +7,28 @@ import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
+import java.util.Base64;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.*;
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import java.util.ArrayList;
 
 public class ApplicationHandlers implements RouteProvider {
     private final ObjectMapper objectMapper;
     private final Config config;
+    private final String FileStoragePath;
 
     public ApplicationHandlers(final ObjectMapper objectMapper, final Config config) {
         this.objectMapper = objectMapper;
         this.config = config;
+        FileStoragePath = config.getString("FileStoragePath");
     }
 
     @Override
@@ -38,8 +44,24 @@ public class ApplicationHandlers implements RouteProvider {
     public List<Application> getApplication(final RequestContext rc) {
         Application application = null;
 
+        Integer applicationId = Integer.valueOf(rc.pathArgs().get("applicationId"));
+
+        File fileRes = new File(FileStoragePath + "resume" + "_" + applicationId);
+        byte[] bufferRes = new byte[(int) fileRes.length()];
+        File fileCov = new File(FileStoragePath + "cover" + "_" + applicationId);
+        byte[] bufferCov = new byte[(int) fileCov.length()];
+            try {
+                FileInputStream input1 = new FileInputStream(fileRes);
+                input1.read(bufferRes);
+                input1.close();
+                FileInputStream input2 = new FileInputStream(fileCov);
+                input2.read(bufferCov);
+                input2.close();
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
+
         try {
-            Integer applicationId = Integer.valueOf(rc.pathArgs().get("applicationId"));
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
                     config.getString("mysql.user"),
@@ -54,8 +76,8 @@ public class ApplicationHandlers implements RouteProvider {
                         .applicationId(rs.getInt("applicationId"))
                         .postingId(rs.getInt("postingId"))
                         .userId(rs.getInt("userId"))
-                        .resume(rs.getBytes("resume"))            //returns BASE64
-                        .coverLetter(rs.getBytes("coverLetter"))   //returns BASE64
+                        .resume(bufferRes)        //returns BASE64
+                        .coverLetter(bufferCov)   //returns BASE64
                         .dateCreated(rs.getString("dateCreated"))
                         .build();
             }
@@ -82,12 +104,28 @@ public class ApplicationHandlers implements RouteProvider {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
+                Integer applicationId = rs.getInt("applicationId");
+                File fileRes = new File(FileStoragePath + "resume" + "_" + applicationId);
+                byte[] bufferRes = new byte[(int) fileRes.length()];
+                File fileCov = new File(FileStoragePath + "cover" + "_" + applicationId);
+                byte[] bufferCov = new byte[(int) fileCov.length()];
+                try {
+                    FileInputStream input1 = new FileInputStream(fileRes);
+                    input1.read(bufferRes);
+                    input1.close();
+                    FileInputStream input2 = new FileInputStream(fileCov);
+                    input2.read(bufferCov);
+                    input2.close();
+                } catch (IOException e) {
+                    System.out.println(e.getMessage());
+                }
+
                 Application application = new ApplicationBuilder()
-                        .applicationId(rs.getInt("applicationId"))
+                        .applicationId(applicationId)
                         .postingId(rs.getInt("postingId"))
                         .userId(rs.getInt("userId"))
-                        .resume(rs.getBytes("resume"))            //returns BASE64
-                        .coverLetter(rs.getBytes("coverLetter"))   //returns BASE64
+                        .resume(bufferRes)        //returns BASE64
+                        .coverLetter(bufferCov)   //returns BASE64
                         .dateCreated(rs.getString("dateCreated"))
                         .build();
 
@@ -102,26 +140,50 @@ public class ApplicationHandlers implements RouteProvider {
 
     @VisibleForTesting
     public List<Application> createApplication(final RequestContext rc) {
+        Integer applicationId;
         try {
-            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            byte[] requestBytes = rc.request().payload().get().toByteArray();
+            Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
             Integer postingId = Integer.valueOf(jsonMap.get("postingId").toString());
             Integer userId = Integer.valueOf(jsonMap.get("userId").toString());
-            byte[] resume = jsonMap.get("resume").toString().getBytes();
-            byte[] coverLetter = jsonMap.get("coverLetter").toString().getBytes();
+            String resume = jsonMap.get("resume").toString();
+            String coverLetter = jsonMap.get("coverLetter").toString();
 
             Connection conn = DriverManager.getConnection(
                     config.getString("mysql.jdbc"),
                     config.getString("mysql.user"),
                     config.getString("mysql.password"));
-            String sqlQuery = "INSERT INTO applications (postingId, userId, " +
-                    "resume, coverLetter) VALUES (?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            String sqlQuery = "INSERT INTO applications (postingId, userId) " +
+                              "VALUES (?, ?)";
+            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, postingId);
             ps.setInt(2, userId);
-            ps.setBytes(3, resume);
-            ps.setBytes(4, coverLetter);
             //timestamped automatically in UTC by mysql database
-            ps.executeUpdate();
+            int rowsAffected = ps.executeUpdate();
+
+            //get ApplicationId
+            if (rowsAffected == 0) {
+                throw new SQLException("Creating new user failed, no rows affected.");
+            }
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                     applicationId = generatedKeys.getInt(1);
+                } else {
+                    throw new SQLException("Creating new user failed, no ID obtained.");
+                }
+            }
+            //write to file system
+            byte[] decodedRes = Base64.getDecoder().decode(resume);
+            byte[] decodedCov = Base64.getDecoder().decode(coverLetter);
+
+            try {
+                FileOutputStream output1 = new FileOutputStream(FileStoragePath + "resume" + "_" + applicationId);
+                output1.write(decodedRes);
+                FileOutputStream output2 = new FileOutputStream(FileStoragePath + "cover" + "_" + applicationId);
+                output2.write(decodedCov);
+            } catch (IOException e) {
+                System.out.println(e.getMessage());
+            }
         } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }

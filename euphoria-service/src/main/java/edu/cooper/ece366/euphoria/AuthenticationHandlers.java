@@ -67,7 +67,8 @@ public class AuthenticationHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Authentication> createAuthentication(final RequestContext rc) {
         try {
-            Authentication authentication = objectMapper.readValue(rc.request().payload().get().toByteArray(), Authentication.class);
+            byte[] requestBytes = rc.request().payload().get().toByteArray();
+            Authentication authentication = objectMapper.readValue(requestBytes, Authentication.class);
             Integer id = authentication.id();
             String username = authentication.username();
             String passwordHash = authentication.passwordHash();
