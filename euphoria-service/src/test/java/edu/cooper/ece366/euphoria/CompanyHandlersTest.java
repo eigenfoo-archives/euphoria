@@ -18,7 +18,6 @@ import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,10 +29,6 @@ public class CompanyHandlersTest {
     Config config;
     @Mock
     RequestContext rc;
-    @Mock
-    PreparedStatement ps;
-    @Mock
-    ResultSet rs;
     @Mock
     Request request;
     @Mock

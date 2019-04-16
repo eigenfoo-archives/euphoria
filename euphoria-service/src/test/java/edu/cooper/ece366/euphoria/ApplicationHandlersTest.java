@@ -1,12 +1,10 @@
 package edu.cooper.ece366.euphoria;
 
-import com.fasterxml.jackson.core.util.RequestPayload;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotify.apollo.Request;
 import com.spotify.apollo.RequestContext;
 import com.typesafe.config.Config;
 import okio.ByteString;
-import org.checkerframework.checker.compilermsgs.qual.CompilerMessageKey;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -17,11 +15,9 @@ import java.io.IOException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.ZoneId;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -33,10 +29,6 @@ public class ApplicationHandlersTest {
     Config config;
     @Mock
     RequestContext rc;
-    @Mock
-    PreparedStatement ps;
-    @Mock
-    ResultSet rs;
     @Mock
     Request request;
     @Mock

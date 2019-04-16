@@ -12,13 +12,9 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,10 +26,6 @@ public class UserHandlersTest {
     Config config;
     @Mock
     RequestContext rc;
-    @Mock
-    PreparedStatement ps;
-    @Mock
-    ResultSet rs;
     @Mock
     Request request;
     @Mock
@@ -47,7 +39,7 @@ public class UserHandlersTest {
     }
 
     @Test
-    public void getUser() throws SQLException {
+    public void getUser() {
         // Setup variables
         User expected = new UserBuilder()
                 .userId(1)

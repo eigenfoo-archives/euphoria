@@ -31,10 +31,6 @@ public class AuthenticationHandlersTest {
     @Mock
     RequestContext rc;
     @Mock
-    PreparedStatement ps;
-    @Mock
-    ResultSet rs;
-    @Mock
     Request request;
     @Mock
     ByteString requestPayloadByteString;

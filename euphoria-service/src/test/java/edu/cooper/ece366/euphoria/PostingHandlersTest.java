@@ -12,13 +12,10 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
@@ -30,10 +27,6 @@ public class PostingHandlersTest {
     Config config;
     @Mock
     RequestContext rc;
-    @Mock
-    PreparedStatement ps;
-    @Mock
-    ResultSet rs;
     @Mock
     Request request;
     @Mock
@@ -47,7 +40,7 @@ public class PostingHandlersTest {
     }
 
     @Test
-    public void getPostingAndAllPostings() throws SQLException {
+    public void getPostingAndAllPostings() {
         // Setup variables
         Posting expected = new PostingBuilder()
                 .postingId(1)
@@ -76,7 +69,7 @@ public class PostingHandlersTest {
     }
 
     @Test
-    public void searchPostings() throws SQLException {
+    public void searchPostings() {
         // Setup variables
         Posting expected = new PostingBuilder()
                 .postingId(1)
@@ -107,7 +100,7 @@ public class PostingHandlersTest {
     }
 
     @Test
-    public void createAndEditPosting() throws SQLException, IOException {
+    public void createAndEditPosting() throws IOException {
         // Setup variables
         List<Posting> expected = Collections.emptyList();
         byte[] byteArray = new byte[0];
@@ -140,7 +133,7 @@ public class PostingHandlersTest {
     }
 
     @Test
-    public void deletePosting() throws SQLException {
+    public void deletePosting() {
         // Setup variables
         List<Posting> expected = Collections.emptyList();
 
