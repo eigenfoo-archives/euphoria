@@ -91,9 +91,9 @@ public class CompanyHandlers implements RouteProvider {
                     company = new CompanyBuilder()
                             .companyId(generatedKeys.getInt(1))
                             //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
-                            .name("namefield")
-                            .website("websitefield")
-                            .description("descriptonfield")
+                            .name("NA")
+                            .website("NA")
+                            .description("NA")
                             .build();
                 } else {
                     throw new SQLException("Creating new company failed, no ID obtained.");

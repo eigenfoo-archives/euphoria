@@ -46,9 +46,9 @@ public class PostingHandlersTest {
                 .companyId(123)
                 .jobTitle("Underwater Basket Weaver")
                 .description("What it sounds like.")
-                .location(Location.valueOf("NEWYORK"))
-                .industry(Industry.valueOf("FINANCE"))
-                .skillLevel(SkillLevel.valueOf("INTERNSHIP"))
+                .location(Location.NEWYORK)
+                .industry(Industry.FINANCE)
+                .skillLevel(SkillLevel.INTERNSHIP)
                 .dateCreated("2019-04-16 02:12:22")
                 .build();
 
@@ -75,9 +75,9 @@ public class PostingHandlersTest {
                 .companyId(123)
                 .jobTitle("Underwater Basket Weaver")
                 .description("What it sounds like.")
-                .location(Location.valueOf("NEWYORK"))
-                .industry(Industry.valueOf("FINANCE"))
-                .skillLevel(SkillLevel.valueOf("INTERNSHIP"))
+                .location(Location.NEWYORK)
+                .industry(Industry.FINANCE)
+                .skillLevel(SkillLevel.INTERNSHIP)
                 .dateCreated("2019-04-16 02:12:22")
                 .build();
 
