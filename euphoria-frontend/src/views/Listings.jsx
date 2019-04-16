@@ -98,7 +98,6 @@ class Listings extends React.Component {
 
   render() {
     const listings_data = this.state.listings_data;
-
     return(
       <div>
         <div className="navbar">
@@ -115,6 +114,7 @@ class Listings extends React.Component {
           {listings_data.map(listing_data => (
             <this.listing key={listing_data.postingId} listing_data={listing_data} />
           ))}
+
         </div>
     </div>
     );

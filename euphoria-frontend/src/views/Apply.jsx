@@ -1,7 +1,6 @@
 import React from 'react'
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
 
-
 class Apply extends React.Component {
 
   constructor(props, context) {
@@ -123,8 +122,8 @@ class Apply extends React.Component {
         {listing_data.map(listing_data => (
           <this.listing listing_data={listing_data} />
         ))}
-
     </div>
+
     );
   }
 }

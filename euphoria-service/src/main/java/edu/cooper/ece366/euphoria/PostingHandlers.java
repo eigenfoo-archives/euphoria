@@ -207,7 +207,8 @@ public class PostingHandlers implements RouteProvider {
     @VisibleForTesting
     public List<Posting> createPosting(final RequestContext rc) {
         try {
-            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            byte[] requestBytes = rc.request().payload().get().toByteArray();
+            Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
             Integer companyId = Integer.parseInt(jsonMap.get("companyId").toString());
             String jobTitle = jsonMap.get("jobTitle").toString();
             String description = jsonMap.get("description").toString();

@@ -68,7 +68,8 @@ public class UserHandlers implements RouteProvider {
     public List<User> createUser(final RequestContext rc) {
         User user = null;
         try {
-            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            byte[] requestBytes = rc.request().payload().get().toByteArray();
+            Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
             String name = jsonMap.get("name").toString();
             String email = jsonMap.get("email").toString();
             String phoneNumber = jsonMap.get("phoneNumber").toString();

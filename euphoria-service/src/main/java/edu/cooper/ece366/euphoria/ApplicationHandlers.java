@@ -7,7 +7,7 @@ import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
 import com.typesafe.config.Config;
 import okio.ByteString;
-import sun.misc.BASE64Decoder;
+import java.util.Base64;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -142,7 +142,8 @@ public class ApplicationHandlers implements RouteProvider {
     public List<Application> createApplication(final RequestContext rc) {
         Integer applicationId;
         try {
-            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
+            byte[] requestBytes = rc.request().payload().get().toByteArray();
+            Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
             Integer postingId = Integer.valueOf(jsonMap.get("postingId").toString());
             Integer userId = Integer.valueOf(jsonMap.get("userId").toString());
             String resume = jsonMap.get("resume").toString();
@@ -172,9 +173,8 @@ public class ApplicationHandlers implements RouteProvider {
                 }
             }
             //write to file system
-            BASE64Decoder decoder = new BASE64Decoder();
-            byte[] decodedRes = decoder.decodeBuffer(resume);
-            byte[] decodedCov = decoder.decodeBuffer(coverLetter);
+            byte[] decodedRes = Base64.getDecoder().decode(resume);
+            byte[] decodedCov = Base64.getDecoder().decode(coverLetter);
 
             try {
                 FileOutputStream output1 = new FileOutputStream(FileStoragePath + "resume" + "_" + applicationId);
