@@ -47,7 +47,7 @@ public class UserHandlers implements RouteProvider {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
+            if (rs.first()) {
                 user = new UserBuilder()
                         .userId(rs.getInt("userId"))
                         .name(rs.getString("name"))

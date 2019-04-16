@@ -48,10 +48,8 @@ public class CookieHandlers implements RouteProvider {
             ps.setString(1, cookieCheck);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
+            if (rs.first()) {
                 cookie = new CookieBuilder()
-                        //.id(rs.getInt("id")) // Either userId or companyId
-                        //.isUser(rs.getBoolean("isUser"))
                         .cookie(rs.getString("cookie"))
                         .build();
             }
@@ -82,7 +80,7 @@ public class CookieHandlers implements RouteProvider {
             ps.setString(2, passwordHash);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
+            if (rs.first()) {
                 id = rs.getInt("id");
                 isUser = rs.getBoolean("isUser");
                 if (rs != null) {
@@ -93,7 +91,7 @@ public class CookieHandlers implements RouteProvider {
                     psIns.setBoolean(2, isUser);
                     psIns.setString(3, cookieNew);
                     psIns.executeUpdate();
-                    //send back to front-end
+                    // Send back to front-end
                     cookie = new CookieBuilder()
                             .cookie(cookieNew)
                             .build();

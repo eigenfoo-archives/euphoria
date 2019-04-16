@@ -47,7 +47,7 @@ public class CompanyHandlers implements RouteProvider {
             ps.setInt(1, companyId);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
+            if (rs.first()) {
                 company = new CompanyBuilder()
                         .companyId(rs.getInt("companyId"))
                         .name(rs.getString("name"))
