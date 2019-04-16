@@ -106,8 +106,8 @@ public class ApplicationHandlersTest {
         map.put("applicationId", 1);
         map.put("postingId", 1);
         map.put("userId", 1);
-        map.put("resume", "ZT16OA==");
-        map.put("coverLetter", "ZT16OA==");
+        map.put("resume", byteArray);
+        map.put("coverLetter", byteArray);
         when(rc.request()).thenReturn(request);
         when(request.payload()).thenReturn(Optional.of(requestPayloadByteString));
         when(requestPayloadByteString.toByteArray()).thenReturn(byteArray);

@@ -50,7 +50,7 @@ public class PostingHandlersTest {
                 .location(Location.valueOf("NEWYORK"))
                 .industry(Industry.valueOf("FINANCE"))
                 .skillLevel(SkillLevel.valueOf("INTERNSHIP"))
-                .dateCreated("2018-07-10 02:30:00")
+                .dateCreated("2019-04-16 02:12:22")
                 .build();
 
         // Mock dependencies and inputs
@@ -79,7 +79,7 @@ public class PostingHandlersTest {
                 .location(Location.valueOf("NEWYORK"))
                 .industry(Industry.valueOf("FINANCE"))
                 .skillLevel(SkillLevel.valueOf("INTERNSHIP"))
-                .dateCreated("2018-07-10 02:30:00")
+                .dateCreated("2019-04-16 02:12:22")
                 .build();
 
         // Mock dependencies and inputs

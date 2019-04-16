@@ -86,11 +86,11 @@ CREATE TABLE postings (postingId INT AUTO_INCREMENT PRIMARY KEY,
                        dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 INSERT INTO postings
-    (companyId, jobTitle, description, location, industry, skillLevel)
+    (companyId, jobTitle, description, location, industry, skillLevel, dateCreated)
 VALUES
-    (123, "Underwater Basket Weaver", "Must lift.", "WASHINGTON", "SERVICES", "INTERNSHIP"),
-    (456, "Frontend Developer", "Must know everything about React.js.", "NEWYORK", "TECHNOLOGY", "EXECUTIVE"),
-    (789, "Backend Developer", "Must know nothing about React.js.", "NEWYORK", "TECHNOLOGY", "INTERNSHIP");
+    (123, "Underwater Basket Weaver", "Must lift.", "WASHINGTON", "SERVICES", "INTERNSHIP", "2019-04-16 02:12:22"),
+    (456, "Frontend Developer", "Must know everything about React.js.", "NEWYORK", "TECHNOLOGY", "EXECUTIVE", "2019-04-16 02:12:22"),
+    (789, "Backend Developer", "Must know nothing about React.js.", "NEWYORK", "TECHNOLOGY", "INTERNSHIP", "2019-04-16 02:12:22");
 
 CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
                            postingId INT NOT NULL,  -- FOREIGN KEY(postingId), REFERENCES postings (postingId),
@@ -98,11 +98,11 @@ CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
                            dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 INSERT INTO applications
-    (postingId, userId)
+    (postingId, userId, dateCreated)
 VALUES
-	(1, 1, x'', x'', "2018-07-11 05:30:00"),
-	(1, 2, x'', x'', "2018-07-13 03:22:00"),
-	(3, 3, x'', x'', "2019-02-13 11:40:33");
+	(1, 1, "2018-07-11 05:30:00"),
+	(1, 2, "2018-07-13 03:22:00"),
+	(3, 3, "2019-02-13 11:40:33");
 
 
 CREATE TABLE authentications (id INT NOT NULL,
