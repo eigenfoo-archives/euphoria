@@ -20,7 +20,7 @@ const routing = (
     <Route path="/signin" component={Signin} />
     <Route path="/signup" component={Signup} />
     <Route exact path="/listings" component={Listings} />
-    <Route path="/listings/apply" component={Apply} />
+    <Route path="/listings/apply/:postingId" component={Apply} />
     <Route exact path="/dashboard" component={Dashboard} />
     <Route path="/dashboard/post" component={Post} />
   </Router>

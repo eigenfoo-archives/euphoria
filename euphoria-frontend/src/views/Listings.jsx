@@ -6,10 +6,18 @@ class Listings extends React.Component {
   constructor(props, context) {
     super(props);
 
+    this.state = {
+      listings_data: []
+    };
+
     this.handleRedirect = this.handleRedirect.bind(this);
     this.handleGet = this.handleGet.bind(this);
 
-    this.Listing = this.Listing.bind(this);
+    this.listing = this.listing.bind(this);
+  }
+
+  componentDidMount() {
+    this.handleGet();
   }
 
   handleRedirect(path) {
@@ -17,48 +25,71 @@ class Listings extends React.Component {
   }
 
   handleGet(props) {
+
     let url = "http://localhost:8080/api/posting/random";
 
     fetch(url)
-      .then(function(data) {
-        console.log(data);
-      });
+    .then(response => {
+      return response.json()
+    })
+    .then(data => {
+      // Work with JSON data here
+      this.setState({listings_data: data});
+    })
+    .catch(err => {
+      // Do something for an error here
+    })
+
     return;
   }
 
-  Listing(props) {
+  listing(props) {
+    const listing_data = props.listing_data;
+
     return(
       <div className="floating-container listing-container-scrolling" style={{width:"600px"}}>
         <Container>
           <Row>
-            <h1>
-              Software Engineer
-            </h1>
+            <Col>
+              <h1>
+                {listing_data.jobTitle}
+              </h1>
+            </Col>
           </Row>
           <Row>
-            <p style={{fontSize:"20px", color:"#AAA"}}>
-              Mountain View, CA
-            </p>
+            <Col>
+              <p style={{fontSize:"20px", color:"#AAA"}}>
+                {listing_data.location}
+              </p>
+            </Col>
           </Row>
           <Row>
-            <Col sm={4}>
-              <Image
-                src={require('../images/1.png')}
-                style={{height:"30px"}}
-              />
+            <Col>
+              <p style={{fontSize:"15px", color:"#AAA"}}>
+                {listing_data.industry}
+              </p>
             </Col>
             <Col>
-              <p>Skill: Python, C++</p>
+              <Image
+                src={require("../images/" + listing_data.skillLevel + ".png")}
+                style={{height:"20px"}}
+              />
             </Col>
           </Row>
           <hr/>
+          <br/>
           <Row>
-            <p>
-
-            </p>
+            <Col>
+              <p>
+                {listing_data.description}
+              </p>
+            </Col>
           </Row>
+          <br/>
           <Row>
-            <Button variant="info" size="lg" block>Apply</Button>
+            <Button variant="info" size="lg" block onClick={() => this.handleRedirect("/listings/apply/" + listing_data.postingId)}>
+              Apply
+            </Button>
           </Row>
         </Container>
       </div>
@@ -66,6 +97,8 @@ class Listings extends React.Component {
   }
 
   render() {
+    const listings_data = this.state.listings_data;
+
     return(
       <div>
         <div className="navbar">
@@ -79,12 +112,9 @@ class Listings extends React.Component {
         </div>
 
         <div className="scrolling-container">
-          <this.Listing />
-          <this.Listing />
-          <this.Listing />
-          <this.Listing />
-          <this.Listing />
-          <this.Listing />
+          {listings_data.map(listing_data => (
+            <this.listing key={listing_data.postingId} listing_data={listing_data} />
+          ))}
         </div>
     </div>
     );

@@ -25,7 +25,7 @@ class Splash extends React.Component {
           </div>
         </div>
 
-        <div class="floating-container centered-container" style={{width:"600px"}}>
+        <div className="floating-container centered-container" style={{width:"600px"}}>
           <Container>
             <Row>
               <div className="welcome-container">
