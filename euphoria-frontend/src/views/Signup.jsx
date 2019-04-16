@@ -134,8 +134,8 @@ class Signup extends React.Component {
               onChange={this.handleChange}>
               <option>Choose...</option>
               <option>NOHIGHSCHOOL</option>
-              <option>HIGHSCHOOL</option>
               <option>GED</option>
+              <option>HIGHSCHOOL</option>
               <option>SOMECOLLEGE</option>
               <option>ASSOCIATES</option>
               <option>BACHELORS</option>

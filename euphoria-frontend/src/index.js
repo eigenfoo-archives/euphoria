@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route} from "react-router-dom";
+import Particles from 'react-particles-js';
 
 import Apply from './views/Apply.jsx';
 import Dashboard from './views/Dashboard';
@@ -16,11 +17,18 @@ import * as serviceWorker from './serviceWorker';
 
 const routing = (
   <Router>
+    <Particles
+      params={require("./images/particles_params.json")}
+      style={{
+        position: "fixed",
+        width: "100%",
+        height: "100%"
+      }} />
     <Route exact path="/" component={Splash} />
     <Route path="/signin" component={Signin} />
     <Route path="/signup" component={Signup} />
     <Route exact path="/listings" component={Listings} />
-    <Route path="/listings/apply" component={Apply} />
+    <Route path="/listings/apply/:postingId" component={Apply} />
     <Route exact path="/dashboard" component={Dashboard} />
     <Route path="/dashboard/post" component={Post} />
   </Router>

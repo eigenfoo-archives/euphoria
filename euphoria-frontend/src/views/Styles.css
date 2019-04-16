@@ -1,6 +1,6 @@
 .navbar{
   overflow: hidden;
-  position: relative; /* Set the navbar to fixed position */
+  position: absolute;; /* Set the navbar to fixed position */
   top: 0; /* Position the navbar at the top of the page */
   width: 100%; /* Full width */
   z-index: 1;
@@ -73,4 +73,12 @@
 
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+.listings-container-dropdown {
+  position: absolute;
+  bottom: 30px;
+
+  left: 50%;
+  transform: translate(-50%, 0%);
 }
