@@ -73,5 +73,5 @@ curl -X GET http://localhost:8080/api/posting/4
 curl -X POST http://localhost:8080/api/cookie -H "Content-Type: application/json" -d '{"username": "timapple", "passwordHash": "hash"}'
 # [{"cookie":"random36charUUIDstring"}]%
 
-curl -X GET http://localhost:8080/api/cookie/specific36charUUIDstring
-# [{"cookie":"specific36charUUIDstring"}]%
+curl -X GET http://localhost:8080/api/cookie/af310190-856f-46e1-b256-04240216367a
+# [{"id":2,"isUser":true,"cookie":"af310190-856f-46e1-b256-04240216367a"}]%
