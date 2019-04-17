@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
 
-class Apply extends React.Component {
+class Apply extends Component {
 
   constructor(props, context) {
     super(props);
 
     this.state = {
-      posting_data: [],
+      postingData: [],
     };
 
     this.handleRedirect = this.handleRedirect.bind(this);
@@ -29,7 +29,7 @@ class Apply extends React.Component {
       return response.json()
     })
     .then(data => {
-      this.setState({posting_data: data});
+      this.setState({postingData: data});
     })
     .catch(err => {
       // Do something for an error here
@@ -39,14 +39,14 @@ class Apply extends React.Component {
   }
 
   posting(props) {
-    const posting_data = props.posting_data;
+    const postingData = props.postingData;
     return(
       <div className="floating-container centered-container" style={{width:"900px"}}>
         <Container fluid>
           <Row>
             <Col sm={9}>
               <h1>
-                {posting_data.jobTitle}
+                {postingData.jobTitle}
               </h1>
             </Col>
             <Col sm={3}>
@@ -56,7 +56,7 @@ class Apply extends React.Component {
           <Row>
             <Col sm={9}>
               <p style={{fontSize:"20px", color:"#AAA"}}>
-                {posting_data.location}
+                {postingData.location}
               </p>
             </Col>
             <Col sm={3}>
@@ -66,12 +66,12 @@ class Apply extends React.Component {
           <Row>
             <Col>
               <p style={{fontSize:"15px", color:"#AAA"}}>
-                {posting_data.industry}
+                {postingData.industry}
               </p>
             </Col>
             <Col>
               <Image
-                src={require("../images/" + posting_data.skillLevel + ".png")}
+                src={require("../images/" + postingData.skillLevel + ".png")}
                 style={{height:"20px"}}
               />
             </Col>
@@ -87,7 +87,7 @@ class Apply extends React.Component {
           <Row>
             <Col>
               <p>
-                {posting_data.description}
+                {postingData.description}
               </p>
             </Col>
           </Row>
@@ -101,9 +101,9 @@ class Apply extends React.Component {
   }
 
   render() {
-    const posting_data = this.state.posting_data;
+    const postingData = this.state.postingData;
 
-    console.log(posting_data);
+    console.log(postingData);
     return(
       <div>
         <div className="navbar">
@@ -117,8 +117,8 @@ class Apply extends React.Component {
         </div>
 
 
-        {posting_data.map(posting_data => (
-          <this.posting posting_data={posting_data} />
+        {postingData.map(postingData => (
+          <this.posting postingData={postingData} />
         ))}
     </div>
 

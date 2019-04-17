@@ -1,7 +1,7 @@
-import React from "react";
+import React, { Component } from 'react';
 import {Image} from "react-bootstrap";
 
-class NotFound extends React.Component {
+class NotFound extends Component {
   constructor(props, context) {
     super(props);
 

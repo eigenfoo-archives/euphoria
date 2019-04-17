@@ -1,14 +1,14 @@
-import React from 'react'
+import React, { Component } from 'react';
 import {Image, Button, ButtonGroup, Container, Row, Col} from "react-bootstrap";
 
-class Dashboard extends React.Component {
+class Dashboard extends Component {
   constructor(props, context) {
     super(props);
 
     this.dashboardUrl = "http://localhost:8080/api/posting/random"; //FIXME
 
     this.state = {
-      company_postings_data: [],
+      companyPostingsData: [],
     };
 
     this.handleRedirect = this.handleRedirect.bind(this);
@@ -33,8 +33,8 @@ class Dashboard extends React.Component {
     })
     .then(data => {
       // Work with JSON data here
-      this.setState({company_postings_data: data});
-      console.log(this.state.company_postings_data);
+      this.setState({companyPostingsData: data});
+      console.log(this.state.companyPostingsData);
     })
     .catch(err => {
       // Do something for an error here
@@ -56,7 +56,7 @@ class Dashboard extends React.Component {
   }
 
   posting(props) {
-    const company_posting_data = props.company_posting_data;
+    const companyPostingData = props.companyPostingData;
 
     return(
       <div className="floating-container posting-container-scrolling" style={{width:"600px"}}>
@@ -64,26 +64,26 @@ class Dashboard extends React.Component {
           <Row>
             <Col>
               <h1>
-                {company_posting_data.jobTitle}
+                {companyPostingData.jobTitle}
               </h1>
             </Col>
           </Row>
           <Row>
             <Col>
               <p style={{fontSize:"20px", color:"#AAA"}}>
-                {company_posting_data.location}
+                {companyPostingData.location}
               </p>
             </Col>
           </Row>
           <Row>
             <Col>
               <p style={{fontSize:"15px", color:"#AAA"}}>
-                {company_posting_data.industry}
+                {companyPostingData.industry}
               </p>
             </Col>
             <Col>
               <Image
-                src={require("../images/" + company_posting_data.skillLevel + ".png")}
+                src={require("../images/" + companyPostingData.skillLevel + ".png")}
                 style={{height:"20px"}}
               />
             </Col>
@@ -93,21 +93,21 @@ class Dashboard extends React.Component {
           <Row>
             <Col>
               <p>
-                {company_posting_data.description}
+                {companyPostingData.description}
               </p>
             </Col>
           </Row>
           <br/>
           <Row>
             <Col sm={8}>
-              <Button variant="info" size="lg" block onClick={() => this.handleRedirect("/dashboard/applications/" + company_posting_data.postingId)}>
+              <Button variant="info" size="lg" block onClick={() => this.handleRedirect("/dashboard/applications/" + companyPostingData.postingId)}>
                 View Applications
               </Button>
             </Col>
             <Col sm={4}>
               <ButtonGroup>
-                <Button variant="secondary" size="lg" onClick={() => this.handleRedirect("/dashboard/post/edit/" + company_posting_data.postingId)}>Edit</Button>
-                <Button variant="danger" size="lg" onClick={() => this.handleDelete(company_posting_data.postingId)}>Delete</Button>
+                <Button variant="secondary" size="lg" onClick={() => this.handleRedirect("/dashboard/post/edit/" + companyPostingData.postingId)}>Edit</Button>
+                <Button variant="danger" size="lg" onClick={() => this.handleDelete(companyPostingData.postingId)}>Delete</Button>
               </ButtonGroup>
             </Col>
           </Row>
@@ -118,7 +118,7 @@ class Dashboard extends React.Component {
 
   render() {
     const {
-      company_postings_data,
+      companyPostingsData,
       location,
       industry,
       skillLevel,
@@ -137,8 +137,8 @@ class Dashboard extends React.Component {
         </div>
 
         <div className="scrolling-container">
-          {company_postings_data.map(company_posting_data => (
-            <this.posting key={company_posting_data.postingId} company_posting_data={company_posting_data} />
+          {companyPostingsData.map(companyPostingData => (
+            <this.posting key={companyPostingData.postingId} companyPostingData={companyPostingData} />
           ))}
         </div>
 

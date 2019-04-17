@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col, Form} from "react-bootstrap";
 
-class Postings extends React.Component {
+class Postings extends Component {
   constructor(props, context) {
     super(props);
 
     this.state = {
-      postings_data: [],
+      postingsData: [],
       location: "",
       industry: "",
       skillLevel: ""
@@ -35,14 +35,14 @@ class Postings extends React.Component {
         skillLevel,
       } = this.state;
 
-      let filter_list = [location, industry, skillLevel];
+      let filterList = [location, industry, skillLevel];
 
-      for (let i = 0; i < filter_list.length; i++){
-        if (filter_list[i].endsWith("...")){
-          filter_list[i] = "";
+      for (let i = 0; i < filterList.length; i++){
+        if (filterList[i].endsWith("...")){
+          filterList[i] = "";
         }
 
-        url += "/" + filter_list[i]
+        url += "/" + filterList[i]
       }
 
       this.handleGet(url);
@@ -60,7 +60,7 @@ class Postings extends React.Component {
     })
     .then(data => {
       // Work with JSON data here
-      this.setState({postings_data: data});
+      this.setState({postingsData: data});
     })
     .catch(err => {
       // Do something for an error here
@@ -70,7 +70,7 @@ class Postings extends React.Component {
   }
 
   posting(props) {
-    const posting_data = props.posting_data;
+    const postingData = props.postingData;
 
     return(
       <div className="floating-container posting-container-scrolling" style={{width:"600px"}}>
@@ -78,26 +78,26 @@ class Postings extends React.Component {
           <Row>
             <Col>
               <h1>
-                {posting_data.jobTitle}
+                {postingData.jobTitle}
               </h1>
             </Col>
           </Row>
           <Row>
             <Col>
               <p style={{fontSize:"20px", color:"#AAA"}}>
-                {posting_data.location}
+                {postingData.location}
               </p>
             </Col>
           </Row>
           <Row>
             <Col>
               <p style={{fontSize:"15px", color:"#AAA"}}>
-                {posting_data.industry}
+                {postingData.industry}
               </p>
             </Col>
             <Col>
               <Image
-                src={require("../images/" + posting_data.skillLevel + ".png")}
+                src={require("../images/" + postingData.skillLevel + ".png")}
                 style={{height:"20px"}}
               />
             </Col>
@@ -107,13 +107,13 @@ class Postings extends React.Component {
           <Row>
             <Col>
               <p>
-                {posting_data.description}
+                {postingData.description}
               </p>
             </Col>
           </Row>
           <br/>
           <Row>
-            <Button variant="info" size="lg" block onClick={() => this.handleRedirect("/postings/apply/" + posting_data.postingId)}>
+            <Button variant="info" size="lg" block onClick={() => this.handleRedirect("/postings/apply/" + postingData.postingId)}>
               Apply
             </Button>
           </Row>
@@ -124,7 +124,7 @@ class Postings extends React.Component {
 
   render() {
     const {
-      postings_data,
+      postingsData,
       location,
       industry,
       skillLevel,
@@ -143,8 +143,8 @@ class Postings extends React.Component {
         </div>
 
         <div className="scrolling-container">
-          {postings_data.map(posting_data => (
-            <this.posting key={posting_data.postingId} posting_data={posting_data} />
+          {postingsData.map(postingData => (
+            <this.posting key={postingData.postingId} postingData={postingData} />
           ))}
         </div>
 

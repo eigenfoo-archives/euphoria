@@ -1,7 +1,7 @@
-import React from "react";
+import React, { Component } from 'react';
 import {Image, Form, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, Col} from "react-bootstrap";
 
-class Signup extends React.Component {
+class Signup extends Component {
 
   constructor(props, context) {
     super(props);
@@ -47,7 +47,7 @@ class Signup extends React.Component {
   handleSubmit(event) {
     const form = event.currentTarget;
     let url = "http://localhost:8080/api/";
-    let data = "";
+    let userData = "";
 
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -69,7 +69,7 @@ class Signup extends React.Component {
 
     if (isUser){
       url += "user";
-      data = {
+      userData = {
         name,
         email,
         phoneNumber,
@@ -79,23 +79,28 @@ class Signup extends React.Component {
     }
     else{
       url += "company";
-      data = {
+      userData = {
         name: companyName,
         website,
         description
       };
     }
 
-    const authentication_url = "http://localhost:8080/api/authentication/" + username + "/"  + password;
+    const authenticationUrl = "http://localhost:8080/api/authentication/" + username + "/"  + password;
 
     fetch(url, {
         method: "POST",
-        body: JSON.stringify(data)
-      })
-      //.then(fetch(authentication_url, {method: "POST"})) //FIXME
-      .then(alert("Account Created"))
-      .then(this.handleRedirect("/dashboard"));
-      //FIXME add check for proper accoutn creation
+        body: JSON.stringify(userData)
+      }) //FIXME add check for is user exists
+      .then(response => {
+        console.log(response);
+      }); //FIXME SERVER ERROR 500
+
+
+
+      // .then(alert("Account Created"))
+      // .then(this.handleRedirect("/dashboard"));
+      // //FIXME add check for proper accoutn creation
 
   }
 

@@ -1,7 +1,7 @@
-import React from "react";
+import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
 
-class Splash extends React.Component {
+class Splash extends Component {
   constructor(props, context) {
     super(props);
 
@@ -30,7 +30,7 @@ class Splash extends React.Component {
             <Row>
               <div className="welcome-container">
                 <h1>
-                  Welcome!
+                  Welcome! {this.props.cookies}
                 </h1>
                 <br></br>
                 <p>

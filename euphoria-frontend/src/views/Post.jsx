@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { Component } from 'react';
 import {Image, Form, Button, Col} from "react-bootstrap";
 
-class Post extends React.Component {
+class Post extends Component {
 
   constructor(props, context) {
     super(props);
