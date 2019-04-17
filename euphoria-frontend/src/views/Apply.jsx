@@ -25,9 +25,7 @@ class Apply extends Component {
 
   handleGet(url) {
     fetch(url)
-    .then(response => {
-      return response.json()
-    })
+    .then(response => response.json())
     .then(data => {
       this.setState({postingData: data});
     })

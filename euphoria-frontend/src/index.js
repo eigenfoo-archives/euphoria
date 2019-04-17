@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
+import { BrowserRouter as Router } from "react-router-dom";
 import { CookiesProvider } from 'react-cookie';
 import Particles from 'react-particles-js';
 
