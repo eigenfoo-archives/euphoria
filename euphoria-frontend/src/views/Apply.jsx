@@ -1,13 +1,13 @@
-import React from 'react'
+import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
 
-class Apply extends React.Component {
+class Apply extends Component {
 
   constructor(props, context) {
     super(props);
 
     this.state = {
-      listing_data: [],
+      postingData: [],
     };
 
     this.handleRedirect = this.handleRedirect.bind(this);
@@ -15,23 +15,21 @@ class Apply extends React.Component {
   }
 
   componentDidMount() {
-    this.handleGet();
+    let url = "http://localhost:8080/api/posting/" + this.props.match.params.postingId;
+    this.handleGet(url);
   }
 
   handleRedirect(path) {
     this.props.history.push(path);
   }
 
-  handleGet(props) {
-    let url = "http://localhost:8080/api/posting/" + this.props.match.params.postingId;
-
+  handleGet(url) {
     fetch(url)
     .then(response => {
       return response.json()
     })
     .then(data => {
-      // Work with JSON data here
-      this.setState({listing_data: data});
+      this.setState({postingData: data});
     })
     .catch(err => {
       // Do something for an error here
@@ -40,15 +38,15 @@ class Apply extends React.Component {
     return;
   }
 
-  listing(props) {
-    const listing_data = props.listing_data;
+  posting(props) {
+    const postingData = props.postingData;
     return(
       <div className="floating-container centered-container" style={{width:"900px"}}>
         <Container fluid>
           <Row>
             <Col sm={9}>
               <h1>
-                {listing_data.jobTitle}
+                {postingData.jobTitle}
               </h1>
             </Col>
             <Col sm={3}>
@@ -58,7 +56,7 @@ class Apply extends React.Component {
           <Row>
             <Col sm={9}>
               <p style={{fontSize:"20px", color:"#AAA"}}>
-                {listing_data.location}
+                {postingData.location}
               </p>
             </Col>
             <Col sm={3}>
@@ -68,12 +66,12 @@ class Apply extends React.Component {
           <Row>
             <Col>
               <p style={{fontSize:"15px", color:"#AAA"}}>
-                {listing_data.industry}
+                {postingData.industry}
               </p>
             </Col>
             <Col>
               <Image
-                src={require("../images/" + listing_data.skillLevel + ".png")}
+                src={require("../images/" + postingData.skillLevel + ".png")}
                 style={{height:"20px"}}
               />
             </Col>
@@ -89,7 +87,7 @@ class Apply extends React.Component {
           <Row>
             <Col>
               <p>
-                {listing_data.description}
+                {postingData.description}
               </p>
             </Col>
           </Row>
@@ -103,9 +101,9 @@ class Apply extends React.Component {
   }
 
   render() {
-    const listing_data = this.state.listing_data;
+    const postingData = this.state.postingData;
 
-    console.log(listing_data);
+    console.log(postingData);
     return(
       <div>
         <div className="navbar">
@@ -113,14 +111,14 @@ class Apply extends React.Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/")}
+              onClick={() => this.handleRedirect("/posting")}
             />
           </div>
         </div>
 
 
-        {listing_data.map(listing_data => (
-          <this.listing listing_data={listing_data} />
+        {postingData.map(postingData => (
+          <this.posting postingData={postingData} />
         ))}
     </div>
 

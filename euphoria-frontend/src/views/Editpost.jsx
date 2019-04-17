@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import {Image, Form, Button, Col} from "react-bootstrap";
 
-class Post extends Component {
+class EditPost extends Component {
 
   constructor(props, context) {
     super(props);
 
     this.state = {
-          companyId: "1", //FIXME
+          postingId: "",
           jobTitle: "",
           description: "",
           location: "",
@@ -18,6 +18,12 @@ class Post extends Component {
     this.handleChange = this.handleChange.bind(this);
     this.handleRedirect = this.handleRedirect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleGet = this.handleGet.bind(this);
+  }
+
+  componentDidMount() {
+    const url = "http://localhost:8080/api/posting/" + this.props.match.params.postingId;
+    this.handleGet(url);
   }
 
   handleChange(event) {
@@ -26,6 +32,26 @@ class Post extends Component {
 
   handleRedirect(path) {
     this.props.history.push(path);
+  }
+
+  handleGet(url) {
+    fetch(url)
+    .then(response => {
+      return response.json()
+    })
+    .then(data => {
+      this.setState({postingId: this.props.match.params.postingId});
+      this.setState({jobTitle: data[0].jobTitle});
+      this.setState({description: data[0].description});
+      this.setState({location: data[0].location});
+      this.setState({industry: data[0].industry});
+      this.setState({skillLevel: data[0].skillLevel});
+    })
+    .catch(err => {
+      // Do something for an error here
+    })
+
+    return;
   }
 
   handleSubmit(event) {
@@ -38,7 +64,7 @@ class Post extends Component {
     }
 
     const {
-      companyId,
+      postingId,
       jobTitle,
       description,
       location,
@@ -47,7 +73,7 @@ class Post extends Component {
     } = this.state;
 
     let data = {
-      companyId,
+      postingId,
       jobTitle,
       description,
       location,
@@ -56,10 +82,10 @@ class Post extends Component {
     };
 
     fetch(url, {
-        method: "POST",
+        method: "PUT",
         body: JSON.stringify(data)
       })
-      .then(alert("Post Created"))
+      .then(alert("Post Edited"))
       .then(this.handleRedirect("/dashboard"))
       //FIXME add check for proper accoutn creation
   }
@@ -86,7 +112,7 @@ class Post extends Component {
         </div>
 
         <div className="floating-container centered-container" style={{width:"600px"}}>
-          <h1>Create Posting</h1>
+          <h1>Edit Posting</h1>
           <hr></hr>
           <Form onSubmit={event => this.handleSubmit(event)}>
             <Form.Row>
@@ -95,7 +121,6 @@ class Post extends Component {
                 <Form.Control
                   required
                   type="jobTitle"
-                  placeholder="Job Title"
                   name="jobTitle"
                   value={jobTitle}
                   maxLength="24"
@@ -110,7 +135,6 @@ class Post extends Component {
                   name="location"
                   value={location}
                   onChange={this.handleChange}>
-                  <option>Location...</option>
                   <option>NEWYORK</option>
                   <option>LONDON</option>
                   <option>HONGKONG</option>
@@ -130,7 +154,6 @@ class Post extends Component {
                   name="industry"
                   value={industry}
                   onChange={this.handleChange}>
-                  <option>Industry...</option>
                   <option>EDUCATION</option>
                   <option>ENERGY</option>
                   <option>FINANCE</option>
@@ -154,7 +177,6 @@ class Post extends Component {
                   name="skillLevel"
                   value={skillLevel}
                   onChange={this.handleChange}>
-                  <option>Skill Level...</option>
                   <option>INTERNSHIP</option>
                   <option>ENTRYLEVEL</option>
                   <option>ASSOCIATE</option>
@@ -173,7 +195,6 @@ class Post extends Component {
                 name="description"
                 value={description}
                 maxLength="5000"
-                placeholder="Descrption..."
                 rows="5"
                 style={{resize:"none"}}
                 onChange={this.handleChange}/>
@@ -188,4 +209,4 @@ class Post extends Component {
     );
   }
 }
-export default Post
+export default EditPost

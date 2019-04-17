@@ -51,7 +51,6 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  box-shadow: inset 5px 0 0 #555;
   border-radius: 15px;
 }
 
@@ -66,7 +65,7 @@
   background: #AAA;
 }
 
-.listing-container-scrolling{
+.posting-container-scrolling{
   display: inline-block;
 
   margin: 10px;
@@ -75,7 +74,7 @@
   overflow: hidden;
 }
 
-.listings-container-dropdown {
+.postings-container-dropdown {
   position: absolute;
   bottom: 30px;
 

@@ -1,37 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
+import { CookiesProvider } from 'react-cookie';
 import Particles from 'react-particles-js';
 
-import Apply from './views/Apply.jsx';
-import Dashboard from './views/Dashboard';
-import Listings from './views/Listings';
-import Signin from './views/Signin';
-import Post from './views/Post';
-import Signup from './views/Signup';
-import Splash from './views/Splash';
+import App from './App.js';
 
 import './index.css';
 import './views/Styles.css';
 import * as serviceWorker from './serviceWorker';
 
 const routing = (
-  <Router>
-    <Particles
-      params={require("./images/particles_params.json")}
-      style={{
-        position: "fixed",
-        width: "100%",
-        height: "100%"
-      }} />
-    <Route exact path="/" component={Splash} />
-    <Route path="/signin" component={Signin} />
-    <Route path="/signup" component={Signup} />
-    <Route exact path="/listings" component={Listings} />
-    <Route path="/listings/apply/:postingId" component={Apply} />
-    <Route exact path="/dashboard" component={Dashboard} />
-    <Route path="/dashboard/post" component={Post} />
-  </Router>
+  <CookiesProvider>
+    <Router>
+      <Particles
+        params={require("./images/particles_params.json")}
+        style={{
+          position: "fixed",
+          width: "100%",
+          height: "100%"
+        }} />
+      <App />
+    </Router>
+  </CookiesProvider>
 )
 
 ReactDOM.render(routing, document.getElementById('root'));
