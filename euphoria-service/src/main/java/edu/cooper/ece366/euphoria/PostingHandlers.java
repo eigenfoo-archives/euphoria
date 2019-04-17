@@ -328,8 +328,8 @@ public class PostingHandlers implements RouteProvider {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Integer applicationId = rs.getInt("applicationId");
-                File fileRes = new File(FileStoragePath + "resume" + "_" + applicationId);
-                File fileCov = new File(FileStoragePath + "cover" + "_" + applicationId);
+                File fileRes = new File(FileStoragePath + "resume" + "_" + applicationId + ".pdf");
+                File fileCov = new File(FileStoragePath + "cover" + "_" + applicationId + ".pdf");
                 fileRes.delete();
                 fileCov.delete();
             }
