@@ -24,6 +24,12 @@
 
    Payload contains nothing.
 
+5. Get postings for a specific company
+   
+   `/api/posting/company/<companyId>`
+
+   Payload contains nothing.
+
 5. Search postings by location, industry and skill level (`GET` request).
 
    `/api/posting/<location>/<industry>/<skillLevel>`
@@ -75,7 +81,7 @@
     `/api/application`
 
     Payload contains `postingId` (e.g. `1`), `userId` (e.g. `1`), `resume` (some
-    hex representation of a file) and `coverLetter` (another hex string string
+    base64 representation of a file) and `coverLetter` (another base64 string string
     representation of a file).
 
 13. Create a new user (`POST` request).
