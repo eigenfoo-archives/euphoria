@@ -5,7 +5,7 @@ class Dashboard extends Component {
   constructor(props, context) {
     super(props);
 
-    this.dashboardUrl = "http://localhost:8080/api/posting/random"; //FIXME
+    this.dashboardUrl = "http://localhost:8080/api/posting/company/" + this.props.cookies.get("id");
 
     this.state = {
       companyPostingsData: [],
@@ -19,11 +19,11 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    if (this.props.cookies.get("isUser")){
-      this.handleRedirect("/");
-    }
+    // if (this.props.cookies.get("isUser")){
+    //   this.handleRedirect("/");
+    // }
 
-    this.handleqGet(this.dashboardUrl);
+    this.handleGet(this.dashboardUrl);
   }
 
   handleRedirect(path) {
@@ -46,8 +46,7 @@ class Dashboard extends Component {
   }
 
   handleDelete(postingId){
-    const url = "http://localhost:8080/api/posting/company/" + this.props.cookies.get("id");
-
+    const url = "http://localhost:8080/api/posting/" + postingId;
     fetch(url, {
         method: "DELETE",
       })

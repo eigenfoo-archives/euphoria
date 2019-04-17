@@ -7,7 +7,6 @@ class Post extends Component {
     super(props);
 
     this.state = {
-          companyId: "1", //FIXME
           jobTitle: "",
           description: "",
           location: "",
@@ -39,8 +38,9 @@ class Post extends Component {
       event.stopPropagation();
     }
 
+    const companyId = this.props.cookies.get("id");
+
     const {
-      companyId,
       jobTitle,
       description,
       location,
@@ -63,7 +63,6 @@ class Post extends Component {
       })
       .then(alert("Post Created"))
       .then(this.handleRedirect("/dashboard"))
-      //FIXME add check for proper accoutn creation
   }
 
   render() {
