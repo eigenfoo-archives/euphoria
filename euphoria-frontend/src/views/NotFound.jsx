@@ -1,5 +1,5 @@
 import React from "react";
-import {Image, Button, Container, Row, Col} from "react-bootstrap";
+import {Image} from "react-bootstrap";
 
 class NotFound extends React.Component {
   constructor(props, context) {

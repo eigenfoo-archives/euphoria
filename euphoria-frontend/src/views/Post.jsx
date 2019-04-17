@@ -1,5 +1,5 @@
 import React from 'react'
-import {Image, Form, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, Col} from "react-bootstrap";
+import {Image, Form, Button, Col} from "react-bootstrap";
 
 class Post extends React.Component {
 
@@ -60,7 +60,7 @@ class Post extends React.Component {
         body: JSON.stringify(data)
       })
       .then(alert("Post Created"))
-      .then(this.handleRedirect("/signin"))
+      .then(this.handleRedirect("/dashboard"))
       //FIXME add check for proper accoutn creation
   }
 
