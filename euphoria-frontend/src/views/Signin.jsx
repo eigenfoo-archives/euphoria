@@ -1,8 +1,7 @@
-import React from "react"
-//import {withRouter} from "react-router-dom";
+import React, { Component } from 'react';
 import {Image, Form, Button} from "react-bootstrap";
 
-class Signin extends React.Component {
+class Signin extends Component {
 
   constructor(props, context) {
     super(props);
@@ -15,6 +14,7 @@ class Signin extends React.Component {
   }
 
   render() {
+    console.log(this.props);
     return(
       <div>
         <div className="navbar">

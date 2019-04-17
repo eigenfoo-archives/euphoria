@@ -1,6 +1,6 @@
 .navbar{
   overflow: hidden;
-  position: relative; /* Set the navbar to fixed position */
+  position: absolute;; /* Set the navbar to fixed position */
   top: 0; /* Position the navbar at the top of the page */
   width: 100%; /* Full width */
   z-index: 1;
@@ -51,7 +51,6 @@
 
 /* Track */
 ::-webkit-scrollbar-track {
-  box-shadow: inset 5px 0 0 #555;
   border-radius: 15px;
 }
 
@@ -66,11 +65,19 @@
   background: #AAA;
 }
 
-.listing-container-scrolling{
+.posting-container-scrolling{
   display: inline-block;
 
   margin: 10px;
 
   text-overflow: ellipsis;
   overflow: hidden;
+}
+
+.postings-container-dropdown {
+  position: absolute;
+  bottom: 30px;
+
+  left: 50%;
+  transform: translate(-50%, 0%);
 }

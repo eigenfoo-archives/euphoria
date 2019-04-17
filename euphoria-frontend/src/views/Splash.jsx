@@ -1,7 +1,7 @@
-import React from "react";
+import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
 
-class Splash extends React.Component {
+class Splash extends Component {
   constructor(props, context) {
     super(props);
 
@@ -25,12 +25,12 @@ class Splash extends React.Component {
           </div>
         </div>
 
-        <div class="floating-container centered-container" style={{width:"600px"}}>
+        <div className="floating-container centered-container" style={{width:"600px"}}>
           <Container>
             <Row>
               <div className="welcome-container">
                 <h1>
-                  Welcome!
+                  Welcome! {this.props.cookies}
                 </h1>
                 <br></br>
                 <p>

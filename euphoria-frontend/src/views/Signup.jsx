@@ -1,8 +1,7 @@
-import React from "react";
-//import {withRouter} from 'react-router-dom';
+import React, { Component } from 'react';
 import {Image, Form, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, Col} from "react-bootstrap";
 
-class Signup extends React.Component {
+class Signup extends Component {
 
   constructor(props, context) {
     super(props);
@@ -48,7 +47,7 @@ class Signup extends React.Component {
   handleSubmit(event) {
     const form = event.currentTarget;
     let url = "http://localhost:8080/api/";
-    let data = "";
+    let userData = "";
 
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -70,7 +69,7 @@ class Signup extends React.Component {
 
     if (isUser){
       url += "user";
-      data = {
+      userData = {
         name,
         email,
         phoneNumber,
@@ -80,25 +79,29 @@ class Signup extends React.Component {
     }
     else{
       url += "company";
-      data = {
+      userData = {
         name: companyName,
         website,
         description
       };
     }
-    const authentication_url = "http://localhost:8080/authentication/" + username + "/"  + password;
+
+    const authenticationUrl = "http://localhost:8080/api/authentication/" + username + "/"  + password;
 
     fetch(url, {
-      method: "POST",
-      body: JSON.stringify(data)
-    })
-      /*.then(function() {
-        fetch(authentication_url, {method: "POST"});
-      })*/ //FIXME add support for authentication posting when its implemented
-      .then(this.handleRedirect("/signin"));
+        method: "POST",
+        body: JSON.stringify(userData)
+      }) //FIXME add check for is user exists
+      .then(response => {
+        console.log(response);
+      }); //FIXME SERVER ERROR 500
 
-      alert("Account Created");
-    //this.setState({ validated: true });
+
+
+      // .then(alert("Account Created"))
+      // .then(this.handleRedirect("/dashboard"));
+      // //FIXME add check for proper accoutn creation
+
   }
 
   User(props){
@@ -107,7 +110,6 @@ class Signup extends React.Component {
       educationLevel,
       email,
       phoneNumber,
-      description
     } = this.state;
 
     return(
@@ -132,10 +134,9 @@ class Signup extends React.Component {
               name="educationLevel"
               value={educationLevel}
               onChange={this.handleChange}>
-              <option>Choose...</option>
               <option>NOHIGHSCHOOL</option>
-              <option>HIGHSCHOOL</option>
               <option>GED</option>
+              <option>HIGHSCHOOL</option>
               <option>SOMECOLLEGE</option>
               <option>ASSOCIATES</option>
               <option>BACHELORS</option>
@@ -171,20 +172,6 @@ class Signup extends React.Component {
               onChange={this.handleChange}/>
           </Form.Group>
         </Form.Row>
-
-        <Form.Group controlId="formGridDescription">
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            required
-            as="textarea"
-            name="description"
-            value={description}
-            maxLength="5000"
-            placeholder="Descrption..."
-            rows="5"
-            style={{resize:"none"}}
-            onChange={this.handleChange}/>
-        </Form.Group>
       </Form>
     );
   }
@@ -192,8 +179,7 @@ class Signup extends React.Component {
   Company(props){
     const {
       companyName,
-      website,
-      description
+      website
     } = this.state;
 
     return(
@@ -219,20 +205,6 @@ class Signup extends React.Component {
             value={website}
             onChange={this.handleChange}/>
         </Form.Group>
-
-        <Form.Group controlId="formGridDescription">
-          <Form.Label>Description</Form.Label>
-          <Form.Control
-            required
-            as="textarea"
-            name="description"
-            value={description}
-            maxLength="5000"
-            placeholder="Descrption..."
-            rows="5"
-            style={{resize:"none"}}
-            onChange={this.handleChange}/>
-        </Form.Group>
       </Form>
     );
   }
@@ -242,6 +214,7 @@ class Signup extends React.Component {
       isUser,
       username,
       password,
+      description
     } = this.state;
 
     return(
@@ -314,6 +287,23 @@ class Signup extends React.Component {
             ) : (
               <this.Company/>
             )}
+
+            <Form.Group controlId="formGridDescription">
+              <Form.Label>Description</Form.Label>
+              <Form.Control
+                required
+                as="textarea"
+                name="description"
+                value={description}
+                maxLength="5000"
+                placeholder="Descrption..."
+                rows="5"
+                style={{resize:"none"}}
+                onChange={this.handleChange}/>
+              <Form.Control.Feedback type="invalid">
+                Please write a description.
+              </Form.Control.Feedback>
+            </Form.Group>
 
             <Button variant="info" type="submit">
               Submit
