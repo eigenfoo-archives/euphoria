@@ -48,6 +48,8 @@ class Signup extends Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault(); //prevent redirect with form in url
+
     const form = event.currentTarget;
 
     if (form.checkValidity() === false) {
@@ -100,7 +102,6 @@ class Signup extends Component {
       }) //FIXME add check for is user exists
       .then(response => response.json())
       .then(data => this.createUserAuthentication(data[0].userId))
-      .then(this.handleRedirect("/"))
       .catch(err => {
       })
 
@@ -131,6 +132,7 @@ class Signup extends Component {
       .then(data => {
         if(data.length == 0){
           alert("Account Created");
+          this.handleRedirect("/signin")
         }
       })
       .catch(err => {

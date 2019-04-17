@@ -29,6 +29,8 @@ class Post extends Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault(); //prevent redirect with form in url
+
     const form = event.currentTarget;
     let url = "http://localhost:8080/api/posting";
 
