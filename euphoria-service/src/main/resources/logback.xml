@@ -1,0 +1,20 @@
+<configuration>
+  <appender name="FILE" class="ch.qos.logback.core.FileAppender">
+    <file>${user.home}/apollo.log</file>
+    <append>false</append>
+    <encoder>
+      <pattern>%-5level %logger{35} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="STDOUT" class="ch.qos.logback.core.ConsoleAppender">
+    <encoder>
+      <pattern>%-5level %logger{35} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <root name="com.spotify.apollo.http.server.CombinedFormatLogger" level="INFO">
+    <appender-ref ref="STDOUT"/> <!-- Every log will appear on screen log -->
+    <appender-ref ref="FILE"/>   <!-- Every log will appear on file -->
+  </root>
+</configuration>
