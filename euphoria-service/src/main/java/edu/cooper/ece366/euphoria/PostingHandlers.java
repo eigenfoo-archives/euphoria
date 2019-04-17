@@ -57,7 +57,7 @@ public class PostingHandlers implements RouteProvider {
             ps.setInt(1, postingId);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
+            if (rs.first()) {
                 posting = new PostingBuilder()
                         .postingId(rs.getInt("postingId"))
                         .companyId(rs.getInt("companyId"))

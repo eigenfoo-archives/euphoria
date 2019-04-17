@@ -71,7 +71,7 @@ public class ApplicationHandlers implements RouteProvider {
             ps.setInt(1, applicationId);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
+            if (rs.first()) {
                 application = new ApplicationBuilder()
                         .applicationId(rs.getInt("applicationId"))
                         .postingId(rs.getInt("postingId"))

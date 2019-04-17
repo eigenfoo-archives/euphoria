@@ -46,7 +46,7 @@ public class UserHandlersTest {
                 .name("Johnny Appleseed")
                 .email("john@appleseed.com")
                 .phoneNumber("123-456-7890")
-                .educationLevel(EducationLevel.valueOf("JD"))
+                .educationLevel(EducationLevel.JD)
                 .description("I like Macintoshes.")
                 .build();
 
@@ -68,11 +68,11 @@ public class UserHandlersTest {
         // Setup variables
         User user = new UserBuilder()
                 .userId(4)
-                .name("namefield")
-                .email("emailfield")
-                .phoneNumber("phoneNumfield")
-                .educationLevel(EducationLevel.valueOf("PHD"))
-                .description("descriptonfield")
+                .name("NA")
+                .email("NA")
+                .phoneNumber("NA")
+                .educationLevel(EducationLevel.NOHIGHSCHOOL)
+                .description("NA")
                 .build();
         List<User> expected = Collections.singletonList(user);
         byte[] byteArray = new byte[0];

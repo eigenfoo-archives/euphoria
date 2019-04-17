@@ -47,7 +47,7 @@ public class UserHandlers implements RouteProvider {
             ps.setInt(1, userId);
             ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {  //FIXME Only read the first result. There should only be one, after all...
+            if (rs.first()) {
                 user = new UserBuilder()
                         .userId(rs.getInt("userId"))
                         .name(rs.getString("name"))
@@ -99,11 +99,11 @@ public class UserHandlers implements RouteProvider {
                     user = new UserBuilder()
                             .userId(generatedKeys.getInt(1))
                             //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
-                            .name("namefield")
-                            .email("emailfield")
-                            .phoneNumber("phoneNumfield")
-                            .educationLevel(EducationLevel.valueOf("PHD"))
-                            .description("descriptonfield")
+                            .name("NA")
+                            .email("NA")
+                            .phoneNumber("NA")
+                            .educationLevel(EducationLevel.NOHIGHSCHOOL)
+                            .description("NA")
                             .build();
                 } else {
                     throw new SQLException("Creating new user failed, no ID obtained.");

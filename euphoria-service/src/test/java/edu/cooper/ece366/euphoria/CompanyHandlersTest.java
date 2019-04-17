@@ -40,7 +40,7 @@ public class CompanyHandlersTest {
     }
 
     @Test
-    public void getCompany() throws SQLException {
+    public void getCompany() {
         // Setup variables
         Company expected = new CompanyBuilder()
                 .companyId(1)
@@ -67,9 +67,9 @@ public class CompanyHandlersTest {
         // Setup variables
         Company company = new CompanyBuilder()
                 .companyId(3)
-                .name("namefield")
-                .website("websitefield")
-                .description("descriptonfield")
+                .name("NA")
+                .website("NA")
+                .description("NA")
                 .build();
         List<Company> expected = Collections.singletonList(company);
         byte[] byteArray = new byte[0];
