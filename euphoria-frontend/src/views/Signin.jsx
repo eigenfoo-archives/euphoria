@@ -68,9 +68,16 @@ class Signin extends Component {
           const cookies = this.props.cookies;
 
           cookies.set("username", username, { path: '/' });
-          //cookies.set("id", cookies.id, { path: '/' });
-          //cookies.set("isUser", cookies.isUser, { path: '/' });
+          cookies.set("id", cookies.id, { path: '/' });
+          cookies.set("isUser", cookies.isUser, { path: '/' });
           cookies.set("authenticationHash", cookie.cookie, { path: '/' });
+
+          if(isUser){
+            this.handleRedirect("/postings")
+          }
+          else{
+            this.handleRedirect("/dashboard")
+          }
         }
         else{
           alert("Not a valid login");

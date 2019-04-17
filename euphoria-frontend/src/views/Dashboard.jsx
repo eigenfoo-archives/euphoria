@@ -19,7 +19,11 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    this.handleGet(this.dashboardUrl);
+    if (this.props.cookies.get("isUser")){
+      this.handleRedirect("/");
+    }
+
+    this.handleqGet(this.dashboardUrl);
   }
 
   handleRedirect(path) {
@@ -42,7 +46,8 @@ class Dashboard extends Component {
   }
 
   handleDelete(postingId){
-    const url = "http://localhost:8080/api/posting/" + postingId;
+    const url = "http://localhost:8080/api/posting/company/" + this.props.cookies.get("id");
+
     fetch(url, {
         method: "DELETE",
       })
