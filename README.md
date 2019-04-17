@@ -32,8 +32,11 @@ Team members:
     ```bash
     cat euphoria-service/src/main/resources/initialize-database.sql | mysql -u root -p
     ```
+ 
+3. Initiliaze the example files by manually copying the contents of [`docs/exampleFiles`
+subdirectory](https://github.com/eigenfoo/euphoria/tree/master/docs/exampleFiles) into /usr/local/etc
 
-3. Download dependencies for, and run, the frontend:
+4. Download dependencies for, and run, the frontend:
 
     ```bash
     cd euphoria-frontend
@@ -45,7 +48,7 @@ Team members:
    README](https://github.com/eigenfoo/euphoria/blob/master/euphoria-frontend/README.md)
    for more information.
 
-4. Package and run the backend.
+5. Package and run the backend.
 
     ```bash
     cd euphoria-service
