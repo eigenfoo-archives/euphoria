@@ -1,13 +1,12 @@
 import React from 'react'
 import {Image, Button, Container, Row, Col, Form} from "react-bootstrap";
 
-class Listings extends React.Component {
-
+class Postings extends React.Component {
   constructor(props, context) {
     super(props);
 
     this.state = {
-      listings_data: [],
+      postings_data: [],
       location: "",
       industry: "",
       skillLevel: ""
@@ -17,7 +16,7 @@ class Listings extends React.Component {
     this.handleRedirect = this.handleRedirect.bind(this);
     this.handleGet = this.handleGet.bind(this);
 
-    this.listing = this.listing.bind(this);
+    this.posting = this.posting.bind(this);
   }
 
   componentDidMount() {
@@ -61,7 +60,7 @@ class Listings extends React.Component {
     })
     .then(data => {
       // Work with JSON data here
-      this.setState({listings_data: data});
+      this.setState({postings_data: data});
     })
     .catch(err => {
       // Do something for an error here
@@ -70,35 +69,35 @@ class Listings extends React.Component {
     return;
   }
 
-  listing(props) {
-    const listing_data = props.listing_data;
+  posting(props) {
+    const posting_data = props.posting_data;
 
     return(
-      <div className="floating-container listing-container-scrolling" style={{width:"600px"}}>
+      <div className="floating-container posting-container-scrolling" style={{width:"600px"}}>
         <Container>
           <Row>
             <Col>
               <h1>
-                {listing_data.jobTitle}
+                {posting_data.jobTitle}
               </h1>
             </Col>
           </Row>
           <Row>
             <Col>
               <p style={{fontSize:"20px", color:"#AAA"}}>
-                {listing_data.location}
+                {posting_data.location}
               </p>
             </Col>
           </Row>
           <Row>
             <Col>
               <p style={{fontSize:"15px", color:"#AAA"}}>
-                {listing_data.industry}
+                {posting_data.industry}
               </p>
             </Col>
             <Col>
               <Image
-                src={require("../images/" + listing_data.skillLevel + ".png")}
+                src={require("../images/" + posting_data.skillLevel + ".png")}
                 style={{height:"20px"}}
               />
             </Col>
@@ -108,13 +107,13 @@ class Listings extends React.Component {
           <Row>
             <Col>
               <p>
-                {listing_data.description}
+                {posting_data.description}
               </p>
             </Col>
           </Row>
           <br/>
           <Row>
-            <Button variant="info" size="lg" block onClick={() => this.handleRedirect("/listings/apply/" + listing_data.postingId)}>
+            <Button variant="info" size="lg" block onClick={() => this.handleRedirect("/postings/apply/" + posting_data.postingId)}>
               Apply
             </Button>
           </Row>
@@ -125,7 +124,7 @@ class Listings extends React.Component {
 
   render() {
     const {
-      listings_data,
+      postings_data,
       location,
       industry,
       skillLevel,
@@ -144,12 +143,12 @@ class Listings extends React.Component {
         </div>
 
         <div className="scrolling-container">
-          {listings_data.map(listing_data => (
-            <this.listing key={listing_data.postingId} listing_data={listing_data} />
+          {postings_data.map(posting_data => (
+            <this.posting key={posting_data.postingId} posting_data={posting_data} />
           ))}
         </div>
 
-        <div className="floating-container listings-container-dropdown" style={{width:"900px", height:"100px"}}>
+        <div className="floating-container postings-container-dropdown" style={{width:"900px", height:"100px"}}>
           <Form>
             <Form.Row>
               <Form.Group as={Col} controlId="formGridLocation">
@@ -216,4 +215,4 @@ class Listings extends React.Component {
     );
   }
 }
-export default Listings
+export default Postings

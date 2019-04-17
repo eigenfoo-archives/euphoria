@@ -7,7 +7,7 @@ class Post extends React.Component {
     super(props);
 
     this.state = {
-          companyId: "1",
+          companyId: "1", //FIXME
           jobTitle: "",
           description: "",
           location: "",

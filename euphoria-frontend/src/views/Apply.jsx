@@ -15,22 +15,20 @@ class Apply extends React.Component {
   }
 
   componentDidMount() {
-    this.handleGet();
+    let url = "http://localhost:8080/api/posting/" + this.props.match.params.postingId;
+    this.handleGet(url);
   }
 
   handleRedirect(path) {
     this.props.history.push(path);
   }
 
-  handleGet(props) {
-    let url = "http://localhost:8080/api/posting/" + this.props.match.params.postingId;
-
+  handleGet(url) {
     fetch(url)
     .then(response => {
       return response.json()
     })
     .then(data => {
-      // Work with JSON data here
       this.setState({listing_data: data});
     })
     .catch(err => {

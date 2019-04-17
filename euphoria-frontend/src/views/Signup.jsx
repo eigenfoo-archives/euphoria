@@ -92,7 +92,7 @@ class Signup extends React.Component {
         method: "POST",
         body: JSON.stringify(data)
       })
-      .then(fetch(authentication_url, {method: "POST"}))
+      //.then(fetch(authentication_url, {method: "POST"})) //FIXME
       .then(alert("Account Created"))
       .then(this.handleRedirect("/dashboard"))
       //FIXME add check for proper accoutn creation
