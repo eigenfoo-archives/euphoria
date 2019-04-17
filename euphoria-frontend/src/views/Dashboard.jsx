@@ -28,9 +28,7 @@ class Dashboard extends Component {
 
   handleGet(url) {
     fetch(url)
-    .then(response => {
-      return response.json()
-    })
+    .then(response => response.json())
     .then(data => {
       // Work with JSON data here
       this.setState({companyPostingsData: data});

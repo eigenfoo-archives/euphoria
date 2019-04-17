@@ -36,9 +36,7 @@ class EditPost extends Component {
 
   handleGet(url) {
     fetch(url)
-    .then(response => {
-      return response.json()
-    })
+    .then(response => response.json())
     .then(data => {
       this.setState({postingId: this.props.match.params.postingId});
       this.setState({jobTitle: data[0].jobTitle});
@@ -55,6 +53,8 @@ class EditPost extends Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault(); //prevent redirect with form in url
+
     const form = event.currentTarget;
     let url = "http://localhost:8080/api/posting";
 

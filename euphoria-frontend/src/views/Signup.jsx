@@ -7,7 +7,7 @@ class Signup extends Component {
     super(props);
 
     this.state = {
-          isUser: 1,
+          isUser: true,
           username: "",
           companyName: "",
           password: "",
@@ -23,6 +23,9 @@ class Signup extends Component {
     this.handleUserChange = this.handleUserChange.bind(this);
     this.handleRedirect = this.handleRedirect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+
+    this.createUser = this.createUser.bind(this);
+    this.createUserAuthentication = this.createUserAuthentication.bind(this);
 
     this.User = this.User.bind(this);
     this.Company = this.Company.bind(this);
@@ -45,20 +48,24 @@ class Signup extends Component {
   }
 
   handleSubmit(event) {
+    event.preventDefault(); //prevent redirect with form in url
+
     const form = event.currentTarget;
-    let url = "http://localhost:8080/api/";
-    let userData = "";
 
     if (form.checkValidity() === false) {
       event.preventDefault();
       event.stopPropagation();
     }
 
+    this.createUser();
+
+    return;
+  }
+
+  createUser() {
     const {
       isUser,
-      username,
       companyName,
-      password,
       name,
       educationLevel,
       email,
@@ -67,9 +74,12 @@ class Signup extends Component {
       description
     } = this.state;
 
+    let userUrl = "http://localhost:8080/api/";
+    let userPayload = "";
+
     if (isUser){
-      url += "user";
-      userData = {
+      userUrl += "user";
+      userPayload = {
         name,
         email,
         phoneNumber,
@@ -78,30 +88,57 @@ class Signup extends Component {
       };
     }
     else{
-      url += "company";
-      userData = {
+      userUrl += "company";
+      userPayload = {
         name: companyName,
         website,
         description
       };
     }
 
-    const authenticationUrl = "http://localhost:8080/api/authentication/" + username + "/"  + password;
-
-    fetch(url, {
+    fetch(userUrl, {
         method: "POST",
-        body: JSON.stringify(userData)
+        body: JSON.stringify(userPayload)
       }) //FIXME add check for is user exists
-      .then(response => {
-        console.log(response);
-      }); //FIXME SERVER ERROR 500
+      .then(response => response.json())
+      .then(data => this.createUserAuthentication(data[0].userId))
+      .catch(err => {
+      })
 
+    return;
+  }
 
+  createUserAuthentication(userId) {
+    const {
+      isUser,
+      username,
+      password,
+    } = this.state;
 
-      // .then(alert("Account Created"))
-      // .then(this.handleRedirect("/dashboard"));
-      // //FIXME add check for proper accoutn creation
+    const authenticationUrl = "http://localhost:8080/api/authentication";
 
+    let authenticationPayload = {
+      id: userId,
+      username: username,
+      passwordHash: password,
+      isUser: isUser
+    };
+
+    fetch(authenticationUrl, {
+        method: "POST",
+        body: JSON.stringify(authenticationPayload)
+      })
+      .then(response => response.json())
+      .then(data => {
+        if(data.length == 0){
+          alert("Account Created");
+          this.handleRedirect("/signin")
+        }
+      })
+      .catch(err => {
+      });
+
+    return;
   }
 
   User(props){
@@ -134,6 +171,7 @@ class Signup extends Component {
               name="educationLevel"
               value={educationLevel}
               onChange={this.handleChange}>
+              <option>Choose...</option>
               <option>NOHIGHSCHOOL</option>
               <option>GED</option>
               <option>HIGHSCHOOL</option>
@@ -258,8 +296,8 @@ class Signup extends Component {
                     defaultValue={isUser}
                     style={{width:"100%"}}
                     onChange={this.handleUserChange}>
-                    <ToggleButton variant="info" value={1}>Applicant</ToggleButton>
-                    <ToggleButton variant="info" value={0}>Company</ToggleButton>
+                    <ToggleButton variant="info" value={true}>Applicant</ToggleButton>
+                    <ToggleButton variant="info" value={false}>Company</ToggleButton>
                   </ToggleButtonGroup>
                 </ButtonToolbar>
               </Form.Group>
