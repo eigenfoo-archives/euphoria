@@ -1,7 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import { BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
-import { CookiesProvider } from 'react-cookies';
+import { CookiesProvider } from 'react-cookies'; //FIXME to react-cookie
 import Particles from 'react-particles-js';
 
 import Splash from './views/Splash';
@@ -9,6 +9,7 @@ import Signup from './views/Signup';
 import Signin from './views/Signin';
 import Dashboard from './views/Dashboard';
 import Post from './views/Post';
+import Editpost from './views/Editpost';
 import Applications from './views/Applications';
 import Postings from './views/Postings';
 import Apply from './views/Apply.jsx';
@@ -34,7 +35,8 @@ const routing = (
       <Route exact path="/postings" component={Postings} />
       <Route path="/postings/apply/:postingId" component={Apply} />
       <Route exact path="/dashboard" component={Dashboard} />
-      <Route path="/dashboard/post" component={Post} />
+      <Route exact path="/dashboard/post" component={Post} />
+      <Route path="/dashboard/post/edit/:postingId" component={Editpost} />
       <Route path="/dashboard/applications/:postingId" component={Applications} />
       <Route path="/404" component={NotFound} />
       <Redirect to="/404" />

@@ -7,7 +7,7 @@ class Apply extends React.Component {
     super(props);
 
     this.state = {
-      listing_data: [],
+      posting_data: [],
     };
 
     this.handleRedirect = this.handleRedirect.bind(this);
@@ -29,7 +29,7 @@ class Apply extends React.Component {
       return response.json()
     })
     .then(data => {
-      this.setState({listing_data: data});
+      this.setState({posting_data: data});
     })
     .catch(err => {
       // Do something for an error here
@@ -38,15 +38,15 @@ class Apply extends React.Component {
     return;
   }
 
-  listing(props) {
-    const listing_data = props.listing_data;
+  posting(props) {
+    const posting_data = props.posting_data;
     return(
       <div className="floating-container centered-container" style={{width:"900px"}}>
         <Container fluid>
           <Row>
             <Col sm={9}>
               <h1>
-                {listing_data.jobTitle}
+                {posting_data.jobTitle}
               </h1>
             </Col>
             <Col sm={3}>
@@ -56,7 +56,7 @@ class Apply extends React.Component {
           <Row>
             <Col sm={9}>
               <p style={{fontSize:"20px", color:"#AAA"}}>
-                {listing_data.location}
+                {posting_data.location}
               </p>
             </Col>
             <Col sm={3}>
@@ -66,12 +66,12 @@ class Apply extends React.Component {
           <Row>
             <Col>
               <p style={{fontSize:"15px", color:"#AAA"}}>
-                {listing_data.industry}
+                {posting_data.industry}
               </p>
             </Col>
             <Col>
               <Image
-                src={require("../images/" + listing_data.skillLevel + ".png")}
+                src={require("../images/" + posting_data.skillLevel + ".png")}
                 style={{height:"20px"}}
               />
             </Col>
@@ -87,7 +87,7 @@ class Apply extends React.Component {
           <Row>
             <Col>
               <p>
-                {listing_data.description}
+                {posting_data.description}
               </p>
             </Col>
           </Row>
@@ -101,9 +101,9 @@ class Apply extends React.Component {
   }
 
   render() {
-    const listing_data = this.state.listing_data;
+    const posting_data = this.state.posting_data;
 
-    console.log(listing_data);
+    console.log(posting_data);
     return(
       <div>
         <div className="navbar">
@@ -111,14 +111,14 @@ class Apply extends React.Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/postings")}
+              onClick={() => this.handleRedirect("/posting")}
             />
           </div>
         </div>
 
 
-        {listing_data.map(listing_data => (
-          <this.listing listing_data={listing_data} />
+        {posting_data.map(posting_data => (
+          <this.posting posting_data={posting_data} />
         ))}
     </div>
 

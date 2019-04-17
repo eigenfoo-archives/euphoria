@@ -101,7 +101,7 @@ class Dashboard extends React.Component {
             </Col>
             <Col sm={4}>
               <ButtonGroup>
-                <Button variant="secondary" size="lg">Edit</Button>
+                <Button variant="secondary" size="lg" onClick={() => this.handleRedirect("/dashboard/post/edit/" + company_posting_data.postingId)}>Edit</Button>
                 <Button variant="danger" size="lg" onClick={() => this.handleDelete(company_posting_data.postingId)}>Delete</Button>
               </ButtonGroup>
             </Col>
