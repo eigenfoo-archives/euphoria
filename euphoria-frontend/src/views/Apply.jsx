@@ -111,7 +111,7 @@ class Apply extends React.Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/")}
+              onClick={() => this.handleRedirect("/postings")}
             />
           </div>
         </div>

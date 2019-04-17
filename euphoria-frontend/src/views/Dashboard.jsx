@@ -126,7 +126,7 @@ class Dashboard extends React.Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/")}
+              onClick={() => this.handleRedirect("/dashboard")}
             />
           </div>
         </div>
@@ -135,6 +135,12 @@ class Dashboard extends React.Component {
           {company_postings_data.map(company_posting_data => (
             <this.posting key={company_posting_data.postingId} company_posting_data={company_posting_data} />
           ))}
+        </div>
+
+        <div className="floating-container postings-container-dropdown" style={{width:"300px", height:"100px"}}>
+          <Button variant="info" size="lg" block onClick={() => this.handleRedirect("/dashboard/post")}>
+            Post New Job
+          </Button>
         </div>
     </div>
     );
