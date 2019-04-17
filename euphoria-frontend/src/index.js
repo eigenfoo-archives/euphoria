@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { BrowserRouter as Router, Route} from "react-router-dom";
+import { BrowserRouter as Router, Route, Switch, Redirect} from "react-router-dom";
+import { CookiesProvider } from 'react-cookies';
 import Particles from 'react-particles-js';
 
 import Apply from './views/Apply.jsx';
@@ -10,6 +11,7 @@ import Signin from './views/Signin';
 import Post from './views/Post';
 import Signup from './views/Signup';
 import Splash from './views/Splash';
+import NotFound from './views/NotFound';
 
 import './index.css';
 import './views/Styles.css';
@@ -24,13 +26,17 @@ const routing = (
         width: "100%",
         height: "100%"
       }} />
-    <Route exact path="/" component={Splash} />
-    <Route path="/signin" component={Signin} />
-    <Route path="/signup" component={Signup} />
-    <Route exact path="/listings" component={Listings} />
-    <Route path="/listings/apply/:postingId" component={Apply} />
-    <Route exact path="/dashboard" component={Dashboard} />
-    <Route path="/dashboard/post" component={Post} />
+    <Switch>
+      <Route exact path="/" component={Splash} />
+      <Route path="/signin" component={Signin} />
+      <Route path="/signup" component={Signup} />
+      <Route exact path="/listings" component={Listings} />
+      <Route path="/listings/apply/:postingId" component={Apply} />
+      <Route exact path="/dashboard" component={Dashboard} />
+      <Route path="/dashboard/post" component={Post} />
+      <Route path="/404" component={NotFound} />
+      <Redirect to="/404" />
+    </Switch>
   </Router>
 )
 
