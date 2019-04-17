@@ -74,4 +74,4 @@ curl -X POST http://localhost:8080/api/cookie -H "Content-Type: application/json
 # [{"cookie":"random36charUUIDstring"}]%
 
 curl -X GET http://localhost:8080/api/cookie/specific36charUUIDstring
-# [{"cookie":"specific36charUUIDstring"}]%
+# [{"id":2,"isUser":true,"cookie":"af310190-856f-46e1-b256-04240216367a"}]%

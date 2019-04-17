@@ -50,6 +50,8 @@ public class CookieHandlers implements RouteProvider {
 
             if (rs.first()) {
                 cookie = new CookieBuilder()
+                        .id(rs.getInt("id"))
+                        .isUser(rs.getBoolean("isUser"))
                         .cookie(rs.getString("cookie"))
                         .build();
             }
