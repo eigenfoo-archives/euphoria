@@ -5,6 +5,7 @@
   "dependencies": {
     "all": "0.0.0",
     "axios": "^0.18.0",
+    "cors": "^2.8.5",
     "npm": "^6.9.0",
     "particlesjs": "^2.2.3",
     "react": "^16.8.5",

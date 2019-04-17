@@ -39,7 +39,7 @@ class Postings extends Component {
 
       for (let i = 0; i < filterList.length; i++){
         if (filterList[i].endsWith("...")){
-          filterList[i] = "";
+          filterList[i] = "/";
         }
 
         url += "/" + filterList[i]
