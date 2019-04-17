@@ -10,6 +10,9 @@ curl -X GET http://localhost:8080/api/posting/all
 curl -X GET http://localhost:8080/api/posting/random
 # Output changes
 
+curl -X GET http://localhost:8080/api/posting/company/123
+# [{"postingId":1,"companyId":123,"jobTitle":"Underwater Basket Weaver","description":"Must lift.","location":"WASHINGTON","industry":"SERVICES","skillLevel":"INTERNSHIP","dateCreated":"2019-04-16 02:12:22"}]
+
 curl -X GET http://localhost:8080/api/posting/NEWYORK/TECHNOLOGY/INTERNSHIP
 # [{"postingId":3,"companyId":789,"jobTitle":"Backend Developer","description":"Must know nothing about React.js.","location":"NEWYORK","industry":"TECHNOLOGY","skillLevel":"INTERNSHIP","dateCreated":"2019-03-16 23:59:59"}]%
 

@@ -34,6 +34,7 @@ public class PostingHandlers implements RouteProvider {
                 Route.sync("GET", "/api/posting/<postingId>", this::getPosting),
                 Route.sync("GET", "/api/posting/all", this::getAllPostings),
                 Route.sync("GET", "/api/posting/random", this::getRandomPostings),
+                Route.sync("GET", "/api/posting/company/<companyId>", this::getPostingsForCompany),
                 // FIXME this http request should use query parameters instead of path arguments
                 Route.sync("GET", "/api/posting/<location>/<industry>/<skillLevel>", this::searchPostings),
                 Route.sync("POST", "/api/posting/", this::createPosting),
@@ -181,6 +182,42 @@ public class PostingHandlers implements RouteProvider {
                     config.getString("mysql.password"));
             String sqlQuery = "SELECT * FROM postings ORDER BY RAND() LIMIT 10";
             PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Posting posting = new PostingBuilder()
+                        .postingId(rs.getInt("postingId"))
+                        .companyId(rs.getInt("companyId"))
+                        .jobTitle(rs.getString("jobTitle"))
+                        .description(rs.getString("description"))
+                        .location(Location.valueOf(rs.getString("location")))
+                        .industry(Industry.valueOf(rs.getString("industry")))
+                        .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
+                        .dateCreated(rs.getString("dateCreated"))
+                        .build();
+
+                postingList.add(posting);
+            }
+        } catch (SQLException ex) {
+            System.out.println(ex);
+        }
+
+        return postingList;
+    }
+
+    @VisibleForTesting
+    public List<Posting> getPostingsForCompany(final RequestContext rc) {
+        ArrayList<Posting> postingList = new ArrayList<Posting>();
+
+        try {
+            Integer companyId = Integer.valueOf(rc.pathArgs().get("companyId"));
+            Connection conn = DriverManager.getConnection(
+                    config.getString("mysql.jdbc"),
+                    config.getString("mysql.user"),
+                    config.getString("mysql.password"));
+            String sqlQuery = "SELECT * FROM postings WHERE companyId = ?";
+            PreparedStatement ps = conn.prepareStatement(sqlQuery);
+            ps.setInt(1, companyId);
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
