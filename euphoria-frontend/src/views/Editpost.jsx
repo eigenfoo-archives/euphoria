@@ -7,8 +7,7 @@ class EditPost extends React.Component {
     super(props);
 
     this.state = {
-          posting_data: [],
-          companyId: "1", //FIXME
+          postingId: "",
           jobTitle: "",
           description: "",
           location: "",
@@ -20,7 +19,6 @@ class EditPost extends React.Component {
     this.handleRedirect = this.handleRedirect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleGet = this.handleGet.bind(this);
-
   }
 
   componentDidMount() {
@@ -42,7 +40,12 @@ class EditPost extends React.Component {
       return response.json()
     })
     .then(data => {
-      this.setState({posting_data: data});
+      this.setState({postingId: this.props.match.params.postingId});
+      this.setState({jobTitle: data[0].jobTitle});
+      this.setState({description: data[0].description});
+      this.setState({location: data[0].location});
+      this.setState({industry: data[0].industry});
+      this.setState({skillLevel: data[0].skillLevel});
     })
     .catch(err => {
       // Do something for an error here
@@ -61,7 +64,7 @@ class EditPost extends React.Component {
     }
 
     const {
-      companyId,
+      postingId,
       jobTitle,
       description,
       location,
@@ -70,7 +73,7 @@ class EditPost extends React.Component {
     } = this.state;
 
     let data = {
-      companyId,
+      postingId,
       jobTitle,
       description,
       location,
@@ -89,15 +92,12 @@ class EditPost extends React.Component {
 
   render() {
     const {
-      posting_data,
       jobTitle,
       description,
       location,
       industry,
       skillLevel
     } = this.state;
-
-    console.log(posting_data)
 
     return(
       <div>
@@ -112,7 +112,7 @@ class EditPost extends React.Component {
         </div>
 
         <div className="floating-container centered-container" style={{width:"600px"}}>
-          <h1>Create Posting</h1>
+          <h1>Edit Posting</h1>
           <hr></hr>
           <Form onSubmit={event => this.handleSubmit(event)}>
             <Form.Row>
@@ -121,10 +121,8 @@ class EditPost extends React.Component {
                 <Form.Control
                   required
                   type="jobTitle"
-                  placeholder="Job Title"
                   name="jobTitle"
                   value={jobTitle}
-                  defaultValue = {posting_data.jobTitle}
                   maxLength="24"
                   onChange={this.handleChange}/>
               </Form.Group>
@@ -136,9 +134,7 @@ class EditPost extends React.Component {
                   as="select"
                   name="location"
                   value={location}
-                  defaultValue = {posting_data.location}
                   onChange={this.handleChange}>
-                  <option>Location...</option>
                   <option>NEWYORK</option>
                   <option>LONDON</option>
                   <option>HONGKONG</option>
@@ -158,7 +154,6 @@ class EditPost extends React.Component {
                   name="industry"
                   value={industry}
                   onChange={this.handleChange}>
-                  <option>Industry...</option>
                   <option>EDUCATION</option>
                   <option>ENERGY</option>
                   <option>FINANCE</option>
@@ -182,7 +177,6 @@ class EditPost extends React.Component {
                   name="skillLevel"
                   value={skillLevel}
                   onChange={this.handleChange}>
-                  <option>Skill Level...</option>
                   <option>INTERNSHIP</option>
                   <option>ENTRYLEVEL</option>
                   <option>ASSOCIATE</option>
@@ -201,7 +195,6 @@ class EditPost extends React.Component {
                 name="description"
                 value={description}
                 maxLength="5000"
-                placeholder="Descrption..."
                 rows="5"
                 style={{resize:"none"}}
                 onChange={this.handleChange}/>

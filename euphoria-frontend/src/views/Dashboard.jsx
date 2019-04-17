@@ -5,6 +5,8 @@ class Dashboard extends React.Component {
   constructor(props, context) {
     super(props);
 
+    this.dashboardUrl = "http://localhost:8080/api/posting/random"; //FIXME
+
     this.state = {
       company_postings_data: [],
     };
@@ -17,8 +19,7 @@ class Dashboard extends React.Component {
   }
 
   componentDidMount() {
-    const url = "http://localhost:8080/api/posting/random"; //FIXME
-    this.handleGet(url);
+    this.handleGet(this.dashboardUrl);
   }
 
   handleRedirect(path) {
@@ -33,6 +34,7 @@ class Dashboard extends React.Component {
     .then(data => {
       // Work with JSON data here
       this.setState({company_postings_data: data});
+      console.log(this.state.company_postings_data);
     })
     .catch(err => {
       // Do something for an error here
@@ -45,9 +47,12 @@ class Dashboard extends React.Component {
     const url = "http://localhost:8080/api/posting/" + postingId;
     fetch(url, {
         method: "DELETE",
-      });
+      })
+      .then(() => {
+        this.handleGet(this.dashboardUrl);
+      })
 
-    window.location.reload();
+    return;
   }
 
   posting(props) {
