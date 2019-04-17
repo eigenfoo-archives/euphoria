@@ -95,6 +95,8 @@ public class CookieHandlers implements RouteProvider {
                     psIns.executeUpdate();
                     // Send back to front-end
                     cookie = new CookieBuilder()
+                            .id(id)
+                            .isUser(isUser)
                             .cookie(cookieNew)
                             .build();
                 }
