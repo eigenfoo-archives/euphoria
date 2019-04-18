@@ -12,6 +12,7 @@ class Apply extends Component {
 
     this.handleRedirect = this.handleRedirect.bind(this);
     this.handleGet = this.handleGet.bind(this);
+    this.handleApply = this.handleApply.bind(this);
   }
 
   componentDidMount() {
@@ -37,6 +38,10 @@ class Apply extends Component {
     return;
   }
 
+  handleApply() {
+    return;
+  }
+
   posting(props) {
     const postingData = props.postingData;
     return(
@@ -49,7 +54,13 @@ class Apply extends Component {
               </h1>
             </Col>
             <Col sm={3}>
-              <Button variant="info" size="lg">Resume</Button>
+              <Button
+                variant="info"
+                size="lg"
+                onClick={() => document.getElementById('resumeInput').click()}>
+                  Resume
+              </Button>
+              <input type="file" accept=".pdf" id="resumeInput"  name="resumeInput" style={{display:"none"}} />
             </Col>
           </Row>
           <Row>
@@ -59,7 +70,13 @@ class Apply extends Component {
               </p>
             </Col>
             <Col sm={3}>
-              <Button variant="info" size="lg">Cover Letter</Button>
+              <Button
+                variant="info"
+                size="lg"
+                onClick={() => document.getElementById('coverLevelInput').click()}>
+                  Cover Letter
+                </Button>
+              <input type="file" accept=".pdf" id="coverLevelInput"  name="coverLevelInput" style={{display:"none"}} />
             </Col>
           </Row>
           <Row>
@@ -92,7 +109,13 @@ class Apply extends Component {
           </Row>
           <hr/>
           <Row>
-            <Button variant="info" size="lg" block>Apply</Button>
+            <Button
+              variant="info"
+              size="lg"
+              block
+              onClick={() => this.handleApply()}>
+                Apply
+              </Button>
           </Row>
         </Container>
       </div>
