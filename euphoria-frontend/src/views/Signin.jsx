@@ -52,7 +52,7 @@ class Signin extends Component {
 
     let authenticationPayload = {
       username: username,
-      passwordHash: password,
+      passwordHash: password
     };
 
     fetch(cookieUrl, {
@@ -70,7 +70,7 @@ class Signin extends Component {
           cookies.set("id", cookies.id, { path: '/' });
           cookies.set("isUser", cookies.isUser, { path: '/' });
           cookies.set("authenticationHash", cookie.cookie, { path: '/' });
-          console.log(cookies);
+
           if(cookies.isUser){
             this.handleRedirect("/postings")
           }

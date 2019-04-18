@@ -20,23 +20,20 @@ class App extends Component {
 
   render() {
 
-    const {
-      cookies,
-      history
-    } = this.props;
+    const props = this.props;
 
     return (
       <div>
         <Switch>
           <Route exact path="/" component={Splash} />
-          <Route path="/signin" render={() => (<Signin cookies={cookies} history={history} />)} /> />
+          <Route path="/signin" render={(props) => (<Signin {...props} />)} />
           <Route path="/signup" component={Signup} />
-          <Route exact path="/postings" render={() => (<Postings cookies={cookies} history={history} />)} />
-          <Route path="/postings/apply/:postingId" render={() => (<Apply cookies={cookies} history={history} />)} />
-          <Route exact path="/dashboard" render={() => (<Dashboard cookies={cookies} history={history} />)} />
-          <Route exact path="/dashboard/post" render={() => (<Post cookies={cookies} history={history} />)} />
-          <Route path="/dashboard/post/edit/:postingId" render={() => (<Editpost cookies={cookies} history={history} />)} />
-          <Route path="/dashboard/applications/:postingId" render={() => (<Applications cookies={cookies} history={history} />)} />
+          <Route exact path="/postings" render={(props) => (<Postings {...props} />)} />
+          <Route path="/postings/apply/:postingId" render={(props) => (<Apply {...props} />)} />
+          <Route exact path="/dashboard" render={(props) => (<Dashboard {...props} />)} />
+          <Route exact path="/dashboard/post" render={(props) => (<Post {...props} />)} />
+          <Route path="/dashboard/post/edit/:postingId" render={(props) => (<Editpost {...props} />)} />
+          <Route path="/dashboard/applications/:postingId" render={(props) => (<Applications {...props} />)} />
           <Route path="/404" component={NotFound} />
           <Redirect to="/404" />
         </Switch>

@@ -16,6 +16,7 @@ class Apply extends Component {
 
   componentDidMount() {
     let url = "http://localhost:8080/api/posting/" + this.props.match.params.postingId;
+    console.log(this.props);
     this.handleGet(url);
   }
 
