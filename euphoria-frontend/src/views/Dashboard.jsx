@@ -5,7 +5,7 @@ class Dashboard extends Component {
   constructor(props, context) {
     super(props);
 
-    this.dashboardUrl = "http://localhost:8080/api/posting/company/" + this.props.cookies.get("id");
+    this.dashboardUrl = "http://localhost:8080/api/posting/company/" + this.props.cookies.get("id")
 
     this.state = {
       companyPostingsData: [],
