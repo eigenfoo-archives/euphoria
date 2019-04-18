@@ -94,6 +94,7 @@ class Signup extends Component {
         website,
         description
       };
+      console.log(userPayload)
     }
 
     fetch(userUrl, {
@@ -101,14 +102,16 @@ class Signup extends Component {
         body: JSON.stringify(userPayload)
       }) //FIXME add check for is user exists
       .then(response => response.json())
-      .then(data => this.createUserAuthentication(data[0].userId))
+      .then(data => {
+        this.createUserAuthentication((isUser) ? data[0].userId : data[0].companyId)
+      })
       .catch(err => {
       })
 
     return;
   }
 
-  createUserAuthentication(userId) {
+  createUserAuthentication(id) {
     const {
       isUser,
       username,
@@ -118,11 +121,13 @@ class Signup extends Component {
     const authenticationUrl = "http://localhost:8080/api/authentication";
 
     let authenticationPayload = {
-      id: userId,
+      id: id,
       username: username,
       passwordHash: password,
       isUser: isUser
     };
+
+    console.log(authenticationPayload);
 
     fetch(authenticationUrl, {
         method: "POST",
@@ -234,7 +239,7 @@ class Signup extends Component {
         </Form.Group>
 
         <Form.Group controlId="formGridWebsite">
-          <Form.Label>Email</Form.Label>
+          <Form.Label>Website</Form.Label>
           <Form.Control
             required
             type="website"
