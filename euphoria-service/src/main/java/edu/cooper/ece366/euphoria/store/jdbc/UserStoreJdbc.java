@@ -70,22 +70,22 @@ public class UserStoreJdbc implements UserStore {
 
             if (rowsAffected == 0) {
                 throw new SQLException("Creating new user failed, no rows affected.");
-            } else {
-                ResultSet generatedKeys = ps.getGeneratedKeys();
-                if (generatedKeys.first()) {
-                    return new UserBuilder()
-                            .userId(generatedKeys.getInt(1))
-                            //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
-                            .name("NA")
-                            .email("NA")
-                            .phoneNumber("NA")
-                            .educationLevel(EducationLevel.NOHIGHSCHOOL)
-                            .description("NA")
-                            .build();
-                } else {
-                    return null;
-                }
             }
+            ResultSet generatedKeys = ps.getGeneratedKeys();
+            if (generatedKeys.first()) {
+                return new UserBuilder()
+                        .userId(generatedKeys.getInt(1))
+                        //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
+                        .name("NA")
+                        .email("NA")
+                        .phoneNumber("NA")
+                        .educationLevel(EducationLevel.NOHIGHSCHOOL)
+                        .description("NA")
+                        .build();
+            } else {
+                return null;
+            }
+
         } catch (SQLException e) {
             throw new RuntimeException("error creating user", e);
         }

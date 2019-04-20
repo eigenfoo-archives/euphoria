@@ -44,6 +44,7 @@ public class UserHandlers implements RouteProvider {
         phoneNumber = null;
         description = null;
         EducationLevel educationLevel = null;
+        boolean success = false;
         try {
             byte[] requestBytes = rc.request().payload().get().toByteArray();
             Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
@@ -52,11 +53,18 @@ public class UserHandlers implements RouteProvider {
             phoneNumber = jsonMap.get("phoneNumber").toString();
             educationLevel = EducationLevel.valueOf(jsonMap.get("educationLevel").toString());
             description = jsonMap.get("description").toString();
+            success = true;
+
         } catch (IOException ex) {
             System.out.println(ex);
         }
 
-        return userStore.createUser(name, email, phoneNumber, educationLevel, description);
+        if (success) {
+            return userStore.createUser(name, email, phoneNumber, educationLevel, description);
+        }
+        else {
+            return null;
+        }
     }
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {
