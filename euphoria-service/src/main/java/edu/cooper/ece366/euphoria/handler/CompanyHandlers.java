@@ -1,29 +1,25 @@
 package edu.cooper.ece366.euphoria.handler;
 
-import edu.cooper.ece366.euphoria.model.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
-import com.typesafe.config.Config;
+import edu.cooper.ece366.euphoria.model.Company;
+import edu.cooper.ece366.euphoria.store.model.CompanyStore;
 import okio.ByteString;
 
 import java.io.IOException;
-import java.sql.*;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 public class CompanyHandlers implements RouteProvider {
     private final ObjectMapper objectMapper;
-    private final Config config;
+    private final CompanyStore companyStore;
 
-    public CompanyHandlers(final ObjectMapper objectMapper, final Config config) {
+    public CompanyHandlers(final ObjectMapper objectMapper, CompanyStore companyStore) {
         this.objectMapper = objectMapper;
-        this.config = config;
+        this.companyStore = companyStore;
     }
 
     @Override
@@ -35,77 +31,33 @@ public class CompanyHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<Company> getCompany(final RequestContext rc) {
-        Company company = null;
-
-        try {
-            Integer companyId = Integer.valueOf(rc.pathArgs().get("companyId"));
-            Connection conn = DriverManager.getConnection(
-                    config.getString("mysql.jdbc"),
-                    config.getString("mysql.user"),
-                    config.getString("mysql.password"));
-            String sqlQuery = "SELECT * FROM companies WHERE companyId = ?";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setInt(1, companyId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.first()) {
-                company = new CompanyBuilder()
-                        .companyId(rs.getInt("companyId"))
-                        .name(rs.getString("name"))
-                        .website(rs.getString("website"))
-                        .description(rs.getString("description"))
-                        .build();
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-
-        return Collections.singletonList(company);
+    Company getCompany(final RequestContext rc) {
+        return companyStore.getCompany(rc.pathArgs().get("companyId"));
     }
 
     @VisibleForTesting
-    public List<Company> createCompany(final RequestContext rc) {
-        Company company = null;
+    Company createCompany(final RequestContext rc) {
+        String name, website, description;
+        name = null;
+        website = null;
+        description = null;
+        boolean success = false;
         try {
             byte[] requestBytes = rc.request().payload().get().toByteArray();
             Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
-            String name = jsonMap.get("name").toString();
-            String website = jsonMap.get("website").toString();
-            String description = jsonMap.get("description").toString();
-
-            Connection conn = DriverManager.getConnection(
-                    config.getString("mysql.jdbc"),
-                    config.getString("mysql.user"),
-                    config.getString("mysql.password"));
-            String sqlQuery = "INSERT INTO companies (name, website, description) VALUES (?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, name);
-            ps.setString(2, website);
-            ps.setString(3, description);
-            int rowsAffected = ps.executeUpdate();
-
-            if (rowsAffected == 0) {
-                throw new SQLException("Creating new company failed, no rows affected.");
-            }
-            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    company = new CompanyBuilder()
-                            .companyId(generatedKeys.getInt(1))
-                            //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
-                            .name("NA")
-                            .website("NA")
-                            .description("NA")
-                            .build();
-                } else {
-                    throw new SQLException("Creating new company failed, no ID obtained.");
-                }
-            }
-        } catch (SQLException | IOException ex) {
+            name = jsonMap.get("name").toString();
+            website = jsonMap.get("website").toString();
+            description = jsonMap.get("description").toString();
+            success = true;
+        } catch (IOException ex) {
             System.out.println(ex);
         }
 
-        return Collections.singletonList(company);
+        if (success)
+            return companyStore.createCompany(name, website, description);
+        else
+            return null;
+
     }
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {
