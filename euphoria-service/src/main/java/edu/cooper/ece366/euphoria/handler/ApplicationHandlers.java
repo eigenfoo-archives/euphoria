@@ -48,9 +48,9 @@ public class ApplicationHandlers implements RouteProvider {
 
         Integer applicationId = Integer.valueOf(rc.pathArgs().get("applicationId"));
 
-        File fileRes = new File(FileStoragePath + "resume" + "_" + applicationId + ".pdf");
+        File fileRes = new File(FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
         byte[] bufferRes = new byte[(int) fileRes.length()];
-        File fileCov = new File(FileStoragePath + "cover" + "_" + applicationId + ".pdf");
+        File fileCov = new File(FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
         byte[] bufferCov = new byte[(int) fileCov.length()];
             try {
                 FileInputStream input1 = new FileInputStream(fileRes);
@@ -107,9 +107,9 @@ public class ApplicationHandlers implements RouteProvider {
 
             while (rs.next()) {
                 Integer applicationId = rs.getInt("applicationId");
-                File fileRes = new File(FileStoragePath + "resume" + "_" + applicationId + ".pdf");
+                File fileRes = new File(FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
                 byte[] bufferRes = new byte[(int) fileRes.length()];
-                File fileCov = new File(FileStoragePath + "cover" + "_" + applicationId + ".pdf");
+                File fileCov = new File(FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
                 byte[] bufferCov = new byte[(int) fileCov.length()];
                 try {
                     FileInputStream input1 = new FileInputStream(fileRes);
@@ -165,13 +165,13 @@ public class ApplicationHandlers implements RouteProvider {
 
             //get ApplicationId
             if (rowsAffected == 0) {
-                throw new SQLException("Creating new user failed, no rows affected.");
+                throw new SQLException("Creating new application failed, no rows affected.");
             }
             try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
                 if (generatedKeys.next()) {
                      applicationId = generatedKeys.getInt(1);
                 } else {
-                    throw new SQLException("Creating new user failed, no ID obtained.");
+                    throw new SQLException("Creating new application failed, no ID obtained.");
                 }
             }
             //write to file system
@@ -179,13 +179,26 @@ public class ApplicationHandlers implements RouteProvider {
             byte[] decodedCov = Base64.getDecoder().decode(coverLetter);
 
             try {
-                FileOutputStream output1 = new FileOutputStream(FileStoragePath + "resume" + "_" + applicationId + ".pdf");
+                File newDir = new File(FileStoragePath + "app_" + applicationId);
+                newDir.mkdir();
+                FileOutputStream output1 = new FileOutputStream(FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
                 output1.write(decodedRes);
-                FileOutputStream output2 = new FileOutputStream(FileStoragePath + "cover" + "_" + applicationId + ".pdf");
+                FileOutputStream output2 = new FileOutputStream(FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
                 output2.write(decodedCov);
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
+
+            sqlQuery = "UPDATE applications SET resumeLocation = ?,  coverLetterLocation = ? WHERE applicationId = ? ";
+            ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
+            ps.setString(1, "file://" + FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
+            ps.setString(2, "file://" + FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
+            ps.setInt(3, applicationId);
+            rowsAffected = ps.executeUpdate();
+            if (rowsAffected == 0) {
+                throw new SQLException("Inserting application file paths failed, no rows affected.");
+            }
+
         } catch (SQLException | IOException ex) {
             System.out.println(ex);
         }

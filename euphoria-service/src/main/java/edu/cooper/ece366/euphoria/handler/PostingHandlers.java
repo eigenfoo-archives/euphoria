@@ -333,10 +333,12 @@ public class PostingHandlers implements RouteProvider {
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 Integer applicationId = rs.getInt("applicationId");
-                File fileRes = new File(FileStoragePath + "resume" + "_" + applicationId + ".pdf");
-                File fileCov = new File(FileStoragePath + "cover" + "_" + applicationId + ".pdf");
+                File fileRes = new File(FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
+                File fileCov = new File(FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
+                File fileDir = new File(FileStoragePath + "app_" + applicationId);
                 fileRes.delete();
                 fileCov.delete();
+                fileDir.delete();
             }
 
             sqlQuery = "DELETE FROM applications WHERE postingId = ?";
