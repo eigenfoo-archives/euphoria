@@ -27,7 +27,9 @@ public class Main {
         CompanyStore companyStore = new CompanyStoreJdbc(environment.config());
         CompanyHandlers companyHandlers = new CompanyHandlers(objectMapper, companyStore);
 
-        AuthenticationHandlers authenticationHandlers = new AuthenticationHandlers(objectMapper, config);
+        AuthenticationStore authenticationStore = new AuthenticationStoreJdbc(environment.config());
+        AuthenticationHandlers authenticationHandlers = new AuthenticationHandlers(objectMapper, authenticationStore);
+
         PostingHandlers postingHandlers = new PostingHandlers(objectMapper, config);
         ApplicationHandlers applicationHandlers = new ApplicationHandlers(objectMapper, config);
         CookieHandlers cookieHandlers = new CookieHandlers(objectMapper, config);

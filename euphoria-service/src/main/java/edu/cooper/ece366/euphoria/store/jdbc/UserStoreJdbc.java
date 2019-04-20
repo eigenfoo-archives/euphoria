@@ -28,10 +28,10 @@ public class UserStoreJdbc implements UserStore {
                             config.getString("mysql.user"),
                             config.getString("mysql.password"));
 
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_STATEMENT);
-            preparedStatement.setInt(1, Integer.parseInt(userId));
+            PreparedStatement ps = connection.prepareStatement(GET_USER_STATEMENT);
+            ps.setInt(1, Integer.parseInt(userId));
 
-            ResultSet rs = preparedStatement.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
             if (rs.first()) {
                 return new UserBuilder()
@@ -85,7 +85,6 @@ public class UserStoreJdbc implements UserStore {
             } else {
                 return null;
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("error creating user", e);
         }

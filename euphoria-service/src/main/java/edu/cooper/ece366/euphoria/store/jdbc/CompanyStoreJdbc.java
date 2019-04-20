@@ -26,10 +26,10 @@ public class CompanyStoreJdbc implements CompanyStore {
                             config.getString("mysql.user"),
                             config.getString("mysql.password"));
 
-            PreparedStatement preparedStatement = connection.prepareStatement(GET_COMPANY_STATEMENT);
-            preparedStatement.setInt(1, Integer.parseInt(companyId));
+            PreparedStatement ps = connection.prepareStatement(GET_COMPANY_STATEMENT);
+            ps.setInt(1, Integer.parseInt(companyId));
 
-            ResultSet rs = preparedStatement.executeQuery();
+            ResultSet rs = ps.executeQuery();
 
             if (rs.first()) {
                 return new CompanyBuilder()
@@ -77,7 +77,6 @@ public class CompanyStoreJdbc implements CompanyStore {
             } else {
                 return null;
             }
-
         } catch (SQLException e) {
             throw new RuntimeException("error creating company", e);
         }
