@@ -1,13 +1,14 @@
 package edu.cooper.ece366.euphoria;
 
-import edu.cooper.ece366.euphoria.handler.*;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotify.apollo.Environment;
 import com.spotify.apollo.httpservice.HttpService;
 import com.spotify.apollo.httpservice.LoadingException;
 import com.spotify.apollo.route.Route;
 import com.typesafe.config.Config;
+import edu.cooper.ece366.euphoria.handler.*;
+import edu.cooper.ece366.euphoria.store.jdbc.UserStoreJdbc;
+import edu.cooper.ece366.euphoria.store.model.UserStore;
 import io.norberg.automatter.jackson.AutoMatterModule;
 
 public class Main {
@@ -20,7 +21,10 @@ public class Main {
         Config config = environment.config();
         AuthenticationHandlers authenticationHandlers = new AuthenticationHandlers(objectMapper, config);
         PostingHandlers postingHandlers = new PostingHandlers(objectMapper, config);
-        UserHandlers userHandlers = new UserHandlers(objectMapper, config);
+        //UserHandlers userHandlers = new UserHandlers(objectMapper, config);
+        UserStore userStore = new UserStoreJdbc(environment.config());
+        UserHandlers userHandlers = new UserHandlers(objectMapper, userStore);
+
         CompanyHandlers companyHandlers = new CompanyHandlers(objectMapper, config);
         ApplicationHandlers applicationHandlers = new ApplicationHandlers(objectMapper, config);
         CookieHandlers cookieHandlers = new CookieHandlers(objectMapper, config);

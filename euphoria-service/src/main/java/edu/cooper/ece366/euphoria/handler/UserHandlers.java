@@ -1,30 +1,26 @@
 package edu.cooper.ece366.euphoria.handler;
 
-import edu.cooper.ece366.euphoria.model.*;
-import edu.cooper.ece366.euphoria.utils.EducationLevel;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
-import com.typesafe.config.Config;
+import edu.cooper.ece366.euphoria.model.User;
+import edu.cooper.ece366.euphoria.store.model.UserStore;
+import edu.cooper.ece366.euphoria.utils.EducationLevel;
 import okio.ByteString;
 
 import java.io.IOException;
-import java.sql.*;
-import java.util.Collections;
-import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 public class UserHandlers implements RouteProvider {
     private final ObjectMapper objectMapper;
-    private final Config config;
+    private final UserStore userStore;
 
-    public UserHandlers(final ObjectMapper objectMapper, final Config config) {
+    public UserHandlers(final ObjectMapper objectMapper, UserStore userStore) {
         this.objectMapper = objectMapper;
-        this.config = config;
+        this.userStore = userStore;
     }
 
     @Override
@@ -36,87 +32,31 @@ public class UserHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    public List<User> getUser(final RequestContext rc) {
-        User user = null;
-
-        try {
-            Integer userId = Integer.valueOf(rc.pathArgs().get("userId"));
-            Connection conn = DriverManager.getConnection(
-                    config.getString("mysql.jdbc"),
-                    config.getString("mysql.user"),
-                    config.getString("mysql.password"));
-            String sqlQuery = "SELECT * FROM users WHERE userId = ?";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setInt(1, userId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.first()) {
-                user = new UserBuilder()
-                        .userId(rs.getInt("userId"))
-                        .name(rs.getString("name"))
-                        .email(rs.getString("email"))
-                        .phoneNumber(rs.getString("phoneNumber"))
-                        .educationLevel(EducationLevel.valueOf(rs.getString("educationLevel")))
-                        .description(rs.getString("description"))
-                        .build();
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-
-        return Collections.singletonList(user);
+    User getUser(final RequestContext rc) {
+        return userStore.getUser(rc.pathArgs().get("userId"));
     }
 
     @VisibleForTesting
-    public List<User> createUser(final RequestContext rc) {
-        User user = null;
+    User createUser(final RequestContext rc) {
+        String name, email, phoneNumber, description;
+        name = null;
+        email = null;
+        phoneNumber = null;
+        description = null;
+        EducationLevel educationLevel = null;
         try {
             byte[] requestBytes = rc.request().payload().get().toByteArray();
             Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
-            String name = jsonMap.get("name").toString();
-            String email = jsonMap.get("email").toString();
-            String phoneNumber = jsonMap.get("phoneNumber").toString();
-            EducationLevel educationLevel = EducationLevel.valueOf(jsonMap.get("educationLevel").toString());
-            String description = jsonMap.get("description").toString();
-
-            Connection conn = DriverManager.getConnection(
-                    config.getString("mysql.jdbc"),
-                    config.getString("mysql.user"),
-                    config.getString("mysql.password"));
-            String sqlQuery = "INSERT INTO users (name, email, phoneNumber, " +
-                    "educationLevel, description) VALUES (?, ?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery, Statement.RETURN_GENERATED_KEYS);
-            ps.setString(1, name);
-            ps.setString(2, email);
-            ps.setString(3, phoneNumber);
-            ps.setString(4, educationLevel.toString());
-            ps.setString(5, description);
-            int rowsAffected = ps.executeUpdate();
-
-            if (rowsAffected == 0) {
-                throw new SQLException("Creating new user failed, no rows affected.");
-            }
-            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
-                if (generatedKeys.next()) {
-                    System.out.println("the generated key was" + generatedKeys.getLong(1));
-                    user = new UserBuilder()
-                            .userId(generatedKeys.getInt(1))
-                            //only want to send the Id, but don't know how to return just an integer alone without the builder, so putting placeholder values below
-                            .name("NA")
-                            .email("NA")
-                            .phoneNumber("NA")
-                            .educationLevel(EducationLevel.NOHIGHSCHOOL)
-                            .description("NA")
-                            .build();
-                } else {
-                    throw new SQLException("Creating new user failed, no ID obtained.");
-                }
-            }
-        } catch (SQLException | IOException ex) {
+            name = jsonMap.get("name").toString();
+            email = jsonMap.get("email").toString();
+            phoneNumber = jsonMap.get("phoneNumber").toString();
+            educationLevel = EducationLevel.valueOf(jsonMap.get("educationLevel").toString());
+            description = jsonMap.get("description").toString();
+        } catch (IOException ex) {
             System.out.println(ex);
         }
 
-        return Collections.singletonList(user);
+        return userStore.createUser(name, email, phoneNumber, educationLevel, description);
     }
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {
