@@ -30,9 +30,12 @@ public class Main {
         AuthenticationStore authenticationStore = new AuthenticationStoreJdbc(environment.config());
         AuthenticationHandlers authenticationHandlers = new AuthenticationHandlers(objectMapper, authenticationStore);
 
+        CookieStore cookieStore = new CookieStoreJdbc(environment.config());
+        CookieHandlers cookieHandlers = new CookieHandlers(objectMapper, cookieStore);
+
         PostingHandlers postingHandlers = new PostingHandlers(objectMapper, config);
         ApplicationHandlers applicationHandlers = new ApplicationHandlers(objectMapper, config);
-        CookieHandlers cookieHandlers = new CookieHandlers(objectMapper, config);
+      
 
         environment
                 .routingEngine()

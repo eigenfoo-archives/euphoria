@@ -60,7 +60,6 @@ public class AuthenticationHandlers implements RouteProvider {
             return null;
     }
 
-
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {
         return JsonSerializerMiddlewares.<T>jsonSerialize(objectMapper.writer())
                 .and(Middlewares::httpPayloadSemantics)
