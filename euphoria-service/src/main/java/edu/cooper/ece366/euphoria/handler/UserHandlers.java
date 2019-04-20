@@ -54,7 +54,6 @@ public class UserHandlers implements RouteProvider {
             educationLevel = EducationLevel.valueOf(jsonMap.get("educationLevel").toString());
             description = jsonMap.get("description").toString();
             success = true;
-
         } catch (IOException ex) {
             System.out.println(ex);
         }
