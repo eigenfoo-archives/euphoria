@@ -58,12 +58,10 @@ public class UserHandlers implements RouteProvider {
             System.out.println(ex);
         }
 
-        if (success) {
+        if (success)
             return userStore.createUser(name, email, phoneNumber, educationLevel, description);
-        }
-        else {
+        else
             return null;
-        }
     }
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {
