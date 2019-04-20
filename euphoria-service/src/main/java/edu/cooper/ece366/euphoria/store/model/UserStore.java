@@ -1,4 +1,4 @@
-package edu.cooper.ece366.euphoria.Store;
+package edu.cooper.ece366.euphoria.store.model;
 
 import edu.cooper.ece366.euphoria.model.User;
 
