@@ -1,5 +1,7 @@
 package edu.cooper.ece366.euphoria;
 
+import edu.cooper.ece366.euphoria.handler.*;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotify.apollo.Environment;
 import com.spotify.apollo.httpservice.HttpService;

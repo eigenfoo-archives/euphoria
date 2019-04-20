@@ -1,4 +1,6 @@
-package edu.cooper.ece366.euphoria;
+package edu.cooper.ece366.euphoria.handler;
+
+import edu.cooper.ece366.euphoria.model.*;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
