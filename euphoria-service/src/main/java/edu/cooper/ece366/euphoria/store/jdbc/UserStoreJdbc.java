@@ -1,7 +1,8 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
 import com.typesafe.config.Config;
-import edu.cooper.ece366.euphoria.model.*;
+import edu.cooper.ece366.euphoria.model.User;
+import edu.cooper.ece366.euphoria.model.UserBuilder;
 import edu.cooper.ece366.euphoria.store.model.UserStore;
 import edu.cooper.ece366.euphoria.utils.EducationLevel;
 
@@ -9,9 +10,9 @@ import java.sql.*;
 
 public class UserStoreJdbc implements UserStore {
 
-    private static final String GET_USER_STATEMENT    = "SELECT * FROM users WHERE userId = ?";
+    private static final String GET_USER_STATEMENT = "SELECT * FROM users WHERE userId = ?";
     private static final String CREATE_USER_STATEMENT = "INSERT INTO users (name, email, phoneNumber, educationLevel, description)" +
-                                                            " VALUES (?, ?, ?, ?, ?)";
+            " VALUES (?, ?, ?, ?, ?)";
     private final Config config;
 
     public UserStoreJdbc(final Config config) {

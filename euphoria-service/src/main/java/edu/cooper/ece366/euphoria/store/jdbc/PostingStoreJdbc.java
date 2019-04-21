@@ -1,14 +1,14 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
 import com.typesafe.config.Config;
-import edu.cooper.ece366.euphoria.model.*;
+import edu.cooper.ece366.euphoria.model.Posting;
+import edu.cooper.ece366.euphoria.model.PostingBuilder;
 import edu.cooper.ece366.euphoria.store.model.PostingStore;
 import edu.cooper.ece366.euphoria.utils.Industry;
 import edu.cooper.ece366.euphoria.utils.Location;
 import edu.cooper.ece366.euphoria.utils.SkillLevel;
 
 import java.io.File;
-import java.nio.file.NoSuchFileException;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -16,22 +16,22 @@ import java.util.List;
 
 public class PostingStoreJdbc implements PostingStore {
 
-    private static final String GET_POSTING_STATEMENT     = "SELECT * FROM postings WHERE postingId = ?";
+    private static final String GET_POSTING_STATEMENT = "SELECT * FROM postings WHERE postingId = ?";
 
     private static final String SEARCH_POSTINGS_STATEMENT = "SELECT * FROM postings WHERE location LIKE ? " +
-                                                                "AND industry LIKE ? AND skillLevel LIKE ?";;
+            "AND industry LIKE ? AND skillLevel LIKE ?";
 
-    private static final String GET_ALL_POSTINGS_STATEMENT         = "SELECT * FROM postings";
-    private static final String GET_RANDOM_POSTINGS_STATEMENT      = "SELECT * FROM postings ORDER BY RAND() LIMIT 10";
+    private static final String GET_ALL_POSTINGS_STATEMENT = "SELECT * FROM postings";
+    private static final String GET_RANDOM_POSTINGS_STATEMENT = "SELECT * FROM postings ORDER BY RAND() LIMIT 10";
     private static final String GET_POSTINGS_FOR_COMPANY_STATEMENT = "SELECT * FROM postings WHERE companyId = ?";
 
     private static final String CREATE_POSTING_STATEMENT = "INSERT INTO postings (companyId, jobTitle, " +
-                                                                "description, location, industry, skillLevel) VALUES (?, ?, ?, ?, ?, ?)";
-    private static final String EDIT_POSTING_STATEMENT   = "UPDATE postings SET jobTitle = ?, " +
-                                                                "description = ?, location = ?, industry = ?, skillLevel = ? WHERE postingId = ?";
+            "description, location, industry, skillLevel) VALUES (?, ?, ?, ?, ?, ?)";
+    private static final String EDIT_POSTING_STATEMENT = "UPDATE postings SET jobTitle = ?, " +
+            "description = ?, location = ?, industry = ?, skillLevel = ? WHERE postingId = ?";
 
-    private static final String DELETE_POSTING_STATEMENT    = "DELETE FROM postings WHERE postingId = ?";
-    private static final String GET_ASSOC_APPS_STATEMENT    = "SELECT applicationId FROM applications WHERE postingId = ?";
+    private static final String DELETE_POSTING_STATEMENT = "DELETE FROM postings WHERE postingId = ?";
+    private static final String GET_ASSOC_APPS_STATEMENT = "SELECT applicationId FROM applications WHERE postingId = ?";
     private static final String DELETE_ASSOC_APPS_STATEMENT = "DELETE FROM applications WHERE postingId = ?";
 
     private final Config config;
@@ -197,7 +197,7 @@ public class PostingStoreJdbc implements PostingStore {
                             config.getString("mysql.user"),
                             config.getString("mysql.password"));
             PreparedStatement ps = connection.prepareStatement(GET_POSTINGS_FOR_COMPANY_STATEMENT);
-            ps.setInt(1,  Integer.parseInt(companyId));
+            ps.setInt(1, Integer.parseInt(companyId));
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
@@ -222,7 +222,8 @@ public class PostingStoreJdbc implements PostingStore {
     }
 
     @Override
-    public List<Posting> createPosting(final String companyId, final String jobTitle, final String description, final Location location, final Industry industry, final SkillLevel skillLevel) {
+    public List<Posting> createPosting(final String companyId, final String jobTitle, final String description,
+                                       final Location location, final Industry industry, final SkillLevel skillLevel) {
         Connection connection;
         try {
             connection =
@@ -250,7 +251,8 @@ public class PostingStoreJdbc implements PostingStore {
     }
 
     @Override
-    public List<Posting> editPosting(final String postingId, final String jobTitle, final String description, final Location location, final Industry industry, final SkillLevel skillLevel) {
+    public List<Posting> editPosting(final String postingId, final String jobTitle, final String description,
+                                     final Location location, final Industry industry, final SkillLevel skillLevel) {
         Connection connection;
         try {
             connection =
@@ -309,12 +311,12 @@ public class PostingStoreJdbc implements PostingStore {
                     fileRes.delete();
                     fileCov.delete();
                     fileDir.delete();
-                } catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
 
-            if  (!empty) {
+            if (!empty) {
                 ps = connection.prepareStatement(DELETE_ASSOC_APPS_STATEMENT);
                 ps.setInt(1, Integer.parseInt(postingId));
                 rowsAffected = ps.executeUpdate();

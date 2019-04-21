@@ -26,9 +26,12 @@ public class ApplicationHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/api/application/<applicationId>", this::getApplication).withMiddleware(jsonMiddleware()),
-                Route.sync("GET", "/api/application/posting/<postingId>", this::getApplicationsForPosting).withMiddleware(jsonMiddleware()),
-                Route.sync("POST", "/api/application", this::createApplication).withMiddleware(jsonMiddleware())
+                Route.sync("GET", "/api/application/<applicationId>", this::getApplication)
+                        .withMiddleware(jsonMiddleware()),
+                Route.sync("GET", "/api/application/posting/<postingId>", this::getApplicationsForPosting)
+                        .withMiddleware(jsonMiddleware()),
+                Route.sync("POST", "/api/application", this::createApplication)
+                        .withMiddleware(jsonMiddleware())
         );
     }
 
