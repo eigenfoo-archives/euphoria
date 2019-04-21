@@ -32,12 +32,12 @@ public class UserHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    User getUser(final RequestContext rc) {
+    public User getUser(final RequestContext rc) {
         return userStore.getUser(rc.pathArgs().get("userId"));
     }
 
     @VisibleForTesting
-    User createUser(final RequestContext rc) {
+    public User createUser(final RequestContext rc) {
         String name, email, phoneNumber, description;
         name = null;
         email = null;
