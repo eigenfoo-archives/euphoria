@@ -1,18 +1,21 @@
 package edu.cooper.ece366.euphoria;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.spotify.apollo.Request;
 import com.spotify.apollo.RequestContext;
 import edu.cooper.ece366.euphoria.handler.ApplicationHandlers;
 import edu.cooper.ece366.euphoria.model.Application;
 import edu.cooper.ece366.euphoria.model.ApplicationBuilder;
 import edu.cooper.ece366.euphoria.store.model.ApplicationStore;
+import okio.ByteString;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
-import java.util.Collections;
+import java.io.IOException;
+import java.util.*;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.verifyZeroInteractions;
@@ -26,6 +29,10 @@ public class ApplicationHandlersTest {
     ApplicationStore applicationStore;
     @Mock
     RequestContext requestContext;
+    @Mock
+    Request request;
+    @Mock
+    ByteString requestPayloadByteString;
 
     private ApplicationHandlers testClass;
 
@@ -88,7 +95,6 @@ public class ApplicationHandlersTest {
         verifyZeroInteractions(objectMapper);
     }
 
-    /*
     @Test
     public void createApplication() throws IOException {
         // Setup variables
@@ -97,15 +103,16 @@ public class ApplicationHandlersTest {
 
         // Mock dependencies and inputs
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("applicationId", 1);
-        map.put("postingId", 1);
-        map.put("userId", 1);
-        map.put("resume", byteArray);
-        map.put("coverLetter", byteArray);
+        map.put("applicationId", "1");
+        map.put("postingId", "1");
+        map.put("userId", "1");
+        map.put("resume", "");
+        map.put("coverLetter", "");
         when(requestContext.request()).thenReturn(request);
         when(request.payload()).thenReturn(Optional.of(requestPayloadByteString));
         when(requestPayloadByteString.toByteArray()).thenReturn(byteArray);
         when(objectMapper.readValue(byteArray, Map.class)).thenReturn(map);
+        when(applicationStore.createApplication("1", "1", "", "")).thenReturn(Collections.emptyList());
 
         // Call test class
         List<Application> actual = testClass.createApplication(requestContext);
@@ -113,5 +120,4 @@ public class ApplicationHandlersTest {
         // Assert and verify
         assertEquals(expected, actual);
     }
-    */
 }
