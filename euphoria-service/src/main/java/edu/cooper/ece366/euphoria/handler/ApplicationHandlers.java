@@ -36,17 +36,17 @@ public class ApplicationHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    Application getApplication(final RequestContext rc) {
+    public Application getApplication(final RequestContext rc) {
         return applicationStore.getApplication(rc.pathArgs().get("applicationId"));
     }
 
     @VisibleForTesting
-    List<Application> getApplicationsForPosting(final RequestContext rc) {
+    public List<Application> getApplicationsForPosting(final RequestContext rc) {
         return applicationStore.getApplicationsForPosting(rc.pathArgs().get("postingId"));
     }
 
     @VisibleForTesting
-    List<Application> createApplication(final RequestContext rc) {
+    public List<Application> createApplication(final RequestContext rc) {
         String postingId = null;
         String userId = null;
         String resume = null;

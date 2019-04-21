@@ -33,12 +33,12 @@ public class AuthenticationHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    Authentication getAuthentication(final RequestContext rc) {
+    public Authentication getAuthentication(final RequestContext rc) {
         return authenticationStore.getAuthentication(rc.pathArgs().get("username"), rc.pathArgs().get("passwordHash"));
     }
 
     @VisibleForTesting
-    List<Authentication> createAuthentication(final RequestContext rc) {
+    public List<Authentication> createAuthentication(final RequestContext rc) {
         Integer id = null;
         String username = null;
         String passwordHash = null;
