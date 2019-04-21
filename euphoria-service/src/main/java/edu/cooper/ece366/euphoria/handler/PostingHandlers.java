@@ -80,7 +80,6 @@ public class PostingHandlers implements RouteProvider {
         if (String.valueOf(rc.pathArgs().get("skillLevel")).isEmpty())
             success3 = true;
 
-
         if (success1 && success2 && success3)
             return postingStore.searchPostings(location, industry, skillLevel);
         else

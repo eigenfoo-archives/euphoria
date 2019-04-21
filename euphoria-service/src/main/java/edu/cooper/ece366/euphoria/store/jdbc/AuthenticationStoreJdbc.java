@@ -69,9 +69,13 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
             if (rowsAffected == 0) {
                 throw new SQLException("Creating new authentication failed, no rows affected.");
             }
-            return Collections.emptyList();
-        } catch (SQLException e) {
-            throw new RuntimeException("error creating authentication", e);
+
+            return Collections.emptyList(); //if everything successful, return empty list
+
+        } catch (SQLException ex) {
+            System.out.println(ex);
         }
+
+        return null; //if not successful, return null
     }
 }

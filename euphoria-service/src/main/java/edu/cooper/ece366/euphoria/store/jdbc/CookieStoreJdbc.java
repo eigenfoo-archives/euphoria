@@ -67,27 +67,24 @@ public class CookieStoreJdbc implements CookieStore {
             if (rs.first()) {
                 id = rs.getInt("id");
                 isUser = rs.getBoolean("isUser");
-                if (rs != null) {
-                    String cookieNew = UUID.randomUUID().toString();
-                    ps = connection.prepareStatement(CREATE_COOKIE_STATEMENT);
-                    ps.setInt(1, id); // Either userId or companyId
-                    ps.setBoolean(2, isUser);
-                    ps.setString(3, cookieNew);
-                    ps.executeUpdate();
-                    // Send back to front-end
-                    return new CookieBuilder()
-                            .id(id)
-                            .isUser(isUser)
-                            .cookie(cookieNew)
-                            .build();
-                } else {
+
+                String cookieNew = UUID.randomUUID().toString();
+                ps = connection.prepareStatement(CREATE_COOKIE_STATEMENT);
+                ps.setInt(1, id); // Either userId or companyId
+                ps.setBoolean(2, isUser);
+                ps.setString(3, cookieNew);
+                ps.executeUpdate();
+                // Send back to front-end
+                return new CookieBuilder()
+                        .id(id)
+                        .isUser(isUser)
+                        .cookie(cookieNew)
+                        .build();
+            } else {
                     return null;
-                }
             }
         } catch (SQLException e) {
             throw new RuntimeException("error creating cookie", e);
         }
-
-        return null; //should never get here, this line just prevents compiler error
     }
 }
