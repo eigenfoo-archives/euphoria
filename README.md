@@ -68,7 +68,11 @@ Team members:
 
 5. If serving the frontend on a virtual machine, overwrite the file
    `/etc/nginx/sites-available/default` with [the `nginx/default`
-   file](https://github.com/eigenfoo/euphoria/blob/master/nginx/default).
+   file](https://github.com/eigenfoo/euphoria/blob/master/nginx/default). Then
+   restart `nginx` with `sudo /etc/init.d/nginx reload`.
+
+   Before restarting `nginx`, you can test your configuration with `sudo nginx
+   -t`.
 
 6. Package and run the backend.
 
