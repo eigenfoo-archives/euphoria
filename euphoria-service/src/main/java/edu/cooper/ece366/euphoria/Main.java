@@ -33,7 +33,9 @@ public class Main {
         CookieStore cookieStore = new CookieStoreJdbc(environment.config());
         CookieHandlers cookieHandlers = new CookieHandlers(objectMapper, cookieStore);
 
-        PostingHandlers postingHandlers = new PostingHandlers(objectMapper, config);
+        PostingStore postingStore = new PostingStoreJdbc(environment.config());
+        PostingHandlers postingHandlers = new PostingHandlers(objectMapper, postingStore);
+        
         ApplicationHandlers applicationHandlers = new ApplicationHandlers(objectMapper, config);
       
 

@@ -1,355 +1,168 @@
 package edu.cooper.ece366.euphoria.handler;
 
-import edu.cooper.ece366.euphoria.model.*;
-import edu.cooper.ece366.euphoria.utils.Industry;
-import edu.cooper.ece366.euphoria.utils.Location;
-import edu.cooper.ece366.euphoria.utils.SkillLevel;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
-import com.typesafe.config.Config;
+import edu.cooper.ece366.euphoria.model.Posting;
+import edu.cooper.ece366.euphoria.store.model.PostingStore;
+import edu.cooper.ece366.euphoria.utils.Industry;
+import edu.cooper.ece366.euphoria.utils.Location;
+import edu.cooper.ece366.euphoria.utils.SkillLevel;
 import okio.ByteString;
 
-import java.io.File;
 import java.io.IOException;
-import java.sql.*;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
 
 public class PostingHandlers implements RouteProvider {
     private final ObjectMapper objectMapper;
-    private final Config config;
-    private final String FileStoragePath;
+    private final PostingStore postingStore;
 
-    public PostingHandlers(final ObjectMapper objectMapper, final Config config) {
+    public PostingHandlers(final ObjectMapper objectMapper, PostingStore postingStore) {
         this.objectMapper = objectMapper;
-        this.config = config;
-        FileStoragePath = config.getString("FileStoragePath");
+        this.postingStore = postingStore;
     }
 
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/api/posting/<postingId>", this::getPosting),
-                Route.sync("GET", "/api/posting/all", this::getAllPostings),
-                Route.sync("GET", "/api/posting/random", this::getRandomPostings),
-                Route.sync("GET", "/api/posting/company/<companyId>", this::getPostingsForCompany),
-                // FIXME this http request should use query parameters instead of path arguments
-                Route.sync("GET", "/api/posting/<location>/<industry>/<skillLevel>", this::searchPostings),
-                Route.sync("POST", "/api/posting/", this::createPosting),
-                Route.sync("PUT", "/api/posting/", this::editPosting),
-                Route.sync("DELETE", "/api/posting/<postingId>", this::deletePosting)
-        ).map(r -> r.withMiddleware(jsonMiddleware()));
+                Route.sync("GET", "/api/posting/<postingId>", this::getPosting).withMiddleware(jsonMiddleware()),
+                Route.sync("GET", "/api/posting/all", this::getAllPostings).withMiddleware(jsonMiddleware()),
+                Route.sync("GET", "/api/posting/random", this::getRandomPostings).withMiddleware(jsonMiddleware()),
+                Route.sync("GET", "/api/posting/company/<companyId>", this::getPostingsForCompany).withMiddleware(jsonMiddleware()),
+                Route.sync("GET", "/api/posting/<location>/<industry>/<skillLevel>", this::searchPostings).withMiddleware(jsonMiddleware()),
+                Route.sync("POST", "/api/posting/", this::createPosting).withMiddleware(jsonMiddleware()),
+                Route.sync("PUT", "/api/posting/", this::editPosting).withMiddleware(jsonMiddleware()),
+                Route.sync("DELETE", "/api/posting/<postingId>", this::deletePosting).withMiddleware(jsonMiddleware())
+        );
     }
 
     @VisibleForTesting
-    public List<Posting> getPosting(final RequestContext rc) {
-        Posting posting = null;
-
-        try {
-            Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
-            Connection conn = DriverManager.getConnection(
-                    config.getString("mysql.jdbc"),
-                    config.getString("mysql.user"),
-                    config.getString("mysql.password"));
-            String sqlQuery = "SELECT * FROM postings WHERE postingId = ?";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setInt(1, postingId);
-            ResultSet rs = ps.executeQuery();
-
-            if (rs.first()) {
-                posting = new PostingBuilder()
-                        .postingId(rs.getInt("postingId"))
-                        .companyId(rs.getInt("companyId"))
-                        .jobTitle(rs.getString("jobTitle"))
-                        .description(rs.getString("description"))
-                        .location(Location.valueOf(rs.getString("location")))
-                        .industry(Industry.valueOf(rs.getString("industry")))
-                        .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
-                        .dateCreated(rs.getString("dateCreated"))
-                        .build();
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-
-        return Collections.singletonList(posting);
+    Posting getPosting(final RequestContext rc) {
+        return postingStore.getPosting(rc.pathArgs().get("postingId"));
     }
 
     @VisibleForTesting
-    public List<Posting> searchPostings(final RequestContext rc) {
-        ArrayList<Posting> postingList = new ArrayList<Posting>();
+    List<Posting> searchPostings(final RequestContext rc) {
         String location = "%";
         String industry = "%";
         String skillLevel = "%";
-
+        boolean success1 = false;
+        boolean success2 = false;
+        boolean success3 = false;
         try {
             location = Location.valueOf(rc.pathArgs().get("location")).toString();
+            success1 = true;
         } catch (Exception ex) {
             System.out.println(ex);
         }
-
         try {
             industry = Industry.valueOf(rc.pathArgs().get("industry")).toString();
+            success2 = true;
         } catch (Exception ex) {
             System.out.println(ex);
         }
-
         try {
             skillLevel = SkillLevel.valueOf(rc.pathArgs().get("skillLevel")).toString();
+            success3 = true;
         } catch (Exception ex) {
             System.out.println(ex);
         }
 
-        try {
-            Connection conn = DriverManager.getConnection(
-                    config.getString("mysql.jdbc"),
-                    config.getString("mysql.user"),
-                    config.getString("mysql.password"));
-            String sqlQuery = "SELECT * FROM postings WHERE location LIKE ? " +
-                    "AND industry LIKE ? AND skillLevel LIKE ?";
-            System.out.println(sqlQuery);
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setString(1, location);
-            ps.setString(2, industry);
-            ps.setString(3, skillLevel);
-            ResultSet rs = ps.executeQuery();
+        //if curl has some fields blank, still ok
+        if (String.valueOf(rc.pathArgs().get("location")).isEmpty())
+            success1 = true;
+        if (String.valueOf(rc.pathArgs().get("industry")).isEmpty())
+            success2 = true;
+        if (String.valueOf(rc.pathArgs().get("skillLevel")).isEmpty())
+            success3 = true;
 
-            while (rs.next()) {
-                Posting posting = new PostingBuilder()
-                        .postingId(rs.getInt("postingId"))
-                        .companyId(rs.getInt("companyId"))
-                        .jobTitle(rs.getString("jobTitle"))
-                        .description(rs.getString("description"))
-                        .location(Location.valueOf(rs.getString("location")))
-                        .industry(Industry.valueOf(rs.getString("industry")))
-                        .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
-                        .dateCreated(rs.getString("dateCreated"))
-                        .build();
 
-                postingList.add(posting);
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-
-        return postingList;
+        if (success1 && success2 && success3)
+            return postingStore.searchPostings(location, industry, skillLevel);
+        else
+            return null;  //if misspell an ENUM constant
     }
 
     @VisibleForTesting
-    public List<Posting> getAllPostings(final RequestContext rc) {
-        ArrayList<Posting> postingList = new ArrayList<Posting>();
-
-        try {
-            Connection conn = DriverManager.getConnection(
-                    config.getString("mysql.jdbc"),
-                    config.getString("mysql.user"),
-                    config.getString("mysql.password"));
-            String sqlQuery = "SELECT * FROM postings";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Posting posting = new PostingBuilder()
-                        .postingId(rs.getInt("postingId"))
-                        .companyId(rs.getInt("companyId"))
-                        .jobTitle(rs.getString("jobTitle"))
-                        .description(rs.getString("description"))
-                        .location(Location.valueOf(rs.getString("location")))
-                        .industry(Industry.valueOf(rs.getString("industry")))
-                        .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
-                        .dateCreated(rs.getString("dateCreated"))
-                        .build();
-
-                postingList.add(posting);
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-
-        return postingList;
+    List<Posting> getAllPostings(final RequestContext rc) {
+        return postingStore.getAllPostings();
     }
 
     @VisibleForTesting
-    public List<Posting> getRandomPostings(final RequestContext rc) {
-        ArrayList<Posting> postingList = new ArrayList<Posting>();
-
-        try {
-            Connection conn = DriverManager.getConnection(
-                    config.getString("mysql.jdbc"),
-                    config.getString("mysql.user"),
-                    config.getString("mysql.password"));
-            String sqlQuery = "SELECT * FROM postings ORDER BY RAND() LIMIT 10";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Posting posting = new PostingBuilder()
-                        .postingId(rs.getInt("postingId"))
-                        .companyId(rs.getInt("companyId"))
-                        .jobTitle(rs.getString("jobTitle"))
-                        .description(rs.getString("description"))
-                        .location(Location.valueOf(rs.getString("location")))
-                        .industry(Industry.valueOf(rs.getString("industry")))
-                        .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
-                        .dateCreated(rs.getString("dateCreated"))
-                        .build();
-
-                postingList.add(posting);
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-
-        return postingList;
+    List<Posting> getRandomPostings(final RequestContext rc) {
+        return postingStore.getRandomPostings();
     }
 
     @VisibleForTesting
-    public List<Posting> getPostingsForCompany(final RequestContext rc) {
-        ArrayList<Posting> postingList = new ArrayList<Posting>();
-
-        try {
-            Integer companyId = Integer.valueOf(rc.pathArgs().get("companyId"));
-            Connection conn = DriverManager.getConnection(
-                    config.getString("mysql.jdbc"),
-                    config.getString("mysql.user"),
-                    config.getString("mysql.password"));
-            String sqlQuery = "SELECT * FROM postings WHERE companyId = ?";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setInt(1, companyId);
-            ResultSet rs = ps.executeQuery();
-
-            while (rs.next()) {
-                Posting posting = new PostingBuilder()
-                        .postingId(rs.getInt("postingId"))
-                        .companyId(rs.getInt("companyId"))
-                        .jobTitle(rs.getString("jobTitle"))
-                        .description(rs.getString("description"))
-                        .location(Location.valueOf(rs.getString("location")))
-                        .industry(Industry.valueOf(rs.getString("industry")))
-                        .skillLevel(SkillLevel.valueOf(rs.getString("skillLevel")))
-                        .dateCreated(rs.getString("dateCreated"))
-                        .build();
-
-                postingList.add(posting);
-            }
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-
-        return postingList;
+    List<Posting> getPostingsForCompany(final RequestContext rc) {
+        return postingStore.getPostingsForCompany(rc.pathArgs().get("companyId"));
     }
 
     @VisibleForTesting
-    public List<Posting> createPosting(final RequestContext rc) {
+    List<Posting> createPosting(final RequestContext rc) {
+        String companyId = null;
+        String jobTitle = null;
+        String description = null;
+        Location location = null;
+        Industry industry = null;
+        SkillLevel skillLevel = null;
+        boolean success = false;
         try {
             byte[] requestBytes = rc.request().payload().get().toByteArray();
             Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
-            Integer companyId = Integer.parseInt(jsonMap.get("companyId").toString());
-            String jobTitle = jsonMap.get("jobTitle").toString();
-            String description = jsonMap.get("description").toString();
-            Location location = Location.valueOf(jsonMap.get("location").toString());
-            Industry industry = Industry.valueOf(jsonMap.get("industry").toString());
-            SkillLevel skillLevel = SkillLevel.valueOf(jsonMap.get("skillLevel").toString());
-
-            Connection conn = DriverManager.getConnection(
-                    config.getString("mysql.jdbc"),
-                    config.getString("mysql.user"),
-                    config.getString("mysql.password"));
-            String sqlQuery = "INSERT INTO postings (companyId, jobTitle, " +
-                    "description, location, industry, skillLevel) VALUES (?, ?, ?, ?, ?, ?)";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setInt(1, companyId);
-            ps.setString(2, jobTitle);
-            ps.setString(3, description);
-            ps.setString(4, location.toString());
-            ps.setString(5, industry.toString());
-            ps.setString(6, skillLevel.toString());
-            //timestamped automatically in UTC by mysql database
-            ps.executeUpdate();
-        } catch (SQLException | IOException ex) {
+            companyId = jsonMap.get("companyId").toString();
+            jobTitle = jsonMap.get("jobTitle").toString();
+            description = jsonMap.get("description").toString();
+            location = Location.valueOf(jsonMap.get("location").toString());
+            industry = Industry.valueOf(jsonMap.get("industry").toString());
+            skillLevel = SkillLevel.valueOf(jsonMap.get("skillLevel").toString());
+            success = true;
+        } catch (IOException ex) {
             System.out.println(ex);
         }
 
-        return Collections.emptyList();
+        if (success)
+            return postingStore.createPosting(companyId, jobTitle, description, location, industry, skillLevel);
+        else
+            return null;
     }
 
     @VisibleForTesting
     public List<Posting> editPosting(final RequestContext rc) {
+        String postingId = null;
+        String jobTitle = null;
+        String description = null;
+        Location location = null;
+        Industry industry = null;
+        SkillLevel skillLevel = null;
+        boolean success = false;
         try {
-            Map jsonMap = objectMapper.readValue(rc.request().payload().get().toByteArray(), Map.class);
-            Integer postingId = Integer.parseInt(jsonMap.get("postingId").toString());
-            String jobTitle = jsonMap.get("jobTitle").toString();
-            String description = jsonMap.get("description").toString();
-            Location location = Location.valueOf(jsonMap.get("location").toString());
-            Industry industry = Industry.valueOf(jsonMap.get("industry").toString());
-            SkillLevel skillLevel = SkillLevel.valueOf(jsonMap.get("skillLevel").toString());
-
-            Connection conn = DriverManager.getConnection(
-                    config.getString("mysql.jdbc"),
-                    config.getString("mysql.user"),
-                    config.getString("mysql.password"));
-            String sqlQuery = "UPDATE postings SET jobTitle = ?, description = ?, " +
-                    "location = ?, industry = ?, skillLevel = ? WHERE postingId = ?";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setString(1, jobTitle);
-            ps.setString(2, description);
-            ps.setString(3, location.toString());
-            ps.setString(4, industry.toString());
-            ps.setString(5, skillLevel.toString());
-            ps.setInt(6, postingId);
-            ps.executeUpdate();
-        } catch (SQLException | IOException ex) {
+            byte[] requestBytes = rc.request().payload().get().toByteArray();
+            Map jsonMap = objectMapper.readValue(requestBytes, Map.class);
+            postingId = jsonMap.get("postingId").toString();
+            jobTitle = jsonMap.get("jobTitle").toString();
+            description = jsonMap.get("description").toString();
+            location = Location.valueOf(jsonMap.get("location").toString());
+            industry = Industry.valueOf(jsonMap.get("industry").toString());
+            skillLevel = SkillLevel.valueOf(jsonMap.get("skillLevel").toString());
+            success = true;
+        } catch (IOException ex) {
             System.out.println(ex);
         }
 
-        return Collections.emptyList();
+        if (success)
+            return postingStore.editPosting(postingId, jobTitle, description, location, industry, skillLevel);
+        else
+            return null;
     }
 
     @VisibleForTesting
     public List<Posting> deletePosting(final RequestContext rc) {
-        try {
-            Integer postingId = Integer.valueOf(rc.pathArgs().get("postingId"));
-
-            Connection conn = DriverManager.getConnection(
-                    config.getString("mysql.jdbc"),
-                    config.getString("mysql.user"),
-                    config.getString("mysql.password"));
-            String sqlQuery = "DELETE FROM postings WHERE postingId = ?";
-            PreparedStatement ps = conn.prepareStatement(sqlQuery);
-            ps.setInt(1, postingId);
-            ps.executeUpdate();
-
-            //remove associated resumes and cover letters from file system
-            sqlQuery = "SELECT applicationId FROM applications WHERE postingId = ?";
-            ps = conn.prepareStatement(sqlQuery);
-            ps.setInt(1, postingId);
-            ResultSet rs = ps.executeQuery();
-            while (rs.next()) {
-                Integer applicationId = rs.getInt("applicationId");
-                File fileRes = new File(FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
-                File fileCov = new File(FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
-                File fileDir = new File(FileStoragePath + "app_" + applicationId);
-                fileRes.delete();
-                fileCov.delete();
-                fileDir.delete();
-            }
-
-            sqlQuery = "DELETE FROM applications WHERE postingId = ?";
-            ps = conn.prepareStatement(sqlQuery);
-            ps.setInt(1, postingId);
-            ps.executeUpdate();
-        } catch (SQLException ex) {
-            System.out.println(ex);
-        }
-
-        return Collections.emptyList();
+        return postingStore.deletePosting(rc.pathArgs().get("postingId"));
     }
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {
