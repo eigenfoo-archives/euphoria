@@ -16,8 +16,8 @@ Team members:
 ## Requirements
 
 - JDK 8
-- Maven
-- MySQL
+- Maven (`sudo apt install maven`)
+- MySQL (`sudo apt install mysql-server`)
 
 ## Installation and Setup
 
@@ -32,28 +32,53 @@ Team members:
     ```bash
     cat euphoria-service/src/main/resources/initialize-database.sql | mysql -u root -p
     ```
- 
-3. Initiliaze the example files by manually copying the contents of [`docs/exampleFiles`
-subdirectory](https://github.com/eigenfoo/euphoria/tree/master/docs/exampleFiles) into /usr/local/etc
 
-4. Download dependencies for, and run, the frontend:
+3. Initiliaze the example files by manually copying the contents of
+   [`docs/exampleFiles`
+   subdirectory](https://github.com/eigenfoo/euphoria/tree/master/docs/exampleFiles)
+   into `/usr/local/etc/`. You may need `sudo` privileges if doing this on a
+   virtual machine.
+
+   ```bash
+   cd docs/exampleFiles/
+   cp * /usr/local/etc/
+   ```
+
+4. Download dependencies for, and build, the frontend:
 
     ```bash
     cd euphoria-frontend
     npm install
-    npm start
+    npm run build
     ```
 
-   See the [Create React App
+   (See the [Create React App
    README](https://github.com/eigenfoo/euphoria/blob/master/euphoria-frontend/README.md)
-   for more information.
+   for more information.)
 
-5. Package and run the backend.
+   If serving the frontend on a virtual machine, it may be wiser to build the
+   web application locally and then `scp` the built static files to the
+   `/var/www/euphoria.ece366.cooper.edu` directory in the virtual machine. You
+   may need `sudo` privileges to do this.
+
+   ```bash
+   cd build/
+   scp -r * root@VM_IP_ADDRESS:/var/www/euphoria.ece366.cooper.edu
+   ```
+
+5. If serving the frontend on a virtual machine, overwrite the file
+   `/etc/nginx/sites-available/default` with [the `nginx/default`
+   file](https://github.com/eigenfoo/euphoria/blob/master/nginx/default). Then
+   restart `nginx` with `sudo /etc/init.d/nginx reload`.
+
+   Before restarting `nginx`, you can test your configuration with `sudo nginx
+   -t`.
+
+6. Package and run the backend.
 
     ```bash
     cd euphoria-service
-    cat src/main/resources/initialize-database.sql | mysql -u root -p
-    mvn package
+    mvn clean package
     java -jar target/euphoria-1.0-SNAPSHOT.jar
     ```
 
@@ -62,4 +87,3 @@ subdirectory](https://github.com/eigenfoo/euphoria/tree/master/docs/exampleFiles
 See the [`docs/`
 subdirectory](https://github.com/eigenfoo/euphoria/tree/master/docs) for more
 documentation.
-
