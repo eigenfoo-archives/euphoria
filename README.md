@@ -1,5 +1,7 @@
 # Euphoria
 
+[![Build Status](https://travis-ci.org/eigenfoo/euphoria.svg?branch=master)](https://travis-ci.org/eigenfoo/euphoria)
+
 A simple recruiting platform, written as a project for ECE366 (Software
 Engineering & Large Systems Design) at The Cooper Union. Euphoria's tech stack
 consists of a [Spotify Apollo](https://github.com/spotify/apollo) Java service
