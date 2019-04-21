@@ -31,12 +31,12 @@ public class CompanyHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    Company getCompany(final RequestContext rc) {
+    public Company getCompany(final RequestContext rc) {
         return companyStore.getCompany(rc.pathArgs().get("companyId"));
     }
 
     @VisibleForTesting
-    Company createCompany(final RequestContext rc) {
+    public Company createCompany(final RequestContext rc) {
         String name, website, description;
         name = null;
         website = null;

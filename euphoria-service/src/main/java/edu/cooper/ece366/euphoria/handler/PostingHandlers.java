@@ -41,12 +41,12 @@ public class PostingHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    Posting getPosting(final RequestContext rc) {
+    public Posting getPosting(final RequestContext rc) {
         return postingStore.getPosting(rc.pathArgs().get("postingId"));
     }
 
     @VisibleForTesting
-    List<Posting> searchPostings(final RequestContext rc) {
+    public List<Posting> searchPostings(final RequestContext rc) {
         String location = "%";
         String industry = "%";
         String skillLevel = "%";
@@ -87,22 +87,22 @@ public class PostingHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    List<Posting> getAllPostings(final RequestContext rc) {
+    public List<Posting> getAllPostings(final RequestContext rc) {
         return postingStore.getAllPostings();
     }
 
     @VisibleForTesting
-    List<Posting> getRandomPostings(final RequestContext rc) {
+    public List<Posting> getRandomPostings(final RequestContext rc) {
         return postingStore.getRandomPostings();
     }
 
     @VisibleForTesting
-    List<Posting> getPostingsForCompany(final RequestContext rc) {
+    public List<Posting> getPostingsForCompany(final RequestContext rc) {
         return postingStore.getPostingsForCompany(rc.pathArgs().get("companyId"));
     }
 
     @VisibleForTesting
-    List<Posting> createPosting(final RequestContext rc) {
+    public List<Posting> createPosting(final RequestContext rc) {
         String companyId = null;
         String jobTitle = null;
         String description = null;
