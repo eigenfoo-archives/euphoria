@@ -110,7 +110,8 @@ public class ApplicationHandlersTest {
         when(request.payload()).thenReturn(Optional.of(requestPayloadByteString));
         when(requestPayloadByteString.toByteArray()).thenReturn(byteArray);
         when(objectMapper.readValue(byteArray, Map.class)).thenReturn(map);
-        when(applicationStore.createApplication("1", "1", "", "")).thenReturn(Collections.emptyList());
+        when(applicationStore.createApplication("1", "1", "", ""))
+                .thenReturn(Collections.emptyList());
 
         // Call test class
         List<Application> actual = testClass.createApplication(requestContext);

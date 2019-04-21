@@ -87,7 +87,8 @@ public class CompanyHandlersTest {
         when(request.payload()).thenReturn(Optional.of(requestPayloadByteString));
         when(requestPayloadByteString.toByteArray()).thenReturn(byteArray);
         when(objectMapper.readValue(byteArray, Map.class)).thenReturn(map);
-        when(companyStore.createCompany("Apple", "apple.com", "Macintoshes.")).thenReturn(expected);
+        when(companyStore.createCompany("Apple", "apple.com", "Macintoshes."))
+                .thenReturn(expected);
 
         // Call test class
         Company actual = testClass.createCompany(requestContext);

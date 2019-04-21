@@ -94,7 +94,8 @@ public class UserHandlersTest {
         when(request.payload()).thenReturn(Optional.of(requestPayloadByteString));
         when(requestPayloadByteString.toByteArray()).thenReturn(byteArray);
         when(objectMapper.readValue(byteArray, Map.class)).thenReturn(map);
-        when(userStore.createUser("John Smith", "john@smith.com", "123-456-7890", EducationLevel.BACHELORS, "Am engineer pls hire.")).thenReturn(expected);
+        when(userStore.createUser("John Smith", "john@smith.com", "123-456-7890", EducationLevel.BACHELORS, "Am engineer pls hire."))
+                .thenReturn(expected);
 
         // Call test class
         User actual = testClass.createUser(requestContext);

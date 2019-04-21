@@ -58,7 +58,8 @@ public class AuthenticationHandlersTest {
 
         // Mock dependencies and inputs
         when(requestContext.pathArgs()).thenReturn(map);
-        when(authenticationStore.getAuthentication("johnnyappleseed", "hash")).thenReturn(expected);
+        when(authenticationStore.getAuthentication("johnnyappleseed", "hash"))
+                .thenReturn(expected);
 
         // Call test class
         Authentication actual = testClass.getAuthentication(requestContext);
@@ -85,7 +86,8 @@ public class AuthenticationHandlersTest {
         when(request.payload()).thenReturn(Optional.of(requestPayloadByteString));
         when(requestPayloadByteString.toByteArray()).thenReturn(byteArray);
         when(objectMapper.readValue(byteArray, Authentication.class)).thenReturn(authentication);
-        when(authenticationStore.createAuthentication(1, "johnnyappleseed", "hash", true)).thenReturn(Collections.emptyList());
+        when(authenticationStore.createAuthentication(1, "johnnyappleseed", "hash", true))
+                .thenReturn(Collections.emptyList());
 
         // Call test class
         List<Authentication> actual = testClass.createAuthentication(requestContext);
