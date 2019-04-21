@@ -1,0 +1,5 @@
+package edu.cooper.ece366.euphoria.utils;
+
+public enum Industry {
+    EDUCATION, ENERGY, FINANCE, FOOD, HEALTHCARE, INSURANCE, MEDIA, RETAIL, SERVICES, TECHNOLOGY, TRANSPORT, UTILITIES
+}

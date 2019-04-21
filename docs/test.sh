@@ -40,7 +40,7 @@ curl -X POST http://localhost:8080/api/posting -H "Content-Type: application/jso
 curl -X GET http://localhost:8080/api/posting/4
 # [{"postingId":4,"companyId":5,"jobTitle":"hello","description":"there","location":"NEWYORK","industry":"FINANCE","skillLevel":"INTERNSHIP","dateCreated":"2019-04-13 16:25:03"}]%
 
-curl -X POST http://localhost:8080/api/application -H "Content-Type: application/json" -d '{"postingId": 3, "userId": 2, "resume": x"54686973", "coverLetter": x"54686973"}'
+curl -X POST http://localhost:8080/api/application -H "Content-Type: application/json" -d '{"postingId": 3, "userId": 2, "resume": "54686973", "coverLetter": "54686973"}'
 # []%
 
 curl -X POST http://localhost:8080/api/application -H "Content-Type: application/json" -d '{"postingId": 1, "userId": 1, "resume": "This", "coverLetter": "This"}'
