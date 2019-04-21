@@ -99,9 +99,6 @@ public class PostingStoreJdbc implements PostingStore {
             ps.setString(3, skillLevel);
             ResultSet rs = ps.executeQuery();
 
-            if (rs == null)
-                return null;
-
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
                         .postingId(rs.getInt("postingId"))
@@ -136,9 +133,6 @@ public class PostingStoreJdbc implements PostingStore {
                             config.getString("mysql.password"));
             PreparedStatement ps = connection.prepareStatement(GET_ALL_POSTINGS_STATEMENT);
             ResultSet rs = ps.executeQuery();
-
-            if (rs == null)
-                return null;
 
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
@@ -175,9 +169,6 @@ public class PostingStoreJdbc implements PostingStore {
             PreparedStatement ps = connection.prepareStatement(GET_RANDOM_POSTINGS_STATEMENT);
             ResultSet rs = ps.executeQuery();
 
-            if (rs == null)
-                return null;
-
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
                         .postingId(rs.getInt("postingId"))
@@ -213,9 +204,6 @@ public class PostingStoreJdbc implements PostingStore {
             PreparedStatement ps = connection.prepareStatement(GET_POSTINGS_FOR_COMPANY_STATEMENT);
             ps.setInt(1,  Integer.parseInt(companyId));
             ResultSet rs = ps.executeQuery();
-
-            if (rs == null)
-                return null;
 
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
