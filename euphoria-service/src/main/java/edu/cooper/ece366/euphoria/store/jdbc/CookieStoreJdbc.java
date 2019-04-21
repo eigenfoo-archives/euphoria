@@ -9,8 +9,8 @@ import java.util.UUID;
 
 public class CookieStoreJdbc implements CookieStore {
 
-    private static final String GET_COOKIE_STATEMENT = "SELECT * FROM cookies WHERE (cookie) IN ((?))";
-    private static final String CREATE_COOKIE_STATEMENT = "INSERT INTO cookies (id, isUser, cookie) VALUES (?, ?, ?)";
+    private static final String GET_COOKIE_STATEMENT         = "SELECT * FROM cookies WHERE (cookie) IN ((?))";
+    private static final String CREATE_COOKIE_STATEMENT      = "INSERT INTO cookies (id, isUser, cookie) VALUES (?, ?, ?)";
     private static final String AUTHENTICATE_LOGIN_STATEMENT = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
     private final Config config;
 

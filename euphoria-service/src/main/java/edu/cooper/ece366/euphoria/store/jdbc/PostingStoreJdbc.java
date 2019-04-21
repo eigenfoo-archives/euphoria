@@ -16,27 +16,22 @@ import java.util.List;
 
 public class PostingStoreJdbc implements PostingStore {
 
-    private static final String GET_POSTING_STATEMENT = "SELECT * FROM postings WHERE postingId = ?";
+    private static final String GET_POSTING_STATEMENT     = "SELECT * FROM postings WHERE postingId = ?";
 
     private static final String SEARCH_POSTINGS_STATEMENT = "SELECT * FROM postings WHERE location LIKE ? " +
                                                                 "AND industry LIKE ? AND skillLevel LIKE ?";;
 
-    private static final String GET_ALL_POSTINGS_STATEMENT =         "SELECT * FROM postings";
-
-    private static final String GET_RANDOM_POSTINGS_STATEMENT =      "SELECT * FROM postings ORDER BY RAND() LIMIT 10";
-
+    private static final String GET_ALL_POSTINGS_STATEMENT         = "SELECT * FROM postings";
+    private static final String GET_RANDOM_POSTINGS_STATEMENT      = "SELECT * FROM postings ORDER BY RAND() LIMIT 10";
     private static final String GET_POSTINGS_FOR_COMPANY_STATEMENT = "SELECT * FROM postings WHERE companyId = ?";
 
     private static final String CREATE_POSTING_STATEMENT = "INSERT INTO postings (companyId, jobTitle, " +
                                                                 "description, location, industry, skillLevel) VALUES (?, ?, ?, ?, ?, ?)";
-
-    private static final String EDIT_POSTING_STATEMENT =   "UPDATE postings SET jobTitle = ?, " +
+    private static final String EDIT_POSTING_STATEMENT   = "UPDATE postings SET jobTitle = ?, " +
                                                                 "description = ?, location = ?, industry = ?, skillLevel = ? WHERE postingId = ?";
 
-    private static final String DELETE_POSTING_STATEMENT =    "DELETE FROM postings WHERE postingId = ?";
-
-    private static final String GET_ASSOC_APPS_STATEMENT =    "SELECT applicationId FROM applications WHERE postingId = ?";
-
+    private static final String DELETE_POSTING_STATEMENT    = "DELETE FROM postings WHERE postingId = ?";
+    private static final String GET_ASSOC_APPS_STATEMENT    = "SELECT applicationId FROM applications WHERE postingId = ?";
     private static final String DELETE_ASSOC_APPS_STATEMENT = "DELETE FROM applications WHERE postingId = ?";
 
     private final Config config;
@@ -245,7 +240,7 @@ public class PostingStoreJdbc implements PostingStore {
             //timestamped automatically in UTC by mysql database
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected == 0) {
-                throw new SQLException("Creating new authentication failed, no rows affected.");
+                throw new SQLException("Creating new posting failed, no rows affected.");
             }
             return Collections.emptyList(); //if everything successful, return empty list
         } catch (SQLException ex) {

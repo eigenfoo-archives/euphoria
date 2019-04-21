@@ -15,10 +15,10 @@ import java.util.*;
 
 public class ApplicationStoreJdbc implements ApplicationStore {
 
-    private static final String GET_APPLICATION_STATEMENT = "SELECT * FROM applications WHERE applicationId = ?";
+    private static final String GET_APPLICATION_STATEMENT              = "SELECT * FROM applications WHERE applicationId = ?";
     private static final String GET_APPLICATIONS_FOR_POSTING_STATEMENT = "SELECT * FROM applications WHERE postingId = ?";
-    private static final String CREATE_APPLICATION_STATEMENT  = "INSERT INTO applications (postingId, userId) VALUES (?, ?)";
-    private static final String ADD_FILE_LOCATIONS_STATEMENT =  "UPDATE applications SET resumeLocation = ?,  coverLetterLocation = ? WHERE applicationId = ? ";
+    private static final String CREATE_APPLICATION_STATEMENT           = "INSERT INTO applications (postingId, userId) VALUES (?, ?)";
+    private static final String ADD_FILE_LOCATIONS_STATEMENT           = "UPDATE applications SET resumeLocation = ?,  coverLetterLocation = ? WHERE applicationId = ? ";
 
     private final Config config;
     private final String FileStoragePath;

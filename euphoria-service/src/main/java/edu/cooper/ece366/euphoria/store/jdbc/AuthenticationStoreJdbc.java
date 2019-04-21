@@ -10,9 +10,9 @@ import java.util.List;
 
 public class AuthenticationStoreJdbc implements AuthenticationStore {
 
-    private static final String GET_AUTHENTICATION_STATEMENT = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
+    private static final String GET_AUTHENTICATION_STATEMENT    = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
     private static final String CREATE_AUTHENTICATION_STATEMENT = "INSERT INTO authentications (id, username, passwordHash, isUser)" +
-                                                                  "VALUES (?, ?, ?, ?)";
+                                                                    "VALUES (?, ?, ?, ?)";
     private final Config config;
 
     public AuthenticationStoreJdbc(final Config config) {
