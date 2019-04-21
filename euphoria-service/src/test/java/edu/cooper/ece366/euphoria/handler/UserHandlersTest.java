@@ -66,7 +66,6 @@ public class UserHandlersTest {
 
         // Assert and verify
         assertEquals(expected, actual);
-
         verifyZeroInteractions(objectMapper);
     }
 
@@ -100,7 +99,7 @@ public class UserHandlersTest {
         // Call test class
         User actual = testClass.createUser(requestContext);
 
-        // Assert and verify
+        // Assert
         assertEquals(expected, actual);
     }
 }

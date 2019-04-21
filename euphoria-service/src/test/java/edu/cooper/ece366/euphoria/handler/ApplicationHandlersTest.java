@@ -64,7 +64,6 @@ public class ApplicationHandlersTest {
 
         // Assert and verify
         assertEquals(expected, actual);
-
         verifyZeroInteractions(objectMapper);
     }
 
@@ -91,7 +90,6 @@ public class ApplicationHandlersTest {
 
         // Assert and verify
         assertEquals(expected, actual);
-
         verifyZeroInteractions(objectMapper);
     }
 
@@ -117,7 +115,7 @@ public class ApplicationHandlersTest {
         // Call test class
         List<Application> actual = testClass.createApplication(requestContext);
 
-        // Assert and verify
+        // Assert
         assertEquals(expected, actual);
     }
 }

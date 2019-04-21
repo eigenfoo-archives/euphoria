@@ -63,7 +63,6 @@ public class CompanyHandlersTest {
 
         // Assert and verify
         assertEquals(expected, actual);
-
         verifyZeroInteractions(objectMapper);
     }
 
@@ -93,7 +92,7 @@ public class CompanyHandlersTest {
         // Call test class
         Company actual = testClass.createCompany(requestContext);
 
-        // Assert and verify
+        // Assert
         assertEquals(expected, actual);
     }
 }

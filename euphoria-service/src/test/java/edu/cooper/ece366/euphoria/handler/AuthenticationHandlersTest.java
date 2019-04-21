@@ -65,7 +65,6 @@ public class AuthenticationHandlersTest {
 
         // Assert and verify
         assertEquals(expected, actual);
-
         verifyZeroInteractions(objectMapper);
     }
 
@@ -91,7 +90,7 @@ public class AuthenticationHandlersTest {
         // Call test class
         List<Authentication> actual = testClass.createAuthentication(requestContext);
 
-        // Assert and verify
+        // Assert
         assertEquals(expected, actual);
     }
 }
