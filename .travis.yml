@@ -1,0 +1,11 @@
+language: java
+jdk: oraclejdk11
+sudo: false
+script:
+  - cd euphoria-service/ && mvn clean package -B -V
+cache:
+  directories:
+  - $HOME/.m2
+
+notifications:
+  email: false
