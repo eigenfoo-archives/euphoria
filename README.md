@@ -57,9 +57,9 @@ Team members:
    for more information.)
 
    If serving the frontend on a virtual machine, it may be wiser to build the
-   website locally and then `scp` the built static files to the
+   web application locally and then `scp` the built static files to the
    `/var/www/euphoria.ece366.cooper.edu` directory in the virtual machine. You
-   may need `sudo` privileges.
+   may need `sudo` privileges to do this.
 
    ```bash
    cd build/
@@ -87,4 +87,3 @@ Team members:
 See the [`docs/`
 subdirectory](https://github.com/eigenfoo/euphoria/tree/master/docs) for more
 documentation.
-
