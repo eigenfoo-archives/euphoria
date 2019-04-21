@@ -3,7 +3,11 @@ package edu.cooper.ece366.euphoria;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotify.apollo.Request;
 import com.spotify.apollo.RequestContext;
-import com.typesafe.config.Config;
+import edu.cooper.ece366.euphoria.handler.AuthenticationHandlers;
+import edu.cooper.ece366.euphoria.model.Application;
+import edu.cooper.ece366.euphoria.model.Authentication;
+import edu.cooper.ece366.euphoria.model.AuthenticationBuilder;
+import edu.cooper.ece366.euphoria.store.model.AuthenticationStore;
 import okio.ByteString;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,7 +16,6 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
@@ -21,13 +24,12 @@ import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class AuthenticationHandlersTest {
-
     @Mock
     ObjectMapper objectMapper;
     @Mock
-    Config config;
+    AuthenticationStore authenticationStore;
     @Mock
-    RequestContext rc;
+    RequestContext requestContext;
     @Mock
     Request request;
     @Mock
@@ -37,7 +39,7 @@ public class AuthenticationHandlersTest {
 
     @Before
     public void setup() {
-        testClass = new AuthenticationHandlers(objectMapper, config);
+        testClass = new AuthenticationHandlers(objectMapper, authenticationStore);
     }
 
     @Test
@@ -55,13 +57,11 @@ public class AuthenticationHandlersTest {
         map.put("passwordHash", "hash");
 
         // Mock dependencies and inputs
-        when(config.getString("mysql.jdbc")).thenReturn("jdbc:mysql://localhost:3306/euphoria");
-        when(config.getString("mysql.user")).thenReturn("euphoria");
-        when(config.getString("mysql.password")).thenReturn("euphoria");
-        when(rc.pathArgs()).thenReturn(map);
+        when(requestContext.pathArgs()).thenReturn(map);
+        when(authenticationStore.getAuthentication("johnnyappleseed", "hash")).thenReturn(expected);
 
         // Call test class
-        Authentication actual = testClass.getAuthentication(rc).get(0);
+        Authentication actual = testClass.getAuthentication(requestContext);
 
         // Assert and verify
         assertEquals(expected, actual);
@@ -82,13 +82,14 @@ public class AuthenticationHandlersTest {
                 .isUser(true)
                 .build();
 
-        when(rc.request()).thenReturn(request);
+        when(requestContext.request()).thenReturn(request);
         when(request.payload()).thenReturn(Optional.of(requestPayloadByteString));
         when(requestPayloadByteString.toByteArray()).thenReturn(byteArray);
         when(objectMapper.readValue(byteArray, Authentication.class)).thenReturn(authentication);
+        when(authenticationStore.createAuthentication(1, "johnnyappleseed", "hash", true)).thenReturn(Collections.emptyList());
 
         // Call test class
-        List<Authentication> actual = testClass.createAuthentication(rc);
+        List<Authentication> actual = testClass.createAuthentication(requestContext);
 
         // Assert and verify
         assertEquals(expected, actual);
