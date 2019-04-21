@@ -3,7 +3,10 @@ package edu.cooper.ece366.euphoria;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotify.apollo.Request;
 import com.spotify.apollo.RequestContext;
-import com.typesafe.config.Config;
+import edu.cooper.ece366.euphoria.handler.ApplicationHandlers;
+import edu.cooper.ece366.euphoria.model.Application;
+import edu.cooper.ece366.euphoria.model.ApplicationBuilder;
+import edu.cooper.ece366.euphoria.store.model.ApplicationStore;
 import okio.ByteString;
 import org.junit.Before;
 import org.junit.Test;
@@ -12,21 +15,20 @@ import org.mockito.Mock;
 import org.mockito.junit.MockitoJUnitRunner;
 
 import java.io.IOException;
-import java.sql.SQLException;
 import java.util.*;
 
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.verifyZeroInteractions;
 import static org.mockito.Mockito.when;
 
 @RunWith(MockitoJUnitRunner.class)
 public class ApplicationHandlersTest {
-
     @Mock
     ObjectMapper objectMapper;
     @Mock
-    Config config;
+    ApplicationStore applicationStore;
     @Mock
-    RequestContext rc;
+    RequestContext requestContext;
     @Mock
     Request request;
     @Mock
@@ -36,7 +38,7 @@ public class ApplicationHandlersTest {
 
     @Before
     public void setup() {
-        testClass = new ApplicationHandlers(objectMapper, config);
+        testClass = new ApplicationHandlers(objectMapper, applicationStore);
     }
 
     @Test
@@ -54,16 +56,15 @@ public class ApplicationHandlersTest {
                 .build();
 
         // Mock dependencies and inputs
-        when(config.getString("mysql.jdbc")).thenReturn("jdbc:mysql://localhost:3306/euphoria");
-        when(config.getString("mysql.user")).thenReturn("euphoria");
-        when(config.getString("mysql.password")).thenReturn("euphoria");
-        when(rc.pathArgs()).thenReturn(Collections.singletonMap("applicationId", "1"));
+        when(requestContext.pathArgs()).thenReturn(Collections.singletonMap("applicationId", "1"));
+        when(applicationStore.getApplication("1")).thenReturn(expected);
 
         // Call test class
-        Application actual = testClass.getApplication(rc).get(0);
+        Application actual = testClass.getApplication(requestContext);
 
         // Assert and verify
         assertEquals(expected, actual);
+        verifyZeroInteractions(objectMapper);
     }
 
     @Test
@@ -81,16 +82,15 @@ public class ApplicationHandlersTest {
                 .build();
 
         // Mock dependencies and inputs
-        when(config.getString("mysql.jdbc")).thenReturn("jdbc:mysql://localhost:3306/euphoria");
-        when(config.getString("mysql.user")).thenReturn("euphoria");
-        when(config.getString("mysql.password")).thenReturn("euphoria");
-        when(rc.pathArgs()).thenReturn(Collections.singletonMap("postingId", "1"));
+        when(requestContext.pathArgs()).thenReturn(Collections.singletonMap("postingId", "1"));
+        when(applicationStore.getApplicationsForPosting("1")).thenReturn(Collections.singletonList(expected));
 
         // Call test class
-        Application actual = testClass.getApplicationsForPosting(rc).get(0);
+        Application actual = testClass.getApplicationsForPosting(requestContext).get(0);
 
         // Assert and verify
         assertEquals(expected, actual);
+        verifyZeroInteractions(objectMapper);
     }
 
     @Test
@@ -101,20 +101,22 @@ public class ApplicationHandlersTest {
 
         // Mock dependencies and inputs
         Map<String, Object> map = new HashMap<String, Object>();
-        map.put("applicationId", 1);
-        map.put("postingId", 1);
-        map.put("userId", 1);
-        map.put("resume", byteArray);
-        map.put("coverLetter", byteArray);
-        when(rc.request()).thenReturn(request);
+        map.put("applicationId", "1");
+        map.put("postingId", "1");
+        map.put("userId", "1");
+        map.put("resume", "");
+        map.put("coverLetter", "");
+        when(requestContext.request()).thenReturn(request);
         when(request.payload()).thenReturn(Optional.of(requestPayloadByteString));
         when(requestPayloadByteString.toByteArray()).thenReturn(byteArray);
         when(objectMapper.readValue(byteArray, Map.class)).thenReturn(map);
+        when(applicationStore.createApplication("1", "1", "", ""))
+                .thenReturn(Collections.emptyList());
 
         // Call test class
-        List<Application> actual = testClass.createApplication(rc);
+        List<Application> actual = testClass.createApplication(requestContext);
 
-        // Assert and verify
+        // Assert
         assertEquals(expected, actual);
     }
 }

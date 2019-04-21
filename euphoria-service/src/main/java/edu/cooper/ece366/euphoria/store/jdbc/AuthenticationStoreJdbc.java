@@ -1,7 +1,8 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
 import com.typesafe.config.Config;
-import edu.cooper.ece366.euphoria.model.*;
+import edu.cooper.ece366.euphoria.model.Authentication;
+import edu.cooper.ece366.euphoria.model.AuthenticationBuilder;
 import edu.cooper.ece366.euphoria.store.model.AuthenticationStore;
 
 import java.sql.*;
@@ -10,9 +11,9 @@ import java.util.List;
 
 public class AuthenticationStoreJdbc implements AuthenticationStore {
 
-    private static final String GET_AUTHENTICATION_STATEMENT    = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
+    private static final String GET_AUTHENTICATION_STATEMENT = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
     private static final String CREATE_AUTHENTICATION_STATEMENT = "INSERT INTO authentications (id, username, passwordHash, isUser)" +
-                                                                    "VALUES (?, ?, ?, ?)";
+            "VALUES (?, ?, ?, ?)";
     private final Config config;
 
     public AuthenticationStoreJdbc(final Config config) {

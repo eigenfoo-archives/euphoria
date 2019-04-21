@@ -1,14 +1,15 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
 import com.typesafe.config.Config;
-import edu.cooper.ece366.euphoria.model.*;
+import edu.cooper.ece366.euphoria.model.Company;
+import edu.cooper.ece366.euphoria.model.CompanyBuilder;
 import edu.cooper.ece366.euphoria.store.model.CompanyStore;
 
 import java.sql.*;
 
 public class CompanyStoreJdbc implements CompanyStore {
 
-    private static final String GET_COMPANY_STATEMENT    = "SELECT * FROM companies WHERE companyId = ?";
+    private static final String GET_COMPANY_STATEMENT = "SELECT * FROM companies WHERE companyId = ?";
     private static final String CREATE_COMPANY_STATEMENT = "INSERT INTO companies (name, website, description) VALUES (?, ?, ?)";
     private final Config config;
 

@@ -1,9 +1,8 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
-import com.google.common.annotations.VisibleForTesting;
-import com.spotify.apollo.RequestContext;
 import com.typesafe.config.Config;
-import edu.cooper.ece366.euphoria.model.*;
+import edu.cooper.ece366.euphoria.model.Application;
+import edu.cooper.ece366.euphoria.model.ApplicationBuilder;
 import edu.cooper.ece366.euphoria.store.model.ApplicationStore;
 
 import java.io.File;
@@ -11,14 +10,17 @@ import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Base64;
+import java.util.Collections;
+import java.util.List;
 
 public class ApplicationStoreJdbc implements ApplicationStore {
 
-    private static final String GET_APPLICATION_STATEMENT              = "SELECT * FROM applications WHERE applicationId = ?";
+    private static final String GET_APPLICATION_STATEMENT = "SELECT * FROM applications WHERE applicationId = ?";
     private static final String GET_APPLICATIONS_FOR_POSTING_STATEMENT = "SELECT * FROM applications WHERE postingId = ?";
-    private static final String CREATE_APPLICATION_STATEMENT           = "INSERT INTO applications (postingId, userId) VALUES (?, ?)";
-    private static final String ADD_FILE_LOCATIONS_STATEMENT           = "UPDATE applications SET resumeLocation = ?,  coverLetterLocation = ? WHERE applicationId = ? ";
+    private static final String CREATE_APPLICATION_STATEMENT = "INSERT INTO applications (postingId, userId) VALUES (?, ?)";
+    private static final String ADD_FILE_LOCATIONS_STATEMENT = "UPDATE applications SET resumeLocation = ?,  coverLetterLocation = ? WHERE applicationId = ? ";
 
     private final Config config;
     private final String FileStoragePath;
