@@ -1,9 +1,22 @@
-language: java
-jdk: oraclejdk11
+matrix:
+  include:
+    - name: "Backend Build"
+      language: java
+      jdk: oraclejdk11
+      install: true
+      script:
+          - cd euphoria-service/ && mvn clean package -B -V
 
-install:
-    - cd euphoria-service/
-    - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+    - name: "Frontend Build"
+      language: node_js
+      node_js: 4
+      install:
+        - cd euphoria-frontend/ && npm install
+      script:
+        - cd euphoria-frontend/ && npm test
+      cache:
+        directories:
+          - "node_modules"
 
-script:
-    - mvn test -B
+notifications:
+  email: false
