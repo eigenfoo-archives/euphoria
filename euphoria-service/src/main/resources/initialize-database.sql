@@ -95,14 +95,16 @@ VALUES
 CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
                            postingId INT NOT NULL,  -- FOREIGN KEY(postingId), REFERENCES postings (postingId),
                            userId INT NOT NULL, -- FOREIGN KEY(userId), REFERENCES users (userId),
+                           resumeLocation VARCHAR(100) DEFAULT NULL,
+                           coverLetterLocation VARCHAR(100) DEFAULT NULL,
                            dateCreated TIMESTAMP DEFAULT CURRENT_TIMESTAMP);
 
 INSERT INTO applications
-    (postingId, userId, dateCreated)
+    (postingId, userId, resumeLocation, coverLetterLocation, dateCreated)
 VALUES
-	(1, 1, "2018-07-11 05:30:00"),
-	(1, 2, "2018-07-13 03:22:00"),
-	(3, 3, "2019-02-13 11:40:33");
+	(1, 1, "file:///usr/local/etc/app_1/resume_1.pdf", "file:///usr/local/etc/app_1/cover_1.pdf", "2018-07-11 05:30:00"),
+	(1, 2, "file:///usr/local/etc/app_2/resume_2.pdf", "file:///usr/local/etc/app_2/cover_2.pdf", "2018-07-13 03:22:00"),
+	(3, 3, "file:///usr/local/etc/app_3/resume_3.pdf", "file:///usr/local/etc/app_3/cover_3.pdf", "2019-02-13 11:40:33");
 
 
 CREATE TABLE authentications (id INT NOT NULL,

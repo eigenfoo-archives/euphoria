@@ -5,7 +5,9 @@ import com.spotify.apollo.Environment;
 import com.spotify.apollo.httpservice.HttpService;
 import com.spotify.apollo.httpservice.LoadingException;
 import com.spotify.apollo.route.Route;
-import com.typesafe.config.Config;
+import edu.cooper.ece366.euphoria.handler.*;
+import edu.cooper.ece366.euphoria.store.jdbc.*;
+import edu.cooper.ece366.euphoria.store.model.*;
 import io.norberg.automatter.jackson.AutoMatterModule;
 
 public class Main {
@@ -15,22 +17,34 @@ public class Main {
 
     private static void init(final Environment environment) {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new AutoMatterModule());
-        Config config = environment.config();
-        AuthenticationHandlers authenticationHandlers = new AuthenticationHandlers(objectMapper, config);
-        PostingHandlers postingHandlers = new PostingHandlers(objectMapper, config);
-        UserHandlers userHandlers = new UserHandlers(objectMapper, config);
-        CompanyHandlers companyHandlers = new CompanyHandlers(objectMapper, config);
-        ApplicationHandlers applicationHandlers = new ApplicationHandlers(objectMapper, config);
-        CookieHandlers cookieHandlers = new CookieHandlers(objectMapper, config);
+
+        ApplicationStore applicationStore = new ApplicationStoreJdbc(environment.config());
+        ApplicationHandlers applicationHandlers = new ApplicationHandlers(objectMapper, applicationStore);
+
+        AuthenticationStore authenticationStore = new AuthenticationStoreJdbc(environment.config());
+        AuthenticationHandlers authenticationHandlers = new AuthenticationHandlers(objectMapper, authenticationStore);
+
+        CompanyStore companyStore = new CompanyStoreJdbc(environment.config());
+        CompanyHandlers companyHandlers = new CompanyHandlers(objectMapper, companyStore);
+
+        CookieStore cookieStore = new CookieStoreJdbc(environment.config());
+        CookieHandlers cookieHandlers = new CookieHandlers(objectMapper, cookieStore);
+
+        PostingStore postingStore = new PostingStoreJdbc(environment.config());
+        PostingHandlers postingHandlers = new PostingHandlers(objectMapper, postingStore);
+
+        UserStore userStore = new UserStoreJdbc(environment.config());
+        UserHandlers userHandlers = new UserHandlers(objectMapper, userStore);
+
 
         environment
                 .routingEngine()
                 .registerAutoRoute(Route.sync("GET", "/ping", rc -> "pong"))
-                .registerRoutes(authenticationHandlers.routes())
-                .registerRoutes(postingHandlers.routes())
-                .registerRoutes(userHandlers.routes())
-                .registerRoutes(companyHandlers.routes())
                 .registerRoutes(applicationHandlers.routes())
-                .registerRoutes(cookieHandlers.routes());
+                .registerRoutes(authenticationHandlers.routes())
+                .registerRoutes(companyHandlers.routes())
+                .registerRoutes(cookieHandlers.routes())
+                .registerRoutes(postingHandlers.routes())
+                .registerRoutes(userHandlers.routes());
     }
 }
