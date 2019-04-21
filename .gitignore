@@ -29,6 +29,9 @@ hs_err_pid*
 # Maven stuff
 euphoria-service/target/
 
+# testing
+euphoria-service/coverage
+
 # dependencies
 euphoria-frontend/node_modules/
 euphoria-frontend/.pnp
@@ -36,9 +39,6 @@ euphoria-frontend/.pnp.js
 
 # production
 euphoria-frontend/build/
-
-# testing
-euphoria-service/coverage
 
 # misc
 .DS_Store
