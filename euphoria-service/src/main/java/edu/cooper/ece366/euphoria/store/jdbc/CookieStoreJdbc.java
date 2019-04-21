@@ -1,7 +1,8 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
 import com.typesafe.config.Config;
-import edu.cooper.ece366.euphoria.model.*;
+import edu.cooper.ece366.euphoria.model.Cookie;
+import edu.cooper.ece366.euphoria.model.CookieBuilder;
 import edu.cooper.ece366.euphoria.store.model.CookieStore;
 
 import java.sql.*;
@@ -9,8 +10,8 @@ import java.util.UUID;
 
 public class CookieStoreJdbc implements CookieStore {
 
-    private static final String GET_COOKIE_STATEMENT         = "SELECT * FROM cookies WHERE (cookie) IN ((?))";
-    private static final String CREATE_COOKIE_STATEMENT      = "INSERT INTO cookies (id, isUser, cookie) VALUES (?, ?, ?)";
+    private static final String GET_COOKIE_STATEMENT = "SELECT * FROM cookies WHERE (cookie) IN ((?))";
+    private static final String CREATE_COOKIE_STATEMENT = "INSERT INTO cookies (id, isUser, cookie) VALUES (?, ?, ?)";
     private static final String AUTHENTICATE_LOGIN_STATEMENT = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
     private final Config config;
 
@@ -81,7 +82,7 @@ public class CookieStoreJdbc implements CookieStore {
                         .cookie(cookieNew)
                         .build();
             } else {
-                    return null;
+                return null;
             }
         } catch (SQLException e) {
             throw new RuntimeException("error creating cookie", e);

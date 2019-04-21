@@ -25,22 +25,24 @@ public class AuthenticationHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/api/authentication/<username>/<passwordHash>", this::getAuthentication).withMiddleware(jsonMiddleware()),
-                Route.sync("POST", "/api/authentication", this::createAuthentication).withMiddleware(jsonMiddleware())
+                Route.sync("GET", "/api/authentication/<username>/<passwordHash>", this::getAuthentication)
+                        .withMiddleware(jsonMiddleware()),
+                Route.sync("POST", "/api/authentication", this::createAuthentication)
+                        .withMiddleware(jsonMiddleware())
         );
     }
 
     @VisibleForTesting
-    Authentication getAuthentication(final RequestContext rc) {
+    public Authentication getAuthentication(final RequestContext rc) {
         return authenticationStore.getAuthentication(rc.pathArgs().get("username"), rc.pathArgs().get("passwordHash"));
     }
 
     @VisibleForTesting
-    List<Authentication> createAuthentication(final RequestContext rc) {
+    public List<Authentication> createAuthentication(final RequestContext rc) {
         Integer id = null;
         String username = null;
         String passwordHash = null;
-        Boolean isUser  = true;
+        Boolean isUser = true;
         boolean success = false;
         try {
             byte[] requestBytes = rc.request().payload().get().toByteArray();

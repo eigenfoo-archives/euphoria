@@ -31,12 +31,12 @@ public class CookieHandlers implements RouteProvider {
     }
 
     @VisibleForTesting
-    Cookie getCookie(final RequestContext rc) {
+    public Cookie getCookie(final RequestContext rc) {
         return cookieStore.getCookie(rc.pathArgs().get("cookieCheck"));
     }
 
     @VisibleForTesting
-    Cookie createCookie(final RequestContext rc) {
+    public Cookie createCookie(final RequestContext rc) {
         String username = null;
         String passwordHash = null;
         boolean success = false;

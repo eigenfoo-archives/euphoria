@@ -26,24 +26,27 @@ public class ApplicationHandlers implements RouteProvider {
     @Override
     public Stream<Route<AsyncHandler<Response<ByteString>>>> routes() {
         return Stream.of(
-                Route.sync("GET", "/api/application/<applicationId>", this::getApplication).withMiddleware(jsonMiddleware()),
-                Route.sync("GET", "/api/application/posting/<postingId>", this::getApplicationsForPosting).withMiddleware(jsonMiddleware()),
-                Route.sync("POST", "/api/application", this::createApplication).withMiddleware(jsonMiddleware())
+                Route.sync("GET", "/api/application/<applicationId>", this::getApplication)
+                        .withMiddleware(jsonMiddleware()),
+                Route.sync("GET", "/api/application/posting/<postingId>", this::getApplicationsForPosting)
+                        .withMiddleware(jsonMiddleware()),
+                Route.sync("POST", "/api/application", this::createApplication)
+                        .withMiddleware(jsonMiddleware())
         );
     }
 
     @VisibleForTesting
-    Application getApplication(final RequestContext rc) {
+    public Application getApplication(final RequestContext rc) {
         return applicationStore.getApplication(rc.pathArgs().get("applicationId"));
     }
 
     @VisibleForTesting
-    List<Application> getApplicationsForPosting(final RequestContext rc) {
+    public List<Application> getApplicationsForPosting(final RequestContext rc) {
         return applicationStore.getApplicationsForPosting(rc.pathArgs().get("postingId"));
     }
 
     @VisibleForTesting
-    List<Application> createApplication(final RequestContext rc) {
+    public List<Application> createApplication(final RequestContext rc) {
         String postingId = null;
         String userId = null;
         String resume = null;
