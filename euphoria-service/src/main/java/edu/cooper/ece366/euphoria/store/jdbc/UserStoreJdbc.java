@@ -18,9 +18,8 @@ public class UserStoreJdbc implements UserStore {
 
     @Override
     public User getUser(final String userId) {
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_USER_STATEMENT);
             ps.setInt(1, Integer.parseInt(userId));
@@ -47,9 +46,8 @@ public class UserStoreJdbc implements UserStore {
 
     @Override
     public User createUser(final String name, final String email, final String phoneNumber, final EducationLevel educationLevel, final String description) {
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(CREATE_USER_STATEMENT, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);

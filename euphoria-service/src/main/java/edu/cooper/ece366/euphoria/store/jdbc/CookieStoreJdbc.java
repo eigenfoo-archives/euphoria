@@ -17,9 +17,8 @@ public class CookieStoreJdbc implements CookieStore {
 
     @Override
     public Cookie getCookie(final String cookieCheck) {
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_COOKIE_STATEMENT);
             ps.setString(1, cookieCheck);
@@ -45,9 +44,8 @@ public class CookieStoreJdbc implements CookieStore {
         Integer id;
         Boolean isUser;
 
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(AUTHENTICATE_LOGIN_STATEMENT);
             ps.setString(1, username);

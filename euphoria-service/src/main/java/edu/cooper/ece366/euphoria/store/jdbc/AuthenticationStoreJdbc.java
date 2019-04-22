@@ -18,9 +18,8 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
 
     @Override
     public Authentication getAuthentication(final String username, final String passwordHash) {
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_AUTHENTICATION_STATEMENT);
             ps.setString(1, username);
@@ -46,9 +45,8 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
 
     @Override
     public List<Authentication> createAuthentication(final Integer id, final String username, final String passwordHash, final Boolean isUser) {
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(CREATE_AUTHENTICATION_STATEMENT);
             ps.setInt(1, id);

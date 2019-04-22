@@ -15,9 +15,8 @@ public class CompanyStoreJdbc implements CompanyStore {
 
     @Override
     public Company getCompany(final String companyId) {
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_COMPANY_STATEMENT);
             ps.setInt(1, Integer.parseInt(companyId));
@@ -42,9 +41,8 @@ public class CompanyStoreJdbc implements CompanyStore {
 
     @Override
     public Company createCompany(final String name, final String website, final String description) {
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(CREATE_COMPANY_STATEMENT, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);

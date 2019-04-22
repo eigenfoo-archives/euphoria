@@ -22,11 +22,9 @@ public class ApplicationStoreJdbc implements ApplicationStore {
     private static final String CREATE_APPLICATION_STATEMENT = "INSERT INTO applications (postingId, userId) VALUES (?, ?)";
     private static final String ADD_FILE_LOCATIONS_STATEMENT = "UPDATE applications SET resumeLocation = ?,  coverLetterLocation = ? WHERE applicationId = ? ";
 
-    private final Config config;
     private final String FileStoragePath;
 
     public ApplicationStoreJdbc(final Config config) {
-        this.config = config;
         FileStoragePath = config.getString("FileStoragePath");
     }
 
@@ -48,9 +46,8 @@ public class ApplicationStoreJdbc implements ApplicationStore {
             System.out.println(e.getMessage());
         }
 
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_APPLICATION_STATEMENT);
             ps.setInt(1, Integer.parseInt(applicationId));
@@ -78,9 +75,8 @@ public class ApplicationStoreJdbc implements ApplicationStore {
     public List<Application> getApplicationsForPosting(final String postingId) {
         ArrayList<Application> applicationList = new ArrayList<Application>();
 
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_APPLICATIONS_FOR_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(postingId));
@@ -125,9 +121,8 @@ public class ApplicationStoreJdbc implements ApplicationStore {
     @Override
     public List<Application> createApplication(final String postingId, final String userId, final String resume, final String coverLetter) {
         Integer applicationId;
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(CREATE_APPLICATION_STATEMENT, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, Integer.parseInt(postingId));

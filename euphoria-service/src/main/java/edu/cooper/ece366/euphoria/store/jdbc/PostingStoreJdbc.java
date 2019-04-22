@@ -34,19 +34,16 @@ public class PostingStoreJdbc implements PostingStore {
     private static final String GET_ASSOC_APPS_STATEMENT = "SELECT applicationId FROM applications WHERE postingId = ?";
     private static final String DELETE_ASSOC_APPS_STATEMENT = "DELETE FROM applications WHERE postingId = ?";
 
-    private final Config config;
     private final String FileStoragePath;
 
     public PostingStoreJdbc(final Config config) {
-        this.config = config;
         FileStoragePath = config.getString("FileStoragePath");
     }
 
     @Override
     public Posting getPosting(final String postingId) {
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(postingId));
@@ -76,9 +73,8 @@ public class PostingStoreJdbc implements PostingStore {
     public List<Posting> searchPostings(final String location, final String industry, final String skillLevel) {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
 
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(SEARCH_POSTINGS_STATEMENT);
             ps.setString(1, location);
@@ -111,9 +107,8 @@ public class PostingStoreJdbc implements PostingStore {
     public List<Posting> getAllPostings() {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
 
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_ALL_POSTINGS_STATEMENT);
             ResultSet rs = ps.executeQuery();
@@ -143,9 +138,8 @@ public class PostingStoreJdbc implements PostingStore {
     public List<Posting> getRandomPostings() {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
 
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_RANDOM_POSTINGS_STATEMENT);
             ResultSet rs = ps.executeQuery();
@@ -175,9 +169,8 @@ public class PostingStoreJdbc implements PostingStore {
     public List<Posting> getPostingsForCompany(final String companyId) {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
 
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_POSTINGS_FOR_COMPANY_STATEMENT);
             ps.setInt(1, Integer.parseInt(companyId));
@@ -207,13 +200,9 @@ public class PostingStoreJdbc implements PostingStore {
     @Override
     public List<Posting> createPosting(final String companyId, final String jobTitle, final String description,
                                        final Location location, final Industry industry, final SkillLevel skillLevel) {
-        Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            Connection connection = DataSource.getConnection();
+
             PreparedStatement ps = connection.prepareStatement(CREATE_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(companyId));
             ps.setString(2, jobTitle);
@@ -236,9 +225,8 @@ public class PostingStoreJdbc implements PostingStore {
     @Override
     public List<Posting> editPosting(final String postingId, final String jobTitle, final String description,
                                      final Location location, final Industry industry, final SkillLevel skillLevel) {
-        Connection connection;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(EDIT_POSTING_STATEMENT);
             ps.setString(1, jobTitle);
@@ -261,10 +249,9 @@ public class PostingStoreJdbc implements PostingStore {
 
     @Override
     public List<Posting> deletePosting(final String postingId) {
-        Connection connection;
         boolean empty = true;
         try {
-            connection = DataSource.getConnection();
+            Connection connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(DELETE_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(postingId));
