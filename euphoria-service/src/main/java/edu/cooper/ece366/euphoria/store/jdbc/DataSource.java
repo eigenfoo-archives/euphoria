@@ -6,6 +6,7 @@ import org.apache.commons.dbcp.BasicDataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
+// DataSource class adapted from https://stackoverflow.com/a/7592081
 public class DataSource {
     private static final BasicDataSource dataSource = new BasicDataSource();
 
