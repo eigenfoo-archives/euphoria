@@ -106,6 +106,7 @@ public class ApplicationHandlersTest {
         map.put("userId", "1");
         map.put("resume", "");
         map.put("coverLetter", "");
+
         when(requestContext.request()).thenReturn(request);
         when(request.payload()).thenReturn(Optional.of(requestPayloadByteString));
         when(requestPayloadByteString.toByteArray()).thenReturn(byteArray);
