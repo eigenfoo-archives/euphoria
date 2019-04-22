@@ -1,6 +1,5 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
-import com.typesafe.config.Config;
 import edu.cooper.ece366.euphoria.model.Cookie;
 import edu.cooper.ece366.euphoria.model.CookieBuilder;
 import edu.cooper.ece366.euphoria.store.model.CookieStore;
@@ -13,21 +12,14 @@ public class CookieStoreJdbc implements CookieStore {
     private static final String GET_COOKIE_STATEMENT = "SELECT * FROM cookies WHERE (cookie) IN ((?))";
     private static final String CREATE_COOKIE_STATEMENT = "INSERT INTO cookies (id, isUser, cookie) VALUES (?, ?, ?)";
     private static final String AUTHENTICATE_LOGIN_STATEMENT = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
-    private final Config config;
 
-    public CookieStoreJdbc(final Config config) {
-        this.config = config;
-    }
+    public CookieStoreJdbc() {}
 
     @Override
     public Cookie getCookie(final String cookieCheck) {
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_COOKIE_STATEMENT);
             ps.setString(1, cookieCheck);
@@ -55,11 +47,8 @@ public class CookieStoreJdbc implements CookieStore {
 
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
+
             PreparedStatement ps = connection.prepareStatement(AUTHENTICATE_LOGIN_STATEMENT);
             ps.setString(1, username);
             ps.setString(2, passwordHash);

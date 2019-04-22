@@ -21,19 +21,19 @@ public class Main {
         ApplicationStore applicationStore = new ApplicationStoreJdbc(environment.config());
         ApplicationHandlers applicationHandlers = new ApplicationHandlers(objectMapper, applicationStore);
 
-        AuthenticationStore authenticationStore = new AuthenticationStoreJdbc(environment.config());
+        AuthenticationStore authenticationStore = new AuthenticationStoreJdbc();
         AuthenticationHandlers authenticationHandlers = new AuthenticationHandlers(objectMapper, authenticationStore);
 
-        CompanyStore companyStore = new CompanyStoreJdbc(environment.config());
+        CompanyStore companyStore = new CompanyStoreJdbc();
         CompanyHandlers companyHandlers = new CompanyHandlers(objectMapper, companyStore);
 
-        CookieStore cookieStore = new CookieStoreJdbc(environment.config());
+        CookieStore cookieStore = new CookieStoreJdbc();
         CookieHandlers cookieHandlers = new CookieHandlers(objectMapper, cookieStore);
 
         PostingStore postingStore = new PostingStoreJdbc(environment.config());
         PostingHandlers postingHandlers = new PostingHandlers(objectMapper, postingStore);
 
-        UserStore userStore = new UserStoreJdbc(environment.config());
+        UserStore userStore = new UserStoreJdbc();
         UserHandlers userHandlers = new UserHandlers(objectMapper, userStore);
 
 

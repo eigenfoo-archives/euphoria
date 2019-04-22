@@ -1,6 +1,5 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
-import com.typesafe.config.Config;
 import edu.cooper.ece366.euphoria.model.Company;
 import edu.cooper.ece366.euphoria.model.CompanyBuilder;
 import edu.cooper.ece366.euphoria.store.model.CompanyStore;
@@ -11,21 +10,14 @@ public class CompanyStoreJdbc implements CompanyStore {
 
     private static final String GET_COMPANY_STATEMENT = "SELECT * FROM companies WHERE companyId = ?";
     private static final String CREATE_COMPANY_STATEMENT = "INSERT INTO companies (name, website, description) VALUES (?, ?, ?)";
-    private final Config config;
 
-    public CompanyStoreJdbc(final Config config) {
-        this.config = config;
-    }
+    public CompanyStoreJdbc() {}
 
     @Override
     public Company getCompany(final String companyId) {
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_COMPANY_STATEMENT);
             ps.setInt(1, Integer.parseInt(companyId));
@@ -52,11 +44,8 @@ public class CompanyStoreJdbc implements CompanyStore {
     public Company createCompany(final String name, final String website, final String description) {
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
+
             PreparedStatement ps = connection.prepareStatement(CREATE_COMPANY_STATEMENT, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, website);

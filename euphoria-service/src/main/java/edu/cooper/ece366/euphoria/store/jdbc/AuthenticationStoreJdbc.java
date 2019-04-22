@@ -1,6 +1,5 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
-import com.typesafe.config.Config;
 import edu.cooper.ece366.euphoria.model.Authentication;
 import edu.cooper.ece366.euphoria.model.AuthenticationBuilder;
 import edu.cooper.ece366.euphoria.store.model.AuthenticationStore;
@@ -14,21 +13,14 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
     private static final String GET_AUTHENTICATION_STATEMENT = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
     private static final String CREATE_AUTHENTICATION_STATEMENT = "INSERT INTO authentications (id, username, passwordHash, isUser)" +
             "VALUES (?, ?, ?, ?)";
-    private final Config config;
 
-    public AuthenticationStoreJdbc(final Config config) {
-        this.config = config;
-    }
+    public AuthenticationStoreJdbc() {}
 
     @Override
     public Authentication getAuthentication(final String username, final String passwordHash) {
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_AUTHENTICATION_STATEMENT);
             ps.setString(1, username);
@@ -56,11 +48,8 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
     public List<Authentication> createAuthentication(final Integer id, final String username, final String passwordHash, final Boolean isUser) {
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
+
             PreparedStatement ps = connection.prepareStatement(CREATE_AUTHENTICATION_STATEMENT);
             ps.setInt(1, id);
             ps.setString(2, username);

@@ -50,11 +50,7 @@ public class ApplicationStoreJdbc implements ApplicationStore {
 
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_APPLICATION_STATEMENT);
             ps.setInt(1, Integer.parseInt(applicationId));
@@ -84,11 +80,7 @@ public class ApplicationStoreJdbc implements ApplicationStore {
 
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_APPLICATIONS_FOR_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(postingId));
@@ -135,11 +127,8 @@ public class ApplicationStoreJdbc implements ApplicationStore {
         Integer applicationId;
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
+
             PreparedStatement ps = connection.prepareStatement(CREATE_APPLICATION_STATEMENT, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, Integer.parseInt(postingId));
             ps.setInt(2, Integer.parseInt(userId));
@@ -189,5 +178,4 @@ public class ApplicationStoreJdbc implements ApplicationStore {
 
         return null; //if not successful, return null
     }
-
 }

@@ -46,11 +46,7 @@ public class PostingStoreJdbc implements PostingStore {
     public Posting getPosting(final String postingId) {
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(postingId));
@@ -82,11 +78,7 @@ public class PostingStoreJdbc implements PostingStore {
 
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(SEARCH_POSTINGS_STATEMENT);
             ps.setString(1, location);
@@ -121,11 +113,8 @@ public class PostingStoreJdbc implements PostingStore {
 
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
+
             PreparedStatement ps = connection.prepareStatement(GET_ALL_POSTINGS_STATEMENT);
             ResultSet rs = ps.executeQuery();
 
@@ -156,11 +145,8 @@ public class PostingStoreJdbc implements PostingStore {
 
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
+
             PreparedStatement ps = connection.prepareStatement(GET_RANDOM_POSTINGS_STATEMENT);
             ResultSet rs = ps.executeQuery();
 
@@ -191,11 +177,8 @@ public class PostingStoreJdbc implements PostingStore {
 
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
+
             PreparedStatement ps = connection.prepareStatement(GET_POSTINGS_FOR_COMPANY_STATEMENT);
             ps.setInt(1, Integer.parseInt(companyId));
             ResultSet rs = ps.executeQuery();
@@ -255,11 +238,8 @@ public class PostingStoreJdbc implements PostingStore {
                                      final Location location, final Industry industry, final SkillLevel skillLevel) {
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
+
             PreparedStatement ps = connection.prepareStatement(EDIT_POSTING_STATEMENT);
             ps.setString(1, jobTitle);
             ps.setString(2, description);
@@ -284,11 +264,7 @@ public class PostingStoreJdbc implements PostingStore {
         Connection connection;
         boolean empty = true;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(DELETE_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(postingId));

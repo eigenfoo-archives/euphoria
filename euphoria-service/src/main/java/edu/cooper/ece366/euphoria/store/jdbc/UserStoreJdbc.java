@@ -13,21 +13,14 @@ public class UserStoreJdbc implements UserStore {
     private static final String GET_USER_STATEMENT = "SELECT * FROM users WHERE userId = ?";
     private static final String CREATE_USER_STATEMENT = "INSERT INTO users (name, email, phoneNumber, educationLevel, description)" +
             " VALUES (?, ?, ?, ?, ?)";
-    private final Config config;
 
-    public UserStoreJdbc(final Config config) {
-        this.config = config;
-    }
+    public UserStoreJdbc() {}
 
     @Override
     public User getUser(final String userId) {
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_USER_STATEMENT);
             ps.setInt(1, Integer.parseInt(userId));
@@ -56,11 +49,8 @@ public class UserStoreJdbc implements UserStore {
     public User createUser(final String name, final String email, final String phoneNumber, final EducationLevel educationLevel, final String description) {
         Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+            connection = DataSource.getConnection();
+
             PreparedStatement ps = connection.prepareStatement(CREATE_USER_STATEMENT, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, email);
