@@ -17,9 +17,14 @@ Team members:
 
 ## Requirements
 
-- JDK 8
-- Maven (`sudo apt install maven`)
-- MySQL (`sudo apt install mysql-server`)
+- [Oracle JDK 11](https://www.oracle.com/technetwork/java/javase/downloads/jdk11-downloads-5066655.html)
+- Maven
+- MySQL
+- Node.js and `npm`
+
+```bash
+sudo apt install nodejs npm maven mysql-server
+```
 
 ## Installation and Setup
 
