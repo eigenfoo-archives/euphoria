@@ -3,6 +3,7 @@ package edu.cooper.ece366.euphoria.store.jdbc;
 import edu.cooper.ece366.euphoria.model.Authentication;
 import edu.cooper.ece366.euphoria.model.AuthenticationBuilder;
 import edu.cooper.ece366.euphoria.store.model.AuthenticationStore;
+import org.apache.commons.dbutils.DbUtils;
 
 import java.sql.*;
 import java.util.Collections;
@@ -22,14 +23,16 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
 
     @Override
     public Authentication getAuthentication(final String username, final String passwordHash) {
-        try {
-            Connection connection = dataSource.getConnection();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-            PreparedStatement ps = connection.prepareStatement(GET_AUTHENTICATION_STATEMENT);
+        try {
+            conn= dataSource.getConnection();
+            ps = conn.prepareStatement(GET_AUTHENTICATION_STATEMENT);
             ps.setString(1, username);
             ps.setString(2, passwordHash);
-
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.first()) {
                 return new AuthenticationBuilder()
@@ -43,21 +46,28 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
             }
         } catch (SQLException e) {
             throw new RuntimeException("error fetching authentication", e);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
     }
 
 
     @Override
     public List<Authentication> createAuthentication(final Integer id, final String username, final String passwordHash, final Boolean isUser) {
-        try {
-            Connection connection = dataSource.getConnection();
+        Connection conn = null;
+        PreparedStatement ps = null;
 
-            PreparedStatement ps = connection.prepareStatement(CREATE_AUTHENTICATION_STATEMENT);
+        try {
+            conn= dataSource.getConnection();
+            ps = conn.prepareStatement(CREATE_AUTHENTICATION_STATEMENT);
             ps.setInt(1, id);
             ps.setString(2, username);
             ps.setString(3, passwordHash);
             ps.setBoolean(4, isUser);
             int rowsAffected = ps.executeUpdate();
+
             if (rowsAffected == 0) {
                 throw new SQLException("Creating new authentication failed, no rows affected.");
             }
@@ -66,6 +76,9 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
 
         } catch (SQLException ex) {
             System.out.println(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
         }
 
         return null; //if not successful, return null

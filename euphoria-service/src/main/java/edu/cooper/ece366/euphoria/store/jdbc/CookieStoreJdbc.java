@@ -3,6 +3,7 @@ package edu.cooper.ece366.euphoria.store.jdbc;
 import edu.cooper.ece366.euphoria.model.Cookie;
 import edu.cooper.ece366.euphoria.model.CookieBuilder;
 import edu.cooper.ece366.euphoria.store.model.CookieStore;
+import org.apache.commons.dbutils.DbUtils;
 
 import java.sql.*;
 import java.util.UUID;
@@ -21,12 +22,15 @@ public class CookieStoreJdbc implements CookieStore {
 
     @Override
     public Cookie getCookie(final String cookieCheck) {
-        try {
-            Connection connection = dataSource.getConnection();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-            PreparedStatement ps = connection.prepareStatement(GET_COOKIE_STATEMENT);
+        try {
+            conn= dataSource.getConnection();
+            ps = conn.prepareStatement(GET_COOKIE_STATEMENT);
             ps.setString(1, cookieCheck);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.first()) {
                 return new CookieBuilder()
@@ -39,6 +43,10 @@ public class CookieStoreJdbc implements CookieStore {
             }
         } catch (SQLException e) {
             throw new RuntimeException("error fetching cookie", e);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
     }
 
@@ -47,21 +55,23 @@ public class CookieStoreJdbc implements CookieStore {
     public Cookie createCookie(final String username, final String passwordHash) {
         Integer id;
         Boolean isUser;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
         try {
-            Connection connection = dataSource.getConnection();
-
-            PreparedStatement ps = connection.prepareStatement(AUTHENTICATE_LOGIN_STATEMENT);
+            conn= dataSource.getConnection();
+            ps = conn.prepareStatement(AUTHENTICATE_LOGIN_STATEMENT);
             ps.setString(1, username);
             ps.setString(2, passwordHash);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.first()) {
                 id = rs.getInt("id");
                 isUser = rs.getBoolean("isUser");
 
                 String cookieNew = UUID.randomUUID().toString();
-                ps = connection.prepareStatement(CREATE_COOKIE_STATEMENT);
+                ps = conn.prepareStatement(CREATE_COOKIE_STATEMENT);
                 ps.setInt(1, id); // Either userId or companyId
                 ps.setBoolean(2, isUser);
                 ps.setString(3, cookieNew);
@@ -77,6 +87,10 @@ public class CookieStoreJdbc implements CookieStore {
             }
         } catch (SQLException e) {
             throw new RuntimeException("error creating cookie", e);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
     }
 }

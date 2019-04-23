@@ -4,6 +4,7 @@ import edu.cooper.ece366.euphoria.model.User;
 import edu.cooper.ece366.euphoria.model.UserBuilder;
 import edu.cooper.ece366.euphoria.store.model.UserStore;
 import edu.cooper.ece366.euphoria.utils.EducationLevel;
+import org.apache.commons.dbutils.DbUtils;
 
 import java.sql.*;
 
@@ -21,13 +22,15 @@ public class UserStoreJdbc implements UserStore {
 
     @Override
     public User getUser(final String userId) {
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         try {
-            Connection connection = DataSource.getConnection();
-
-            PreparedStatement ps = connection.prepareStatement(GET_USER_STATEMENT);
+            conn = DataSource.getConnection();
+            ps = conn.prepareStatement(GET_USER_STATEMENT);
             ps.setInt(1, Integer.parseInt(userId));
-
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.first()) {
                 return new UserBuilder()
@@ -43,16 +46,22 @@ public class UserStoreJdbc implements UserStore {
             }
         } catch (SQLException e) {
             throw new RuntimeException("error fetching user", e);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
     }
 
 
     @Override
     public User createUser(final String name, final String email, final String phoneNumber, final EducationLevel educationLevel, final String description) {
-        try {
-            Connection connection = DataSource.getConnection();
+        Connection conn = null;
+        PreparedStatement ps = null;
 
-            PreparedStatement ps = connection.prepareStatement(CREATE_USER_STATEMENT, Statement.RETURN_GENERATED_KEYS);
+        try {
+            conn = DataSource.getConnection();
+            ps = conn.prepareStatement(CREATE_USER_STATEMENT, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, email);
             ps.setString(3, phoneNumber);
@@ -79,6 +88,9 @@ public class UserStoreJdbc implements UserStore {
             }
         } catch (SQLException e) {
             throw new RuntimeException("error creating user", e);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
         }
     }
 }
