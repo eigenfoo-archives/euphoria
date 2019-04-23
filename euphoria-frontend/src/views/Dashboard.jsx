@@ -36,7 +36,6 @@ class Dashboard extends Component {
     .then(data => {
       // Work with JSON data here
       this.setState({companyPostingsData: data});
-      console.log(this.state.companyPostingsData);
     })
     .catch(err => {
       // Do something for an error here
