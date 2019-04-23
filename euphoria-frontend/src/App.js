@@ -37,10 +37,8 @@ class App extends Component {
     this.props.history.push(path);
   }
 
-
   render() {
-    const props = this.props;
-
+    
     return (
       <div>
         <Switch>

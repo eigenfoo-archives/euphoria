@@ -85,9 +85,15 @@ class EditPost extends Component {
         method: "PUT",
         body: JSON.stringify(data)
       })
-      .then(alert("Post Edited"))
-      .then(this.handleRedirect("/dashboard"))
-      //FIXME add check for proper accoutn creation
+      .then(response => response.json())
+      .then(data => {
+        if(data !== "undefined" && data.length == 0){
+          alert("Post edited!")
+          this.handleRedirect("/dashboard")
+        }
+      })
+      .catch(err => {
+      })
   }
 
   render() {

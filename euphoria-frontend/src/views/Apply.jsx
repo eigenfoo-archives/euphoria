@@ -8,11 +8,14 @@ class Apply extends Component {
 
     this.state = {
       postingData: [],
+      resume: "",
+      coverLetter: ""
     };
 
     this.handleRedirect = this.handleRedirect.bind(this);
     this.handleGet = this.handleGet.bind(this);
     this.handleApply = this.handleApply.bind(this);
+    this.readFile = this.readFile.bind(this);
   }
 
   componentDidMount() {
@@ -29,7 +32,7 @@ class Apply extends Component {
     fetch(url)
     .then(response => response.json())
     .then(data => {
-      this.setState({postingData: data});
+      this.setState({postingData: data[0]});
     })
     .catch(err => {
       // Do something for an error here
@@ -39,93 +42,88 @@ class Apply extends Component {
   }
 
   handleApply() {
+    const {
+      postingData,
+      resume,
+      coverLetter
+    } = this.state;
+
+    let applicationUrl = "http://localhost:8080/api/application";
+
+    let applicationPayload = {
+      postingId: postingData.postingId,
+      userId: this.props.cookies.get("id"),
+      resume,
+      coverLetter
+    };
+
+    console.log(applicationPayload)
+
+    fetch(applicationUrl, {
+        method: "POST",
+        body: JSON.stringify(applicationPayload)
+      }) //FIXME add check for is user exists
+      .then(response => response.json())
+      .then(data => {
+        if(data !== "undefined" && data.length == 0){
+          alert("Application successfully submitted!")
+          this.handleRedirect("/postings")
+        }
+      })
+      .catch(err => {
+      })
+
     return;
   }
 
-  posting(props) {
-    const postingData = props.postingData;
-    return(
-      <div className="floating-container centered-container" style={{width:"900px"}}>
-        <Container fluid>
-          <Row>
-            <Col sm={9}>
-              <h1>
-                {postingData.jobTitle}
-              </h1>
-            </Col>
-            <Col sm={3}>
-              <Button
-                variant="info"
-                size="lg"
-                onClick={() => document.getElementById('resumeInput').click()}>
-                  Resume
-              </Button>
-              <input type="file" accept=".pdf" id="resumeInput"  name="resumeInput" style={{display:"none"}} />
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={9}>
-              <p style={{fontSize:"20px", color:"#AAA"}}>
-                {postingData.location}
-              </p>
-            </Col>
-            <Col sm={3}>
-              <Button
-                variant="info"
-                size="lg"
-                onClick={() => document.getElementById('coverLevelInput').click()}>
-                  Cover Letter
-                </Button>
-              <input type="file" accept=".pdf" id="coverLevelInput"  name="coverLevelInput" style={{display:"none"}} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <p style={{fontSize:"15px", color:"#AAA"}}>
-                {postingData.industry}
-              </p>
-            </Col>
-            <Col>
-              <Image
-                src={require("../images/" + postingData.skillLevel + ".png")}
-                style={{height:"20px"}}
-              />
-            </Col>
-          </Row>
-          <br/>
-          <Row>
-            <Col>
-              <p style={{fontSize:"16px", color:"#AAA"}}>
-                Description
-              </p>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <p>
-                {postingData.description}
-              </p>
-            </Col>
-          </Row>
-          <hr/>
-          <Row>
-            <Button
-              variant="info"
-              size="lg"
-              block
-              onClick={() => this.handleApply()}>
-                Apply
-              </Button>
-          </Row>
-        </Container>
-      </div>
-    );
+  readFile(event) {
+    var file = event.target.files[0];
+    var name = event.target.name
+    var reader = new FileReader();
+
+    reader.onload = (event) => {
+      const encodedString = new Buffer(event.target.result).toString('base64');
+
+      this.setState({[name]: encodedString}, () => {
+        return;
+      });
+    };
+
+    reader.readAsText(file);
   }
 
   render() {
     const postingData = this.state.postingData;
 
-    console.log(postingData);
+    if(postingData.skillLevel){
+      var skillImage =
+      <Image
+        src={require("../images/" + postingData.skillLevel + ".png")}
+        style={{height:"20px"}}
+      />;
+    }
+
+    var applyButton =
+    <Button
+      variant="secondary"
+      size="lg"
+      block
+      onClick={() => {alert("Pleas upload both Resume and Cover Letter")}}>
+        Apply
+    </Button>;
+
+    if(this.state.coverLetter!=="" && this.state.resume!==""){
+      var applyButton =
+      <Button
+        variant="info"
+        size="lg"
+        block
+        onClick={() => this.handleApply()}>
+          Apply
+      </Button>;
+    }
+
+
     return(
       <div>
         <div className="navbar">
@@ -138,10 +136,83 @@ class Apply extends Component {
           </div>
         </div>
 
-
-        {postingData.map(postingData => (
-          <this.posting postingData={postingData} />
-        ))}
+        <div className="floating-container centered-container" style={{width:"900px"}}>
+          <Container fluid>
+            <Row>
+              <Col sm={9}>
+                <h1>
+                  {postingData.jobTitle}
+                </h1>
+              </Col>
+              <Col sm={3}>
+                <Button
+                  variant={this.state.resume=="" ? "info" : "secondary"}
+                  size="lg"
+                  onClick={() => document.getElementById('resumeInput').click()}>
+                    Resume
+                </Button>
+                <input
+                  type="file"
+                  accept=".pdf"
+                  id="resumeInput"
+                  name="resume"
+                  style={{display:"none"}}
+                  onChange={event => this.readFile(event)}/>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={9}>
+                <p style={{fontSize:"20px", color:"#AAA"}}>
+                  {postingData.location}
+                </p>
+              </Col>
+              <Col sm={3}>
+                <Button
+                  variant={this.state.coverLetter=="" ? "info" : "secondary"}
+                  size="lg"
+                  onClick={() => document.getElementById('coverLetterInput').click()}>
+                    Cover Letter
+                  </Button>
+                <input
+                  type="file"
+                  accept=".pdf"
+                  id="coverLetterInput"
+                  name="coverLetter"
+                  style={{display:"none"}}
+                  onChange={event => this.readFile(event)}/>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <p style={{fontSize:"15px", color:"#AAA"}}>
+                  {postingData.industry}
+                </p>
+              </Col>
+              <Col>
+                {skillImage}
+              </Col>
+            </Row>
+            <br/>
+            <Row>
+              <Col>
+                <p style={{fontSize:"16px", color:"#AAA"}}>
+                  Description
+                </p>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <p>
+                  {postingData.description}
+                </p>
+              </Col>
+            </Row>
+            <hr/>
+            <Row>
+              {applyButton}
+            </Row>
+          </Container>
+        </div>
     </div>
 
     );
