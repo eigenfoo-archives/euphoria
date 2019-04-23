@@ -42,6 +42,37 @@ class Apply extends Component {
   }
 
   handleApply() {
+    const {
+      postingData,
+      resume,
+      coverLetter
+    } = this.state;
+
+    let applicationUrl = "http://localhost:8080/api/application";
+
+    let applicationPayload = {
+      postingId: postingData.postingId,
+      userId: this.props.cookies.get("id"),
+      resume,
+      coverLetter
+    };
+
+    console.log(applicationPayload)
+
+    fetch(applicationUrl, {
+        method: "POST",
+        body: JSON.stringify(applicationPayload)
+      }) //FIXME add check for is user exists
+      .then(response => response.json())
+      .then(data => {
+        if(data !== "undefined" && data.length == 0){
+          alert("Application successfully submitted!")
+          this.handleRedirect("/postings")
+        }
+      })
+      .catch(err => {
+      })
+
     return;
   }
 
