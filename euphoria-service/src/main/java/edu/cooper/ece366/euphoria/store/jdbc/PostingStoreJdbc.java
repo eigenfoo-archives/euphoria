@@ -7,6 +7,7 @@ import edu.cooper.ece366.euphoria.store.model.PostingStore;
 import edu.cooper.ece366.euphoria.utils.Industry;
 import edu.cooper.ece366.euphoria.utils.Location;
 import edu.cooper.ece366.euphoria.utils.SkillLevel;
+import org.apache.commons.dbutils.DbUtils;
 
 import java.io.File;
 import java.sql.*;
@@ -34,28 +35,25 @@ public class PostingStoreJdbc implements PostingStore {
     private static final String GET_ASSOC_APPS_STATEMENT = "SELECT applicationId FROM applications WHERE postingId = ?";
     private static final String DELETE_ASSOC_APPS_STATEMENT = "DELETE FROM applications WHERE postingId = ?";
 
-    private final Config config;
+    private final DataSource dataSource;
     private final String FileStoragePath;
 
-    public PostingStoreJdbc(final Config config) {
-        this.config = config;
+    public PostingStoreJdbc(final DataSource dataSource, final Config config) {
+        this.dataSource = dataSource;
         FileStoragePath = config.getString("FileStoragePath");
     }
 
     @Override
     public Posting getPosting(final String postingId) {
-        Connection connection;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-
-            PreparedStatement ps = connection.prepareStatement(GET_POSTING_STATEMENT);
+            conn = dataSource.getConnection();
+            ps = conn.prepareStatement(GET_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(postingId));
-
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.first()) {
                 return new PostingBuilder()
@@ -73,26 +71,27 @@ public class PostingStoreJdbc implements PostingStore {
             }
         } catch (SQLException e) {
             throw new RuntimeException("error fetching user", e);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
     }
 
     @Override
     public List<Posting> searchPostings(final String location, final String industry, final String skillLevel) {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-
-            PreparedStatement ps = connection.prepareStatement(SEARCH_POSTINGS_STATEMENT);
+            conn = dataSource.getConnection();
+            ps = conn.prepareStatement(SEARCH_POSTINGS_STATEMENT);
             ps.setString(1, location);
             ps.setString(2, industry);
             ps.setString(3, skillLevel);
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
@@ -110,6 +109,10 @@ public class PostingStoreJdbc implements PostingStore {
             }
         } catch (SQLException ex) {
             System.out.println(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
 
         return postingList;
@@ -118,16 +121,14 @@ public class PostingStoreJdbc implements PostingStore {
     @Override
     public List<Posting> getAllPostings() {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-            PreparedStatement ps = connection.prepareStatement(GET_ALL_POSTINGS_STATEMENT);
-            ResultSet rs = ps.executeQuery();
+            conn = dataSource.getConnection();
+            ps = conn.prepareStatement(GET_ALL_POSTINGS_STATEMENT);
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
@@ -145,6 +146,10 @@ public class PostingStoreJdbc implements PostingStore {
             }
         } catch (SQLException ex) {
             System.out.println(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
 
         return postingList;
@@ -153,16 +158,14 @@ public class PostingStoreJdbc implements PostingStore {
     @Override
     public List<Posting> getRandomPostings() {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-            PreparedStatement ps = connection.prepareStatement(GET_RANDOM_POSTINGS_STATEMENT);
-            ResultSet rs = ps.executeQuery();
+            conn = dataSource.getConnection();
+            ps = conn.prepareStatement(GET_RANDOM_POSTINGS_STATEMENT);
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
@@ -180,6 +183,10 @@ public class PostingStoreJdbc implements PostingStore {
             }
         } catch (SQLException ex) {
             System.out.println(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
 
         return postingList;
@@ -188,17 +195,15 @@ public class PostingStoreJdbc implements PostingStore {
     @Override
     public List<Posting> getPostingsForCompany(final String companyId) {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-        Connection connection;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-            PreparedStatement ps = connection.prepareStatement(GET_POSTINGS_FOR_COMPANY_STATEMENT);
+            conn = dataSource.getConnection();
+            ps = conn.prepareStatement(GET_POSTINGS_FOR_COMPANY_STATEMENT);
             ps.setInt(1, Integer.parseInt(companyId));
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 Posting posting = new PostingBuilder()
@@ -216,6 +221,10 @@ public class PostingStoreJdbc implements PostingStore {
             }
         } catch (SQLException ex) {
             System.out.println(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
 
         return postingList;
@@ -224,14 +233,12 @@ public class PostingStoreJdbc implements PostingStore {
     @Override
     public List<Posting> createPosting(final String companyId, final String jobTitle, final String description,
                                        final Location location, final Industry industry, final SkillLevel skillLevel) {
-        Connection connection;
+        Connection conn = null;
+        PreparedStatement ps = null;
+
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-            PreparedStatement ps = connection.prepareStatement(CREATE_POSTING_STATEMENT);
+            conn = dataSource.getConnection();
+            ps = conn.prepareStatement(CREATE_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(companyId));
             ps.setString(2, jobTitle);
             ps.setString(3, description);
@@ -246,6 +253,9 @@ public class PostingStoreJdbc implements PostingStore {
             return Collections.emptyList(); //if everything successful, return empty list
         } catch (SQLException ex) {
             System.out.println(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
         }
         return null; //if not successful, return null
     }
@@ -253,14 +263,11 @@ public class PostingStoreJdbc implements PostingStore {
     @Override
     public List<Posting> editPosting(final String postingId, final String jobTitle, final String description,
                                      final Location location, final Industry industry, final SkillLevel skillLevel) {
-        Connection connection;
+        Connection conn = null;
+        PreparedStatement ps = null;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-            PreparedStatement ps = connection.prepareStatement(EDIT_POSTING_STATEMENT);
+            conn = dataSource.getConnection();
+            ps = conn.prepareStatement(EDIT_POSTING_STATEMENT);
             ps.setString(1, jobTitle);
             ps.setString(2, description);
             ps.setString(3, location.toString());
@@ -274,6 +281,9 @@ public class PostingStoreJdbc implements PostingStore {
             return Collections.emptyList(); //if everything successful, return empty list
         } catch (SQLException ex) {
             System.out.println(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
         }
 
         return null; //if not successful, return null
@@ -281,16 +291,13 @@ public class PostingStoreJdbc implements PostingStore {
 
     @Override
     public List<Posting> deletePosting(final String postingId) {
-        Connection connection;
         boolean empty = true;
-        try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+        Connection conn = null;
+        PreparedStatement ps = null;
 
-            PreparedStatement ps = connection.prepareStatement(DELETE_POSTING_STATEMENT);
+        try {
+            conn = dataSource.getConnection();
+            ps = conn.prepareStatement(DELETE_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(postingId));
             int rowsAffected = ps.executeUpdate();
             if (rowsAffected == 0) {
@@ -298,7 +305,7 @@ public class PostingStoreJdbc implements PostingStore {
             }
 
             //remove associated resumes and cover letters from file system
-            ps = connection.prepareStatement(GET_ASSOC_APPS_STATEMENT);
+            ps = conn.prepareStatement(GET_ASSOC_APPS_STATEMENT);
             ps.setInt(1, Integer.parseInt(postingId));
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
@@ -317,7 +324,7 @@ public class PostingStoreJdbc implements PostingStore {
             }
 
             if (!empty) {
-                ps = connection.prepareStatement(DELETE_ASSOC_APPS_STATEMENT);
+                ps = conn.prepareStatement(DELETE_ASSOC_APPS_STATEMENT);
                 ps.setInt(1, Integer.parseInt(postingId));
                 rowsAffected = ps.executeUpdate();
                 if (rowsAffected == 0) {
@@ -329,6 +336,9 @@ public class PostingStoreJdbc implements PostingStore {
 
         } catch (SQLException ex) {
             System.out.println(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
         }
 
         return null; //if not successful, return null

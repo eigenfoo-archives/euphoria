@@ -17,23 +17,24 @@ public class Main {
 
     private static void init(final Environment environment) {
         ObjectMapper objectMapper = new ObjectMapper().registerModule(new AutoMatterModule());
+        DataSource dataSource = new DataSource(environment.config());
 
-        ApplicationStore applicationStore = new ApplicationStoreJdbc(environment.config());
+        ApplicationStore applicationStore = new ApplicationStoreJdbc(dataSource, environment.config());
         ApplicationHandlers applicationHandlers = new ApplicationHandlers(objectMapper, applicationStore);
 
-        AuthenticationStore authenticationStore = new AuthenticationStoreJdbc(environment.config());
+        AuthenticationStore authenticationStore = new AuthenticationStoreJdbc(dataSource);
         AuthenticationHandlers authenticationHandlers = new AuthenticationHandlers(objectMapper, authenticationStore);
 
-        CompanyStore companyStore = new CompanyStoreJdbc(environment.config());
+        CompanyStore companyStore = new CompanyStoreJdbc(dataSource);
         CompanyHandlers companyHandlers = new CompanyHandlers(objectMapper, companyStore);
 
-        CookieStore cookieStore = new CookieStoreJdbc(environment.config());
+        CookieStore cookieStore = new CookieStoreJdbc(dataSource);
         CookieHandlers cookieHandlers = new CookieHandlers(objectMapper, cookieStore);
 
-        PostingStore postingStore = new PostingStoreJdbc(environment.config());
+        PostingStore postingStore = new PostingStoreJdbc(dataSource, environment.config());
         PostingHandlers postingHandlers = new PostingHandlers(objectMapper, postingStore);
 
-        UserStore userStore = new UserStoreJdbc(environment.config());
+        UserStore userStore = new UserStoreJdbc(dataSource);
         UserHandlers userHandlers = new UserHandlers(objectMapper, userStore);
 
 

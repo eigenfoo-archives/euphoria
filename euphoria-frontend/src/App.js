@@ -16,13 +16,33 @@ import NotFound from './views/NotFound';
 class App extends Component {
   constructor(props, context) {
     super(props);
+
+    this.handleRedirect = this.handleRedirect.bind(this);
+  }
+
+  componentDidMount(){
+    switch(this.props.cookies.get("isUser")){
+      case true:
+        this.handleRedirect("/postings")
+        break;
+      case false:
+        this.handleRedirect("/dashboard")
+        break;
+      default:
+        break;
+    }
+  }
+
+  handleRedirect(path) {
+    this.props.history.push(path);
   }
 
   render() {
+    
     return (
       <div>
         <Switch>
-          <Route exact path="/" component={Splash} />
+          <Route exact path="/" component={Splash} />;
           <Route path="/signin" render={(props) => (<Signin cookies={this.props.cookies} {...props} />)} />
           <Route path="/signup" component={Signup} />
           <Route exact path="/postings" render={(props) => (<Postings cookies={this.props.cookies} {...props} />)} />
