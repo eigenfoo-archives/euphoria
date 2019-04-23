@@ -46,6 +46,14 @@ class Apply extends Component {
   readFile(event) {
     console.log(event.target.files[0]);
 
+    var file = event.target.files[0];
+    var reader = new FileReader();
+    reader.onload = function(event) {
+      // The file's text will be printed here
+      console.log(event.target.result)
+    };
+
+    reader.readAsText(file);
   }
 
   render() {
@@ -90,7 +98,7 @@ class Apply extends Component {
                   type="file"
                   accept=".pdf"
                   id="resumeInput"
-                  name="resumeInput"
+                  name="resume"
                   style={{display:"none"}}
                   onChange={event => this.readFile(event)}/>
               </Col>
@@ -105,14 +113,14 @@ class Apply extends Component {
                 <Button
                   variant="info"
                   size="lg"
-                  onClick={() => document.getElementById('coverLevelInput').click()}>
+                  onClick={() => document.getElementById('coverLetterInput').click()}>
                     Cover Letter
                   </Button>
                 <input
                   type="file"
                   accept=".pdf"
-                  id="coverLevelInput"
-                  name="coverLevelInput"
+                  id="coverLetterInput"
+                  name="coverLetter"
                   style={{display:"none"}}
                   onChange={event => this.readFile(event)}/>
               </Col>

@@ -19,9 +19,6 @@ class App extends Component {
   }
 
   render() {
-
-    const props = this.props;
-
     return (
       <div>
         <Switch>
