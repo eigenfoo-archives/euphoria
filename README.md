@@ -1,4 +1,4 @@
-# Euphoria
+# Euphoria Recruiting Platform: [euphoria-recruiting.club](http://euphoria-recruiting.club/)
 
 [![Build Status](https://travis-ci.org/eigenfoo/euphoria.svg?branch=master)](https://travis-ci.org/eigenfoo/euphoria)
 
@@ -9,11 +9,7 @@ with a [MySQL](https://www.mysql.com/) database and a
 [React.js](https://github.com/facebook/create-react-app) JavaScript web
 application. 
 
-Team members:
-- [George Ho](https://github.com/eigenfoo)
-- [Wendy Ide](https://github.com/wside)
-- [Luka Lipovac](https://github.com/lipovac)
-- [Ostap Voynarovskiy](https://github.com/ostapstephan)
+Team members: [George Ho](https://github.com/eigenfoo), [Wendy Ide](https://github.com/wside), [Luka Lipovac](https://github.com/lipovac) and [Ostap Voynarovskiy](https://github.com/ostapstephan)
 
 ## Requirements
 
