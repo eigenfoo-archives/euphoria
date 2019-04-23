@@ -13,6 +13,7 @@ class Apply extends Component {
     this.handleRedirect = this.handleRedirect.bind(this);
     this.handleGet = this.handleGet.bind(this);
     this.handleApply = this.handleApply.bind(this);
+    this.readFile = this.readFile.bind(this);
   }
 
   componentDidMount() {
@@ -29,7 +30,7 @@ class Apply extends Component {
     fetch(url)
     .then(response => response.json())
     .then(data => {
-      this.setState({postingData: data});
+      this.setState({postingData: data[0]});
     })
     .catch(err => {
       // Do something for an error here
@@ -42,90 +43,22 @@ class Apply extends Component {
     return;
   }
 
-  posting(props) {
-    const postingData = props.postingData;
-    return(
-      <div className="floating-container centered-container" style={{width:"900px"}}>
-        <Container fluid>
-          <Row>
-            <Col sm={9}>
-              <h1>
-                {postingData.jobTitle}
-              </h1>
-            </Col>
-            <Col sm={3}>
-              <Button
-                variant="info"
-                size="lg"
-                onClick={() => document.getElementById('resumeInput').click()}>
-                  Resume
-              </Button>
-              <input type="file" accept=".pdf" id="resumeInput"  name="resumeInput" style={{display:"none"}} />
-            </Col>
-          </Row>
-          <Row>
-            <Col sm={9}>
-              <p style={{fontSize:"20px", color:"#AAA"}}>
-                {postingData.location}
-              </p>
-            </Col>
-            <Col sm={3}>
-              <Button
-                variant="info"
-                size="lg"
-                onClick={() => document.getElementById('coverLevelInput').click()}>
-                  Cover Letter
-                </Button>
-              <input type="file" accept=".pdf" id="coverLevelInput"  name="coverLevelInput" style={{display:"none"}} />
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <p style={{fontSize:"15px", color:"#AAA"}}>
-                {postingData.industry}
-              </p>
-            </Col>
-            <Col>
-              <Image
-                src={require("../images/" + postingData.skillLevel + ".png")}
-                style={{height:"20px"}}
-              />
-            </Col>
-          </Row>
-          <br/>
-          <Row>
-            <Col>
-              <p style={{fontSize:"16px", color:"#AAA"}}>
-                Description
-              </p>
-            </Col>
-          </Row>
-          <Row>
-            <Col>
-              <p>
-                {postingData.description}
-              </p>
-            </Col>
-          </Row>
-          <hr/>
-          <Row>
-            <Button
-              variant="info"
-              size="lg"
-              block
-              onClick={() => this.handleApply()}>
-                Apply
-              </Button>
-          </Row>
-        </Container>
-      </div>
-    );
+  readFile(event) {
+    console.log(event.target.files[0]);
+
   }
 
   render() {
     const postingData = this.state.postingData;
 
-    console.log(postingData);
+    if(postingData.skillLevel){
+      var skillImage =
+      <Image
+        src={require("../images/" + postingData.skillLevel + ".png")}
+        style={{height:"20px"}}
+      />;
+    }
+
     return(
       <div>
         <div className="navbar">
@@ -138,10 +71,89 @@ class Apply extends Component {
           </div>
         </div>
 
-
-        {postingData.map(postingData => (
-          <this.posting postingData={postingData} />
-        ))}
+        <div className="floating-container centered-container" style={{width:"900px"}}>
+          <Container fluid>
+            <Row>
+              <Col sm={9}>
+                <h1>
+                  {postingData.jobTitle}
+                </h1>
+              </Col>
+              <Col sm={3}>
+                <Button
+                  variant="info"
+                  size="lg"
+                  onClick={() => document.getElementById('resumeInput').click()}>
+                    Resume
+                </Button>
+                <input
+                  type="file"
+                  accept=".pdf"
+                  id="resumeInput"
+                  name="resumeInput"
+                  style={{display:"none"}}
+                  onChange={event => this.readFile(event)}/>
+              </Col>
+            </Row>
+            <Row>
+              <Col sm={9}>
+                <p style={{fontSize:"20px", color:"#AAA"}}>
+                  {postingData.location}
+                </p>
+              </Col>
+              <Col sm={3}>
+                <Button
+                  variant="info"
+                  size="lg"
+                  onClick={() => document.getElementById('coverLevelInput').click()}>
+                    Cover Letter
+                  </Button>
+                <input
+                  type="file"
+                  accept=".pdf"
+                  id="coverLevelInput"
+                  name="coverLevelInput"
+                  style={{display:"none"}}
+                  onChange={event => this.readFile(event)}/>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <p style={{fontSize:"15px", color:"#AAA"}}>
+                  {postingData.industry}
+                </p>
+              </Col>
+              <Col>
+                {skillImage}
+              </Col>
+            </Row>
+            <br/>
+            <Row>
+              <Col>
+                <p style={{fontSize:"16px", color:"#AAA"}}>
+                  Description
+                </p>
+              </Col>
+            </Row>
+            <Row>
+              <Col>
+                <p>
+                  {postingData.description}
+                </p>
+              </Col>
+            </Row>
+            <hr/>
+            <Row>
+              <Button
+                variant="info"
+                size="lg"
+                block
+                onClick={() => this.handleApply()}>
+                  Apply
+                </Button>
+            </Row>
+          </Container>
+        </div>
     </div>
 
     );

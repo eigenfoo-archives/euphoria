@@ -90,7 +90,7 @@ class Applications extends Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/")}
+              onClick={() => this.handleRedirect("/dashboard")}
             />
           </div>
         </div>
