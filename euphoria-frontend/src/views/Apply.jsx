@@ -47,11 +47,15 @@ class Apply extends Component {
 
   readFile(event) {
     var file = event.target.files[0];
+    var name = event.target.name
     var reader = new FileReader();
-    let encodedString;
 
-    reader.onload = function(event) {
-      encodedString = new Buffer(event.target.result).toString('base64');
+    reader.onload = (event) => {
+      const encodedString = new Buffer(event.target.result).toString('base64');
+
+      this.setState({[name]: encodedString}, () => {
+        return;
+      });
     };
 
     reader.readAsText(file);
