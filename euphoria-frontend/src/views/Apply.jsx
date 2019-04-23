@@ -8,6 +8,8 @@ class Apply extends Component {
 
     this.state = {
       postingData: [],
+      resume: "",
+      coverLetter: ""
     };
 
     this.handleRedirect = this.handleRedirect.bind(this);
@@ -44,13 +46,12 @@ class Apply extends Component {
   }
 
   readFile(event) {
-    console.log(event.target.files[0]);
-
     var file = event.target.files[0];
     var reader = new FileReader();
+    let encodedString;
+
     reader.onload = function(event) {
-      // The file's text will be printed here
-      console.log(event.target.result)
+      encodedString = new Buffer(event.target.result).toString('base64');
     };
 
     reader.readAsText(file);
@@ -66,6 +67,27 @@ class Apply extends Component {
         style={{height:"20px"}}
       />;
     }
+
+    var applyButton =
+    <Button
+      variant="secondary"
+      size="lg"
+      block
+      onClick={() => {alert("Pleas upload both Resume and Cover Letter")}}>
+        Apply
+    </Button>;
+
+    if(this.state.coverLetter!=="" && this.state.resume!==""){
+      var applyButton =
+      <Button
+        variant="info"
+        size="lg"
+        block
+        onClick={() => this.handleApply()}>
+          Apply
+      </Button>;
+    }
+
 
     return(
       <div>
@@ -89,7 +111,7 @@ class Apply extends Component {
               </Col>
               <Col sm={3}>
                 <Button
-                  variant="info"
+                  variant={this.state.resume=="" ? "info" : "secondary"}
                   size="lg"
                   onClick={() => document.getElementById('resumeInput').click()}>
                     Resume
@@ -111,7 +133,7 @@ class Apply extends Component {
               </Col>
               <Col sm={3}>
                 <Button
-                  variant="info"
+                  variant={this.state.coverLetter=="" ? "info" : "secondary"}
                   size="lg"
                   onClick={() => document.getElementById('coverLetterInput').click()}>
                     Cover Letter
@@ -152,13 +174,7 @@ class Apply extends Component {
             </Row>
             <hr/>
             <Row>
-              <Button
-                variant="info"
-                size="lg"
-                block
-                onClick={() => this.handleApply()}>
-                  Apply
-                </Button>
+              {applyButton}
             </Row>
           </Container>
         </div>
