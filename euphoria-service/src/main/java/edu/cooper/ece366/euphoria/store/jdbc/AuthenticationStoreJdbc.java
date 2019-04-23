@@ -1,9 +1,9 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
-import com.typesafe.config.Config;
 import edu.cooper.ece366.euphoria.model.Authentication;
 import edu.cooper.ece366.euphoria.model.AuthenticationBuilder;
 import edu.cooper.ece366.euphoria.store.model.AuthenticationStore;
+import org.apache.commons.dbutils.DbUtils;
 
 import java.sql.*;
 import java.util.Collections;
@@ -14,27 +14,25 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
     private static final String GET_AUTHENTICATION_STATEMENT = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
     private static final String CREATE_AUTHENTICATION_STATEMENT = "INSERT INTO authentications (id, username, passwordHash, isUser)" +
             "VALUES (?, ?, ?, ?)";
-    private final Config config;
 
-    public AuthenticationStoreJdbc(final Config config) {
-        this.config = config;
+    private final DataSource dataSource;
+
+    public AuthenticationStoreJdbc(final DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
     public Authentication getAuthentication(final String username, final String passwordHash) {
-        Connection connection;
-        try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
 
-            PreparedStatement ps = connection.prepareStatement(GET_AUTHENTICATION_STATEMENT);
+        try {
+            conn= dataSource.getConnection();
+            ps = conn.prepareStatement(GET_AUTHENTICATION_STATEMENT);
             ps.setString(1, username);
             ps.setString(2, passwordHash);
-
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.first()) {
                 return new AuthenticationBuilder()
@@ -48,25 +46,28 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
             }
         } catch (SQLException e) {
             throw new RuntimeException("error fetching authentication", e);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
     }
 
 
     @Override
     public List<Authentication> createAuthentication(final Integer id, final String username, final String passwordHash, final Boolean isUser) {
-        Connection connection;
+        Connection conn = null;
+        PreparedStatement ps = null;
+
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-            PreparedStatement ps = connection.prepareStatement(CREATE_AUTHENTICATION_STATEMENT);
+            conn= dataSource.getConnection();
+            ps = conn.prepareStatement(CREATE_AUTHENTICATION_STATEMENT);
             ps.setInt(1, id);
             ps.setString(2, username);
             ps.setString(3, passwordHash);
             ps.setBoolean(4, isUser);
             int rowsAffected = ps.executeUpdate();
+
             if (rowsAffected == 0) {
                 throw new SQLException("Creating new authentication failed, no rows affected.");
             }
@@ -75,6 +76,9 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
 
         } catch (SQLException ex) {
             System.out.println(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
         }
 
         return null; //if not successful, return null

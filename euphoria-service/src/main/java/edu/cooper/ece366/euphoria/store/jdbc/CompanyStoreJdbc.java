@@ -1,9 +1,9 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
-import com.typesafe.config.Config;
 import edu.cooper.ece366.euphoria.model.Company;
 import edu.cooper.ece366.euphoria.model.CompanyBuilder;
 import edu.cooper.ece366.euphoria.store.model.CompanyStore;
+import org.apache.commons.dbutils.DbUtils;
 
 import java.sql.*;
 
@@ -11,26 +11,23 @@ public class CompanyStoreJdbc implements CompanyStore {
 
     private static final String GET_COMPANY_STATEMENT = "SELECT * FROM companies WHERE companyId = ?";
     private static final String CREATE_COMPANY_STATEMENT = "INSERT INTO companies (name, website, description) VALUES (?, ?, ?)";
-    private final Config config;
 
-    public CompanyStoreJdbc(final Config config) {
-        this.config = config;
+    private final DataSource dataSource;
+
+    public CompanyStoreJdbc(final DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
     public Company getCompany(final String companyId) {
-        Connection connection;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-
-            PreparedStatement ps = connection.prepareStatement(GET_COMPANY_STATEMENT);
+            conn= dataSource.getConnection();
+            ps = conn.prepareStatement(GET_COMPANY_STATEMENT);
             ps.setInt(1, Integer.parseInt(companyId));
-
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.first()) {
                 return new CompanyBuilder()
@@ -44,20 +41,22 @@ public class CompanyStoreJdbc implements CompanyStore {
             }
         } catch (SQLException e) {
             throw new RuntimeException("error fetching company", e);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
     }
 
 
     @Override
     public Company createCompany(final String name, final String website, final String description) {
-        Connection connection;
+        Connection conn = null;
+        PreparedStatement ps = null;
+
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-            PreparedStatement ps = connection.prepareStatement(CREATE_COMPANY_STATEMENT, Statement.RETURN_GENERATED_KEYS);
+            conn= dataSource.getConnection();
+            ps = conn.prepareStatement(CREATE_COMPANY_STATEMENT, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, website);
             ps.setString(3, description);
@@ -80,6 +79,9 @@ public class CompanyStoreJdbc implements CompanyStore {
             }
         } catch (SQLException e) {
             throw new RuntimeException("error creating company", e);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
         }
     }
 }

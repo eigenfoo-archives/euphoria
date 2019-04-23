@@ -1,10 +1,10 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
-import com.typesafe.config.Config;
 import edu.cooper.ece366.euphoria.model.User;
 import edu.cooper.ece366.euphoria.model.UserBuilder;
 import edu.cooper.ece366.euphoria.store.model.UserStore;
 import edu.cooper.ece366.euphoria.utils.EducationLevel;
+import org.apache.commons.dbutils.DbUtils;
 
 import java.sql.*;
 
@@ -13,26 +13,24 @@ public class UserStoreJdbc implements UserStore {
     private static final String GET_USER_STATEMENT = "SELECT * FROM users WHERE userId = ?";
     private static final String CREATE_USER_STATEMENT = "INSERT INTO users (name, email, phoneNumber, educationLevel, description)" +
             " VALUES (?, ?, ?, ?, ?)";
-    private final Config config;
 
-    public UserStoreJdbc(final Config config) {
-        this.config = config;
+    private final DataSource dataSource;
+
+    public UserStoreJdbc(final DataSource dataSource) {
+        this.dataSource = dataSource;
     }
 
     @Override
     public User getUser(final String userId) {
-        Connection connection;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-
-            PreparedStatement ps = connection.prepareStatement(GET_USER_STATEMENT);
+            conn = DataSource.getConnection();
+            ps = conn.prepareStatement(GET_USER_STATEMENT);
             ps.setInt(1, Integer.parseInt(userId));
-
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.first()) {
                 return new UserBuilder()
@@ -48,20 +46,22 @@ public class UserStoreJdbc implements UserStore {
             }
         } catch (SQLException e) {
             throw new RuntimeException("error fetching user", e);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
     }
 
 
     @Override
     public User createUser(final String name, final String email, final String phoneNumber, final EducationLevel educationLevel, final String description) {
-        Connection connection;
+        Connection conn = null;
+        PreparedStatement ps = null;
+
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-            PreparedStatement ps = connection.prepareStatement(CREATE_USER_STATEMENT, Statement.RETURN_GENERATED_KEYS);
+            conn = DataSource.getConnection();
+            ps = conn.prepareStatement(CREATE_USER_STATEMENT, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);
             ps.setString(2, email);
             ps.setString(3, phoneNumber);
@@ -88,6 +88,9 @@ public class UserStoreJdbc implements UserStore {
             }
         } catch (SQLException e) {
             throw new RuntimeException("error creating user", e);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
         }
     }
 }

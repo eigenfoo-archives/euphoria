@@ -4,6 +4,7 @@ import com.typesafe.config.Config;
 import edu.cooper.ece366.euphoria.model.Application;
 import edu.cooper.ece366.euphoria.model.ApplicationBuilder;
 import edu.cooper.ece366.euphoria.store.model.ApplicationStore;
+import org.apache.commons.dbutils.DbUtils;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -22,17 +23,16 @@ public class ApplicationStoreJdbc implements ApplicationStore {
     private static final String CREATE_APPLICATION_STATEMENT = "INSERT INTO applications (postingId, userId) VALUES (?, ?)";
     private static final String ADD_FILE_LOCATIONS_STATEMENT = "UPDATE applications SET resumeLocation = ?,  coverLetterLocation = ? WHERE applicationId = ? ";
 
-    private final Config config;
+    private final DataSource dataSource;
     private final String FileStoragePath;
 
-    public ApplicationStoreJdbc(final Config config) {
-        this.config = config;
+    public ApplicationStoreJdbc(final DataSource dataSource, final Config config) {
+        this.dataSource = dataSource;
         FileStoragePath = config.getString("FileStoragePath");
     }
 
     @Override
     public Application getApplication(final String applicationId) {
-
         File fileRes = new File(FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
         byte[] bufferRes = new byte[(int) fileRes.length()];
         File fileCov = new File(FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
@@ -48,18 +48,14 @@ public class ApplicationStoreJdbc implements ApplicationStore {
             System.out.println(e.getMessage());
         }
 
-        Connection connection;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-
-            PreparedStatement ps = connection.prepareStatement(GET_APPLICATION_STATEMENT);
+            conn= dataSource.getConnection();
+            ps = conn.prepareStatement(GET_APPLICATION_STATEMENT);
             ps.setInt(1, Integer.parseInt(applicationId));
-
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             if (rs.first()) {
                 return new ApplicationBuilder()
@@ -75,25 +71,26 @@ public class ApplicationStoreJdbc implements ApplicationStore {
             }
         } catch (SQLException e) {
             throw new RuntimeException("error fetching application", e);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
+
     }
 
     @Override
     public List<Application> getApplicationsForPosting(final String postingId) {
         ArrayList<Application> applicationList = new ArrayList<Application>();
 
-        Connection connection;
+        Connection conn = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-
-            PreparedStatement ps = connection.prepareStatement(GET_APPLICATIONS_FOR_POSTING_STATEMENT);
+            conn= dataSource.getConnection();
+            ps = conn.prepareStatement(GET_APPLICATIONS_FOR_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(postingId));
-
-            ResultSet rs = ps.executeQuery();
+            rs = ps.executeQuery();
 
             while (rs.next()) {
                 Integer applicationId = rs.getInt("applicationId");
@@ -125,6 +122,10 @@ public class ApplicationStoreJdbc implements ApplicationStore {
             }
         } catch (SQLException ex) {
             System.out.println(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
+            DbUtils.closeQuietly(rs);
         }
 
         return applicationList;
@@ -132,15 +133,13 @@ public class ApplicationStoreJdbc implements ApplicationStore {
 
     @Override
     public List<Application> createApplication(final String postingId, final String userId, final String resume, final String coverLetter) {
-        Integer applicationId;
-        Connection connection;
+        Integer applicationId = null;
+        Connection conn = null;
+        PreparedStatement ps = null;
+
         try {
-            connection =
-                    DriverManager.getConnection(
-                            config.getString("mysql.jdbc"),
-                            config.getString("mysql.user"),
-                            config.getString("mysql.password"));
-            PreparedStatement ps = connection.prepareStatement(CREATE_APPLICATION_STATEMENT, Statement.RETURN_GENERATED_KEYS);
+            conn= dataSource.getConnection();
+            ps = conn.prepareStatement(CREATE_APPLICATION_STATEMENT, Statement.RETURN_GENERATED_KEYS);
             ps.setInt(1, Integer.parseInt(postingId));
             ps.setInt(2, Integer.parseInt(userId));
             //timestamped automatically in UTC by mysql database
@@ -172,7 +171,7 @@ public class ApplicationStoreJdbc implements ApplicationStore {
                 System.out.println(e.getMessage());
             }
 
-            ps = connection.prepareStatement(ADD_FILE_LOCATIONS_STATEMENT);
+            ps = conn.prepareStatement(ADD_FILE_LOCATIONS_STATEMENT);
             ps.setString(1, "file://" + FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
             ps.setString(2, "file://" + FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
             ps.setInt(3, applicationId);
@@ -185,9 +184,11 @@ public class ApplicationStoreJdbc implements ApplicationStore {
 
         } catch (SQLException ex) {
             System.out.println(ex);
+        } finally {
+            DbUtils.closeQuietly(conn);
+            DbUtils.closeQuietly(ps);
         }
 
         return null; //if not successful, return null
     }
-
 }
