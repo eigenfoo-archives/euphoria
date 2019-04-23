@@ -34,16 +34,18 @@ public class PostingStoreJdbc implements PostingStore {
     private static final String GET_ASSOC_APPS_STATEMENT = "SELECT applicationId FROM applications WHERE postingId = ?";
     private static final String DELETE_ASSOC_APPS_STATEMENT = "DELETE FROM applications WHERE postingId = ?";
 
+    private final DataSource dataSource;
     private final String FileStoragePath;
 
-    public PostingStoreJdbc(final Config config) {
+    public PostingStoreJdbc(final DataSource dataSource, final Config config) {
+        this.dataSource = dataSource;
         FileStoragePath = config.getString("FileStoragePath");
     }
 
     @Override
     public Posting getPosting(final String postingId) {
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(postingId));
@@ -74,7 +76,7 @@ public class PostingStoreJdbc implements PostingStore {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
 
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(SEARCH_POSTINGS_STATEMENT);
             ps.setString(1, location);
@@ -108,7 +110,7 @@ public class PostingStoreJdbc implements PostingStore {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
 
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_ALL_POSTINGS_STATEMENT);
             ResultSet rs = ps.executeQuery();
@@ -139,7 +141,7 @@ public class PostingStoreJdbc implements PostingStore {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
 
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_RANDOM_POSTINGS_STATEMENT);
             ResultSet rs = ps.executeQuery();
@@ -170,7 +172,7 @@ public class PostingStoreJdbc implements PostingStore {
         ArrayList<Posting> postingList = new ArrayList<Posting>();
 
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_POSTINGS_FOR_COMPANY_STATEMENT);
             ps.setInt(1, Integer.parseInt(companyId));
@@ -201,7 +203,7 @@ public class PostingStoreJdbc implements PostingStore {
     public List<Posting> createPosting(final String companyId, final String jobTitle, final String description,
                                        final Location location, final Industry industry, final SkillLevel skillLevel) {
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(CREATE_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(companyId));
@@ -226,7 +228,7 @@ public class PostingStoreJdbc implements PostingStore {
     public List<Posting> editPosting(final String postingId, final String jobTitle, final String description,
                                      final Location location, final Industry industry, final SkillLevel skillLevel) {
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(EDIT_POSTING_STATEMENT);
             ps.setString(1, jobTitle);
@@ -251,7 +253,7 @@ public class PostingStoreJdbc implements PostingStore {
     public List<Posting> deletePosting(final String postingId) {
         boolean empty = true;
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(DELETE_POSTING_STATEMENT);
             ps.setInt(1, Integer.parseInt(postingId));

@@ -13,12 +13,16 @@ public class CookieStoreJdbc implements CookieStore {
     private static final String CREATE_COOKIE_STATEMENT = "INSERT INTO cookies (id, isUser, cookie) VALUES (?, ?, ?)";
     private static final String AUTHENTICATE_LOGIN_STATEMENT = "SELECT * FROM authentications WHERE (username, passwordHash) IN ((?, ?))";
 
-    public CookieStoreJdbc() {}
+    private final DataSource dataSource;
+
+    public CookieStoreJdbc(final DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public Cookie getCookie(final String cookieCheck) {
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_COOKIE_STATEMENT);
             ps.setString(1, cookieCheck);
@@ -45,7 +49,7 @@ public class CookieStoreJdbc implements CookieStore {
         Boolean isUser;
 
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(AUTHENTICATE_LOGIN_STATEMENT);
             ps.setString(1, username);

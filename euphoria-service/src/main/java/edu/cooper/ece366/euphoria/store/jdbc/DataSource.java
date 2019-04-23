@@ -1,5 +1,6 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
+import com.typesafe.config.Config;
 import org.apache.commons.dbcp.BasicDataSource;
 
 import java.sql.Connection;
@@ -9,14 +10,12 @@ import java.sql.SQLException;
 public final class DataSource {
     private static final BasicDataSource ds = new BasicDataSource();
 
-    static {
+    public DataSource(final Config config) {
         ds.setDriverClassName("com.mysql.jdbc.Driver");
-        ds.setUsername("euphoria");
-        ds.setPassword("euphoria");
-        ds.setUrl("jdbc:mysql://localhost:3306/euphoria");
+        ds.setUsername(config.getString("mysql.user"));
+        ds.setPassword(config.getString("mysql.password"));
+        ds.setUrl(config.getString("mysql.jdbc"));
     }
-
-    private DataSource() {}
 
     public static Connection getConnection() throws SQLException {
         return ds.getConnection();

@@ -1,6 +1,5 @@
 package edu.cooper.ece366.euphoria.store.jdbc;
 
-import com.typesafe.config.Config;
 import edu.cooper.ece366.euphoria.model.User;
 import edu.cooper.ece366.euphoria.model.UserBuilder;
 import edu.cooper.ece366.euphoria.store.model.UserStore;
@@ -14,7 +13,11 @@ public class UserStoreJdbc implements UserStore {
     private static final String CREATE_USER_STATEMENT = "INSERT INTO users (name, email, phoneNumber, educationLevel, description)" +
             " VALUES (?, ?, ?, ?, ?)";
 
-    public UserStoreJdbc() {}
+    private final DataSource dataSource;
+
+    public UserStoreJdbc(final DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public User getUser(final String userId) {

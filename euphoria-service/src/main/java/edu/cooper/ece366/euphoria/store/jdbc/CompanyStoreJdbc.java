@@ -11,12 +11,16 @@ public class CompanyStoreJdbc implements CompanyStore {
     private static final String GET_COMPANY_STATEMENT = "SELECT * FROM companies WHERE companyId = ?";
     private static final String CREATE_COMPANY_STATEMENT = "INSERT INTO companies (name, website, description) VALUES (?, ?, ?)";
 
-    public CompanyStoreJdbc() {}
+    private final DataSource dataSource;
+
+    public CompanyStoreJdbc(final DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public Company getCompany(final String companyId) {
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_COMPANY_STATEMENT);
             ps.setInt(1, Integer.parseInt(companyId));
@@ -42,7 +46,7 @@ public class CompanyStoreJdbc implements CompanyStore {
     @Override
     public Company createCompany(final String name, final String website, final String description) {
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(CREATE_COMPANY_STATEMENT, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, name);

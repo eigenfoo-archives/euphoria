@@ -14,12 +14,16 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
     private static final String CREATE_AUTHENTICATION_STATEMENT = "INSERT INTO authentications (id, username, passwordHash, isUser)" +
             "VALUES (?, ?, ?, ?)";
 
-    public AuthenticationStoreJdbc() {}
+    private final DataSource dataSource;
+
+    public AuthenticationStoreJdbc(final DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     @Override
     public Authentication getAuthentication(final String username, final String passwordHash) {
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(GET_AUTHENTICATION_STATEMENT);
             ps.setString(1, username);
@@ -46,7 +50,7 @@ public class AuthenticationStoreJdbc implements AuthenticationStore {
     @Override
     public List<Authentication> createAuthentication(final Integer id, final String username, final String passwordHash, final Boolean isUser) {
         try {
-            Connection connection = DataSource.getConnection();
+            Connection connection = dataSource.getConnection();
 
             PreparedStatement ps = connection.prepareStatement(CREATE_AUTHENTICATION_STATEMENT);
             ps.setInt(1, id);
