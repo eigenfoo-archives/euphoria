@@ -7,9 +7,9 @@ class Postings extends Component {
 
     this.state = {
       postingsData: [],
-      location: "",
-      industry: "",
-      skillLevel: ""
+      location: "...",
+      industry: "...",
+      skillLevel: "..."
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -25,7 +25,7 @@ class Postings extends Component {
   }
 
   handleChange(event) {
-    let url = "http://localhost:8080/api/posting"
+    let url = "http://localhost:8080/api/posting/"
 
     this.setState({[event.target.name]: event.target.value}, () => {
 
@@ -39,10 +39,11 @@ class Postings extends Component {
 
       for (let i = 0; i < filterList.length; i++){
         if (filterList[i].endsWith("...")){
-          filterList[i] = "/";
+          url += "/";
         }
-
-        url += "/" + filterList[i]
+        else{
+          url += filterList[i] + "/";
+        }
       }
 
       this.handleGet(url);
