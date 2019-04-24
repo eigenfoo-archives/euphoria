@@ -39,8 +39,7 @@ sudo apt install nodejs npm maven mysql-server
 3. Initiliaze the example files by manually copying the contents of
    [`docs/exampleFiles`
    subdirectory](https://github.com/eigenfoo/euphoria/tree/master/docs/exampleFiles)
-   into `/usr/local/etc/`. You may need `sudo` privileges if doing this on a
-   virtual machine.
+   into `~/.euphoria/`.
 
    ```bash
    cd docs/exampleFiles/
