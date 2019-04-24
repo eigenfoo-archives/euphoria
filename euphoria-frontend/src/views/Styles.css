@@ -74,10 +74,16 @@
   overflow: hidden;
 }
 
+.signout-container {
+  position: absolute;
+  top: 30px;
+  right: 30px;
+  z-index: 1;
+}
+
 .postings-container-dropdown {
   position: absolute;
   bottom: 30px;
-
   left: 50%;
   transform: translate(-50%, 0%);
 }

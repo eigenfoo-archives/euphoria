@@ -20,8 +20,8 @@ class Applications extends Component {
 
   componentDidMount() {
     const url = "http://localhost:8080/api/application/posting/" + this.props.match.params.postingId;
-    console.log(this.handleGet(url));
-    this.setState({applications_data: this.handleGet(url)});
+    console.log(url);
+    this.handleGet(url);
   }
 
   handleRedirect(path) {
@@ -32,8 +32,7 @@ class Applications extends Component {
     fetch(url)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
-      return data;
+      this.setState({applications_data: data});
     })
     .catch(err => {
       // Do something for an error here
