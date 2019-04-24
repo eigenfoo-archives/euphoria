@@ -36,11 +36,11 @@ public class PostingStoreJdbc implements PostingStore {
     private static final String DELETE_ASSOC_APPS_STATEMENT = "DELETE FROM applications WHERE postingId = ?";
 
     private final DataSource dataSource;
-    private final String FileStoragePath;
+    private final String fileStoragePath;
 
     public PostingStoreJdbc(final DataSource dataSource, final Config config) {
         this.dataSource = dataSource;
-        FileStoragePath = config.getString("FileStoragePath");
+        fileStoragePath = config.getString("FileStoragePath").replaceFirst("^~", System.getProperty("user.home"));
     }
 
     @Override
@@ -312,9 +312,9 @@ public class PostingStoreJdbc implements PostingStore {
                 empty = false;
                 Integer applicationId = rs.getInt("applicationId");
                 try {
-                    File fileRes = new File(FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
-                    File fileCov = new File(FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
-                    File fileDir = new File(FileStoragePath + "app_" + applicationId);
+                    File fileRes = new File(fileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
+                    File fileCov = new File(fileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
+                    File fileDir = new File(fileStoragePath + "app_" + applicationId);
                     fileRes.delete();
                     fileCov.delete();
                     fileDir.delete();

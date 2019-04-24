@@ -102,9 +102,9 @@ CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
 INSERT INTO applications
     (postingId, userId, resumeLocation, coverLetterLocation, dateCreated)
 VALUES
-	(1, 1, "file://home/.euphoria/app_1/resume_1.pdf", "file://home/.euphoria/app_1/cover_1.pdf", "2018-07-11 05:30:00"),
-	(1, 2, "file://home/.euphoria/app_2/resume_2.pdf", "file://home/.euphoria/app_2/cover_2.pdf", "2018-07-13 03:22:00"),
-	(3, 3, "file://home/.euphoria/app_3/resume_3.pdf", "file://home/.euphoria/app_3/cover_3.pdf", "2019-02-13 11:40:33");
+	(1, 1, "file://home/euphoria/.euphoria/app_1/resume_1.pdf", "file://home/euphoria/.euphoria/app_1/cover_1.pdf", "2018-07-11 05:30:00"),
+	(1, 2, "file://home/euphoria/.euphoria/app_2/resume_2.pdf", "file://home/euphoria/.euphoria/app_2/cover_2.pdf", "2018-07-13 03:22:00"),
+	(3, 3, "file://home/euphoria/.euphoria/app_3/resume_3.pdf", "file://home/euphoria/.euphoria/app_3/cover_3.pdf", "2019-02-13 11:40:33");
 
 
 CREATE TABLE authentications (id INT NOT NULL,
