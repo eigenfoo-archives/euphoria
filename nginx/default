@@ -1,9 +1,9 @@
 server {
     listen 8000 default_server;
     listen [::]:8000 default_server;
-    root /var/www/euphoria.ece366.cooper.edu/;
+    root /var/www/club.euphoria_recruiting/;
     index index.html;
-    server_name euphoria.ece366.cooper.edu www.euphoria.ece366.cooper.edu;
+    server_name euphoria-recruiting.club www.euphoria-recruiting.club;
     location ~ ^/api/(.*)$  {
         # insert Apollo IP address and server port number below
         proxy_pass http://199.98.27.117:8080/$1;

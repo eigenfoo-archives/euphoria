@@ -61,12 +61,12 @@ sudo apt install nodejs npm maven mysql-server
 
    If serving the frontend on a virtual machine, it may be wiser to build the
    web application locally and then `scp` the built static files to the
-   `/var/www/euphoria.ece366.cooper.edu` directory in the virtual machine. You
-   may need `sudo` privileges to do this.
+   `/var/www/club.euphoria_recruiting` directory in the virtual machine. You may
+   need `sudo` privileges to do this.
 
    ```bash
    cd build/
-   scp -r * root@VM_IP_ADDRESS:/var/www/euphoria.ece366.cooper.edu
+   scp -r * root@VM_IP_ADDRESS:/var/www/club.euphoria_recruiting
    ```
 
 5. If serving the frontend on a virtual machine, overwrite the file
