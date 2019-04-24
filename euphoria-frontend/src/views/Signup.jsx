@@ -32,10 +32,6 @@ class Signup extends Component {
   }
 
   handleChange(event) {
-    var data = event.target.value;
-
-    data = data.replace(/ /g, "%20");
-
     this.setState({ [event.target.name]: event.target.value});
   }
 

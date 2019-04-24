@@ -141,9 +141,6 @@ class Dashboard extends Component {
   render() {
     const {
       companyPostingsData,
-      location,
-      industry,
-      skillLevel,
     } = this.state;
 
     return(
