@@ -1,4 +1,4 @@
-package edu.cooper.ece366.euphoria.handler;
+package club.euphoria_recruiting.handler;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.annotations.VisibleForTesting;

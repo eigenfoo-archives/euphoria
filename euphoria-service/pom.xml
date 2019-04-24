@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>edu.cooper.ece366</groupId>
+    <groupId>club.euphoria_recruiting</groupId>
     <artifactId>euphoria</artifactId>
     <version>1.0-SNAPSHOT</version>
 
@@ -101,7 +101,7 @@
                 <configuration>
                     <archive>
                         <manifest>
-                            <mainClass>edu.cooper.ece366.euphoria.Main</mainClass>
+                            <mainClass>club.euphoria_recruiting.Main</mainClass>
                         </manifest>
                     </archive>
                 </configuration>
