@@ -22,10 +22,10 @@ class App extends Component {
 
   componentDidMount(){
     switch(this.props.cookies.get("isUser")){
-      case true:
+      case "true":
         this.handleRedirect("/postings")
         break;
-      case false:
+      case "false":
         this.handleRedirect("/dashboard")
         break;
       default:
@@ -38,7 +38,7 @@ class App extends Component {
   }
 
   render() {
-    
+
     return (
       <div>
         <Switch>
