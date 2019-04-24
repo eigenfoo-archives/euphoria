@@ -45,7 +45,7 @@ sudo apt install nodejs npm maven mysql-server
 
    ```bash
    mkdir ~/.euphoria/
-   cp docs/exampleFiles/* ~/.euphoria/
+   cp -r docs/exampleFiles/* ~/.euphoria/
    ```
 
 4. Download dependencies for, and build, the frontend:
