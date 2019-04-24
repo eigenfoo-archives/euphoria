@@ -94,7 +94,6 @@ class Signup extends Component {
         website,
         description
       };
-      console.log(userPayload)
     }
 
     fetch(userUrl, {
@@ -103,7 +102,7 @@ class Signup extends Component {
       }) //FIXME add check for is user exists
       .then(response => response.json())
       .then(data => {
-        this.createUserAuthentication((isUser) ? data[0].userId : data[0].companyId)
+        this.createUserAuthentication((isUser) ? data.userId : data.companyId)
       })
       .catch(err => {
       })
@@ -126,8 +125,6 @@ class Signup extends Component {
       passwordHash: password,
       isUser: isUser
     };
-
-    console.log(authenticationPayload);
 
     fetch(authenticationUrl, {
         method: "POST",
@@ -155,7 +152,7 @@ class Signup extends Component {
     } = this.state;
 
     return(
-      <Form>
+      <div>
         <Form.Row>
           <Form.Group as={Col} controlId="formGridFullName">
             <Form.Label>Full Name</Form.Label>
@@ -215,7 +212,7 @@ class Signup extends Component {
               onChange={this.handleChange}/>
           </Form.Group>
         </Form.Row>
-      </Form>
+      </div>
     );
   }
 
@@ -226,7 +223,7 @@ class Signup extends Component {
     } = this.state;
 
     return(
-      <Form>
+      <div>
         <Form.Group controlId="formGridCompanyName">
           <Form.Label>Company Name</Form.Label>
           <Form.Control
@@ -248,7 +245,7 @@ class Signup extends Component {
             value={website}
             onChange={this.handleChange}/>
         </Form.Group>
-      </Form>
+      </div>
     );
   }
 

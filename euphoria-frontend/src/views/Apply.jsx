@@ -32,7 +32,7 @@ class Apply extends Component {
     fetch(url)
     .then(response => response.json())
     .then(data => {
-      this.setState({postingData: data[0]});
+      this.setState({postingData: data});
     })
     .catch(err => {
       // Do something for an error here
