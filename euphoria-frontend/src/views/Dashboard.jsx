@@ -14,6 +14,7 @@ class Dashboard extends Component {
     this.handleRedirect = this.handleRedirect.bind(this);
     this.handleGet = this.handleGet.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
+    this.handleSignout = this.handleSignout.bind(this);
 
     this.posting = this.posting.bind(this);
   }
@@ -52,6 +53,26 @@ class Dashboard extends Component {
       .then(() => {
         this.handleGet(this.dashboardUrl);
       })
+
+    return;
+  }
+
+  handleSignout() {
+    const cookiesProp = this.props.cookies;
+
+    cookiesProp.remove("username");
+    cookiesProp.remove("id");
+    cookiesProp.remove("isUser");
+    cookiesProp.remove("authenticationHash");
+
+    if (cookiesProp.get("username") === undefined){
+      alert("Successfully signed out");
+
+      this.handleRedirect("/");
+    }
+    else{
+      alert("Could not sign out. Try at a different time.");
+    }
 
     return;
   }
@@ -137,6 +158,16 @@ class Dashboard extends Component {
           </div>
         </div>
 
+        <div className="signout-container" style={{width:"200px", height:"100px"}}>
+          <Button
+            variant="dark"
+            size="lg"
+            block
+            onClick={() => this.handleSignout()}>
+            Sign Out
+          </Button>
+        </div>
+
         <div className="scrolling-container">
           {companyPostingsData.map(companyPostingData => (
             <this.posting key={companyPostingData.postingId} companyPostingData={companyPostingData} />
@@ -144,7 +175,11 @@ class Dashboard extends Component {
         </div>
 
         <div className="floating-container postings-container-dropdown" style={{width:"300px", height:"100px"}}>
-          <Button variant="info" size="lg" block onClick={() => this.handleRedirect("/dashboard/post")}>
+          <Button
+            variant="info"
+            size="lg"
+            block
+            onClick={() => this.handleRedirect("/dashboard/post")}>
             Post New Job
           </Button>
         </div>

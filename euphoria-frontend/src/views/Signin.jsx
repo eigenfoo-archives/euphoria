@@ -64,10 +64,10 @@ class Signin extends Component {
         if(!(data == null)){
           const cookiesProp = this.props.cookies;
 
-          cookiesProp.set("username", username, { path: '/' });
-          cookiesProp.set("id", data.id, { path: '/' });
-          cookiesProp.set("isUser", data.isUser, { path: '/' });
-          cookiesProp.set("authenticationHash", data.cookie, { path: '/' });
+          cookiesProp.set("username", username, { path: '/', maxAge: 1728000 });
+          cookiesProp.set("id", data.id, { path: '/', maxAge: 1728000 });
+          cookiesProp.set("isUser", data.isUser, { path: '/', maxAge: 1728000 });
+          cookiesProp.set("authenticationHash", data.cookie, { path: '/', maxAge: 1728000 });
 
           if(data.isUser){
             this.handleRedirect("/postings")
