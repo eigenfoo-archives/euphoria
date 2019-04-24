@@ -39,11 +39,11 @@ class EditPost extends Component {
     .then(response => response.json())
     .then(data => {
       this.setState({postingId: this.props.match.params.postingId});
-      this.setState({jobTitle: data[0].jobTitle});
-      this.setState({description: data[0].description});
-      this.setState({location: data[0].location});
-      this.setState({industry: data[0].industry});
-      this.setState({skillLevel: data[0].skillLevel});
+      this.setState({jobTitle: data.jobTitle});
+      this.setState({description: data.description});
+      this.setState({location: data.location});
+      this.setState({industry: data.industry});
+      this.setState({skillLevel: data.skillLevel});
     })
     .catch(err => {
       // Do something for an error here
