@@ -24,18 +24,18 @@ public class ApplicationStoreJdbc implements ApplicationStore {
     private static final String ADD_FILE_LOCATIONS_STATEMENT = "UPDATE applications SET resumeLocation = ?,  coverLetterLocation = ? WHERE applicationId = ? ";
 
     private final DataSource dataSource;
-    private final String FileStoragePath;
+    private final String fileStoragePath;
 
     public ApplicationStoreJdbc(final DataSource dataSource, final Config config) {
         this.dataSource = dataSource;
-        FileStoragePath = config.getString("FileStoragePath");
+        fileStoragePath = config.getString("FileStoragePath").replaceFirst("^~", System.getProperty("user.home"));
     }
 
     @Override
     public Application getApplication(final String applicationId) {
-        File fileRes = new File(FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
+        File fileRes = new File(fileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
         byte[] bufferRes = new byte[(int) fileRes.length()];
-        File fileCov = new File(FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
+        File fileCov = new File(fileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
         byte[] bufferCov = new byte[(int) fileCov.length()];
         try {
             FileInputStream input1 = new FileInputStream(fileRes);
@@ -94,9 +94,9 @@ public class ApplicationStoreJdbc implements ApplicationStore {
 
             while (rs.next()) {
                 Integer applicationId = rs.getInt("applicationId");
-                File fileRes = new File(FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
+                File fileRes = new File(fileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
                 byte[] bufferRes = new byte[(int) fileRes.length()];
-                File fileCov = new File(FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
+                File fileCov = new File(fileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
                 byte[] bufferCov = new byte[(int) fileCov.length()];
                 try {
                     FileInputStream input1 = new FileInputStream(fileRes);
@@ -161,19 +161,19 @@ public class ApplicationStoreJdbc implements ApplicationStore {
             byte[] decodedCov = Base64.getDecoder().decode(coverLetter);
 
             try {
-                File newDir = new File(FileStoragePath + "app_" + applicationId);
+                File newDir = new File(fileStoragePath + "app_" + applicationId);
                 newDir.mkdir();
-                FileOutputStream output1 = new FileOutputStream(FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
+                FileOutputStream output1 = new FileOutputStream(fileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
                 output1.write(decodedRes);
-                FileOutputStream output2 = new FileOutputStream(FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
+                FileOutputStream output2 = new FileOutputStream(fileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
                 output2.write(decodedCov);
             } catch (IOException e) {
                 System.out.println(e.getMessage());
             }
 
             ps = conn.prepareStatement(ADD_FILE_LOCATIONS_STATEMENT);
-            ps.setString(1, "file://" + FileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
-            ps.setString(2, "file://" + FileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
+            ps.setString(1, "file://" + fileStoragePath + "app_" + applicationId + "/resume_" + applicationId + ".pdf");
+            ps.setString(2, "file://" + fileStoragePath + "app_" + applicationId + "/cover_" + applicationId + ".pdf");
             ps.setInt(3, applicationId);
             rowsAffected = ps.executeUpdate();
             if (rowsAffected == 0) {

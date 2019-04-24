@@ -28,6 +28,7 @@ sudo apt install nodejs npm maven mysql-server
 
     ```bash
     git clone https://github.com/eigenfoo/euphoria.git
+    cd euphoria/
     ```
 
 2. Initialize the database with the provided `initialize-database.sql` script.
@@ -39,18 +40,18 @@ sudo apt install nodejs npm maven mysql-server
 3. Initiliaze the example files by manually copying the contents of
    [`docs/exampleFiles`
    subdirectory](https://github.com/eigenfoo/euphoria/tree/master/docs/exampleFiles)
-   into `/usr/local/etc/`. You may need `sudo` privileges if doing this on a
-   virtual machine.
+   into `~/.euphoria/`. You will need to manually create the `~/.euphoria`
+   directory.
 
    ```bash
-   cd docs/exampleFiles/
-   cp * /usr/local/etc/
+   mkdir ~/.euphoria/
+   cp docs/exampleFiles/* ~/.euphoria/
    ```
 
 4. Download dependencies for, and build, the frontend:
 
     ```bash
-    cd euphoria-frontend
+    cd euphoria-frontend/
     npm install
     npm run build
     ```
@@ -80,7 +81,7 @@ sudo apt install nodejs npm maven mysql-server
 6. Package and run the backend.
 
     ```bash
-    cd euphoria-service
+    cd ../../euphoria-service
     mvn clean package
     java -jar target/euphoria-1.0-SNAPSHOT.jar
     ```
