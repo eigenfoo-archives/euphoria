@@ -1,0 +1,5 @@
+package club.euphoria_recruiting.utils;
+
+public enum Industry {
+    EDUCATION, ENERGY, FINANCE, FOOD, HEALTHCARE, INSURANCE, MEDIA, RETAIL, SERVICES, TECHNOLOGY, TRANSPORT, UTILITIES
+}
