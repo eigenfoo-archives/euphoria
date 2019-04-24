@@ -32,10 +32,6 @@ class Signup extends Component {
   }
 
   handleChange(event) {
-    var data = event.target.value;
-
-    data = data.replace(/ /g, "%20");
-
     this.setState({ [event.target.name]: event.target.value});
   }
 
@@ -74,7 +70,7 @@ class Signup extends Component {
       description
     } = this.state;
 
-    let userUrl = "http://localhost:8080/api/";
+    let userUrl = "http://euphoria-recruiting.club/api/";
     let userPayload = "";
 
     if (isUser){
@@ -117,7 +113,7 @@ class Signup extends Component {
       password,
     } = this.state;
 
-    const authenticationUrl = "http://localhost:8080/api/authentication";
+    const authenticationUrl = "http://euphoria-recruiting.club/api/authentication";
 
     let authenticationPayload = {
       id: id,
@@ -132,7 +128,7 @@ class Signup extends Component {
       })
       .then(response => response.json())
       .then(data => {
-        if(data.length == 0){
+        if(data.length === 0){
           alert("Account Created");
           this.handleRedirect("/signin")
         }

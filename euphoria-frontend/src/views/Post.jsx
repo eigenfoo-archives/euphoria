@@ -31,7 +31,7 @@ class Post extends Component {
     event.preventDefault(); //prevent redirect with form in url
 
     const form = event.currentTarget;
-    let url = "http://localhost:8080/api/posting";
+    let url = "http://euphoria-recruiting.club/api/posting";
 
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -63,7 +63,7 @@ class Post extends Component {
       })
       .then(response => response.json())
       .then(data => {
-        if(data !== "undefined" && data.length == 0){
+        if(data !== "undefined" && data.length === 0){
           alert("Post Created!")
           this.handleRedirect("/postings")
         }
