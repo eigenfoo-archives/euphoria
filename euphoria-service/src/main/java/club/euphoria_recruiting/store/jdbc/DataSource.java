@@ -1,4 +1,4 @@
-package edu.cooper.ece366.euphoria.store.jdbc;
+package club.euphoria_recruiting.store.jdbc;
 
 import com.typesafe.config.Config;
 import org.apache.commons.dbcp.BasicDataSource;

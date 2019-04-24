@@ -1,8 +1,8 @@
-package edu.cooper.ece366.euphoria.store.jdbc;
+package club.euphoria_recruiting.store.jdbc;
 
-import edu.cooper.ece366.euphoria.model.Company;
-import edu.cooper.ece366.euphoria.model.CompanyBuilder;
-import edu.cooper.ece366.euphoria.store.model.CompanyStore;
+import club.euphoria_recruiting.model.Company;
+import club.euphoria_recruiting.model.CompanyBuilder;
+import club.euphoria_recruiting.store.model.CompanyStore;
 import org.apache.commons.dbutils.DbUtils;
 
 import java.sql.*;

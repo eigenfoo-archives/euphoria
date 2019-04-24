@@ -1,9 +1,9 @@
-package edu.cooper.ece366.euphoria.store.jdbc;
+package club.euphoria_recruiting.store.jdbc;
 
-import edu.cooper.ece366.euphoria.model.User;
-import edu.cooper.ece366.euphoria.model.UserBuilder;
-import edu.cooper.ece366.euphoria.store.model.UserStore;
-import edu.cooper.ece366.euphoria.utils.EducationLevel;
+import club.euphoria_recruiting.model.User;
+import club.euphoria_recruiting.model.UserBuilder;
+import club.euphoria_recruiting.store.model.UserStore;
+import club.euphoria_recruiting.utils.EducationLevel;
 import org.apache.commons.dbutils.DbUtils;
 
 import java.sql.*;

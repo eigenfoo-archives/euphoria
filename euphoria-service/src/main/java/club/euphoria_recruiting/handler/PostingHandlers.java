@@ -5,11 +5,11 @@ import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
-import edu.cooper.ece366.euphoria.model.Posting;
-import edu.cooper.ece366.euphoria.store.model.PostingStore;
-import edu.cooper.ece366.euphoria.utils.Industry;
-import edu.cooper.ece366.euphoria.utils.Location;
-import edu.cooper.ece366.euphoria.utils.SkillLevel;
+import club.euphoria_recruiting.model.Posting;
+import club.euphoria_recruiting.store.model.PostingStore;
+import club.euphoria_recruiting.utils.Industry;
+import club.euphoria_recruiting.utils.Location;
+import club.euphoria_recruiting.utils.SkillLevel;
 import okio.ByteString;
 
 import java.io.IOException;

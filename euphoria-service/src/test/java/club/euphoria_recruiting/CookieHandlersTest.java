@@ -1,11 +1,12 @@
-package edu.cooper.ece366.euphoria.handler;
+package club.euphoria_recruiting;
 
+import club.euphoria_recruiting.handler.CookieHandlers;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotify.apollo.Request;
 import com.spotify.apollo.RequestContext;
-import edu.cooper.ece366.euphoria.model.Cookie;
-import edu.cooper.ece366.euphoria.model.CookieBuilder;
-import edu.cooper.ece366.euphoria.store.model.CookieStore;
+import club.euphoria_recruiting.model.Cookie;
+import club.euphoria_recruiting.model.CookieBuilder;
+import club.euphoria_recruiting.store.model.CookieStore;
 import okio.ByteString;
 import org.junit.Before;
 import org.junit.Test;

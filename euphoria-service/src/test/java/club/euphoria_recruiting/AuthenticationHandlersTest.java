@@ -1,13 +1,13 @@
-package edu.cooper.ece366.euphoria;
+package club.euphoria_recruiting;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotify.apollo.Request;
 import com.spotify.apollo.RequestContext;
-import edu.cooper.ece366.euphoria.handler.AuthenticationHandlers;
-import edu.cooper.ece366.euphoria.model.Application;
-import edu.cooper.ece366.euphoria.model.Authentication;
-import edu.cooper.ece366.euphoria.model.AuthenticationBuilder;
-import edu.cooper.ece366.euphoria.store.model.AuthenticationStore;
+import club.euphoria_recruiting.handler.AuthenticationHandlers;
+import club.euphoria_recruiting.model.Application;
+import club.euphoria_recruiting.model.Authentication;
+import club.euphoria_recruiting.model.AuthenticationBuilder;
+import club.euphoria_recruiting.store.model.AuthenticationStore;
 import okio.ByteString;
 import org.junit.Before;
 import org.junit.Test;

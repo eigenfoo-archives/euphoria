@@ -1,12 +1,12 @@
-package edu.cooper.ece366.euphoria.store.jdbc;
+package club.euphoria_recruiting.store.jdbc;
 
 import com.typesafe.config.Config;
-import edu.cooper.ece366.euphoria.model.Posting;
-import edu.cooper.ece366.euphoria.model.PostingBuilder;
-import edu.cooper.ece366.euphoria.store.model.PostingStore;
-import edu.cooper.ece366.euphoria.utils.Industry;
-import edu.cooper.ece366.euphoria.utils.Location;
-import edu.cooper.ece366.euphoria.utils.SkillLevel;
+import club.euphoria_recruiting.model.Posting;
+import club.euphoria_recruiting.model.PostingBuilder;
+import club.euphoria_recruiting.store.model.PostingStore;
+import club.euphoria_recruiting.utils.Industry;
+import club.euphoria_recruiting.utils.Location;
+import club.euphoria_recruiting.utils.SkillLevel;
 import org.apache.commons.dbutils.DbUtils;
 
 import java.io.File;

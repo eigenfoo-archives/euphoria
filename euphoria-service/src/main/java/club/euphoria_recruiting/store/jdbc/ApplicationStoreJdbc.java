@@ -1,9 +1,9 @@
-package edu.cooper.ece366.euphoria.store.jdbc;
+package club.euphoria_recruiting.store.jdbc;
 
 import com.typesafe.config.Config;
-import edu.cooper.ece366.euphoria.model.Application;
-import edu.cooper.ece366.euphoria.model.ApplicationBuilder;
-import edu.cooper.ece366.euphoria.store.model.ApplicationStore;
+import club.euphoria_recruiting.model.Application;
+import club.euphoria_recruiting.model.ApplicationBuilder;
+import club.euphoria_recruiting.store.model.ApplicationStore;
 import org.apache.commons.dbutils.DbUtils;
 
 import java.io.File;

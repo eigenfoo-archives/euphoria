@@ -1,4 +1,4 @@
-package edu.cooper.ece366.euphoria.utils;
+package club.euphoria_recruiting.utils;
 
 public enum SkillLevel {
     INTERNSHIP, ENTRYLEVEL, ASSOCIATE, SENIOR, DIRECTOR, EXECUTIVE

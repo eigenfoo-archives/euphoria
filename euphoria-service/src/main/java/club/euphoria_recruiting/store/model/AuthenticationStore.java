@@ -1,6 +1,6 @@
-package edu.cooper.ece366.euphoria.store.model;
+package club.euphoria_recruiting.store.model;
 
-import edu.cooper.ece366.euphoria.model.Authentication;
+import club.euphoria_recruiting.model.Authentication;
 
 import java.util.List;
 

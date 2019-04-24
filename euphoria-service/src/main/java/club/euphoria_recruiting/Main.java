@@ -1,13 +1,13 @@
-package edu.cooper.ece366.euphoria;
+package club.euphoria_recruiting;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.spotify.apollo.Environment;
 import com.spotify.apollo.httpservice.HttpService;
 import com.spotify.apollo.httpservice.LoadingException;
 import com.spotify.apollo.route.Route;
-import edu.cooper.ece366.euphoria.handler.*;
-import edu.cooper.ece366.euphoria.store.jdbc.*;
-import edu.cooper.ece366.euphoria.store.model.*;
+import club.euphoria_recruiting.handler.*;
+import club.euphoria_recruiting.store.jdbc.*;
+import club.euphoria_recruiting.store.model.*;
 import io.norberg.automatter.jackson.AutoMatterModule;
 
 public class Main {

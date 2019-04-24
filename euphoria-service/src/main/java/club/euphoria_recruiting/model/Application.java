@@ -1,4 +1,4 @@
-package edu.cooper.ece366.euphoria.model;
+package club.euphoria_recruiting.model;
 
 import io.norberg.automatter.AutoMatter;
 

@@ -1,6 +1,6 @@
-package edu.cooper.ece366.euphoria.model;
+package club.euphoria_recruiting.model;
 
-import edu.cooper.ece366.euphoria.utils.EducationLevel;
+import club.euphoria_recruiting.utils.EducationLevel;
 import io.norberg.automatter.AutoMatter;
 
 @AutoMatter

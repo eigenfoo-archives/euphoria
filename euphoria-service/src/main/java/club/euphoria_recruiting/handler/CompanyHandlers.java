@@ -5,8 +5,8 @@ import com.google.common.annotations.VisibleForTesting;
 import com.spotify.apollo.RequestContext;
 import com.spotify.apollo.Response;
 import com.spotify.apollo.route.*;
-import edu.cooper.ece366.euphoria.model.Company;
-import edu.cooper.ece366.euphoria.store.model.CompanyStore;
+import club.euphoria_recruiting.model.Company;
+import club.euphoria_recruiting.store.model.CompanyStore;
 import okio.ByteString;
 
 import java.io.IOException;

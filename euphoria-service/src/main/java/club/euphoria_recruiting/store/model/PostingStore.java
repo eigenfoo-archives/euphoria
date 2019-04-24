@@ -1,9 +1,9 @@
-package edu.cooper.ece366.euphoria.store.model;
+package club.euphoria_recruiting.store.model;
 
-import edu.cooper.ece366.euphoria.model.Posting;
-import edu.cooper.ece366.euphoria.utils.Industry;
-import edu.cooper.ece366.euphoria.utils.Location;
-import edu.cooper.ece366.euphoria.utils.SkillLevel;
+import club.euphoria_recruiting.model.Posting;
+import club.euphoria_recruiting.utils.Industry;
+import club.euphoria_recruiting.utils.Location;
+import club.euphoria_recruiting.utils.SkillLevel;
 
 import java.util.List;
 

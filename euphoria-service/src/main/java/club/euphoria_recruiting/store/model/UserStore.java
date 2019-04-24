@@ -1,7 +1,7 @@
-package edu.cooper.ece366.euphoria.store.model;
+package club.euphoria_recruiting.store.model;
 
-import edu.cooper.ece366.euphoria.model.User;
-import edu.cooper.ece366.euphoria.utils.EducationLevel;
+import club.euphoria_recruiting.model.User;
+import club.euphoria_recruiting.utils.EducationLevel;
 
 public interface UserStore {
 

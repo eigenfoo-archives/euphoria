@@ -1,8 +1,8 @@
-package edu.cooper.ece366.euphoria.store.jdbc;
+package club.euphoria_recruiting.store.jdbc;
 
-import edu.cooper.ece366.euphoria.model.Cookie;
-import edu.cooper.ece366.euphoria.model.CookieBuilder;
-import edu.cooper.ece366.euphoria.store.model.CookieStore;
+import club.euphoria_recruiting.model.Cookie;
+import club.euphoria_recruiting.model.CookieBuilder;
+import club.euphoria_recruiting.store.model.CookieStore;
 import org.apache.commons.dbutils.DbUtils;
 
 import java.sql.*;
