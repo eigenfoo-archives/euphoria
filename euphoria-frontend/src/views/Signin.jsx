@@ -61,17 +61,15 @@ class Signin extends Component {
       })
       .then(response => response.json())
       .then(data => {
-        const cookie = data[0];
-
-        if(!(cookie == null)){
+        if(!(data == null)){
           const cookiesProp = this.props.cookies;
 
           cookiesProp.set("username", username, { path: '/' });
-          cookiesProp.set("id", cookie.id, { path: '/' });
-          cookiesProp.set("isUser", cookie.isUser, { path: '/' });
-          cookiesProp.set("authenticationHash", cookie.cookie, { path: '/' });
+          cookiesProp.set("id", data.id, { path: '/' });
+          cookiesProp.set("isUser", data.isUser, { path: '/' });
+          cookiesProp.set("authenticationHash", data.cookie, { path: '/' });
 
-          if(cookie.isUser){
+          if(data.isUser){
             this.handleRedirect("/postings")
           }
           else{
