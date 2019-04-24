@@ -22,7 +22,7 @@ class EditPost extends Component {
   }
 
   componentDidMount() {
-    const url = "http://localhost:8080/api/posting/" + this.props.match.params.postingId;
+    const url = "http://euphoria-recruiting.club/api/posting/" + this.props.match.params.postingId;
     this.handleGet(url);
   }
 
@@ -56,7 +56,7 @@ class EditPost extends Component {
     event.preventDefault(); //prevent redirect with form in url
 
     const form = event.currentTarget;
-    let url = "http://localhost:8080/api/posting";
+    let url = "http://euphoria-recruiting.club/api/posting";
 
     if (form.checkValidity() === false) {
       event.preventDefault();
