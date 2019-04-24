@@ -48,7 +48,7 @@ class Signin extends Component {
       password
     } = this.state;
 
-    const cookieUrl = "http://localhost:8080/api/cookie";
+    const cookieUrl = "http://euphoria-recruiting.club/api/cookie";
 
     let authenticationPayload = {
       username: username,

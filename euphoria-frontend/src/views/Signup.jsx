@@ -74,7 +74,7 @@ class Signup extends Component {
       description
     } = this.state;
 
-    let userUrl = "http://localhost:8080/api/";
+    let userUrl = "http://euphoria-recruiting.club/api/";
     let userPayload = "";
 
     if (isUser){
@@ -117,7 +117,7 @@ class Signup extends Component {
       password,
     } = this.state;
 
-    const authenticationUrl = "http://localhost:8080/api/authentication";
+    const authenticationUrl = "http://euphoria-recruiting.club/api/authentication";
 
     let authenticationPayload = {
       id: id,

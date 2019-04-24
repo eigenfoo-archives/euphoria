@@ -19,7 +19,7 @@ class Applications extends Component {
   }
 
   componentDidMount() {
-    const url = "http://localhost:8080/api/application/posting/" + this.props.match.params.postingId;
+    const url = "http://euphoria-recruiting.club/api/application/posting/" + this.props.match.params.postingId;
     console.log(url);
     this.handleGet(url);
   }
