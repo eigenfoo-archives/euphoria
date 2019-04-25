@@ -1,6 +1,11 @@
-# Euphoria Recruiting Platform: [euphoria-recruiting.club](http://euphoria-recruiting.club/)
+# Euphoria
 
 [![Build Status](https://travis-ci.org/eigenfoo/euphoria.svg?branch=master)](https://travis-ci.org/eigenfoo/euphoria)
+
+> Our web application is served at
+> [199.98.27.117:8000](http://199.98.27.117:8000/). We eventually intend to set
+> up the [euphoria-recruiting.club](http://euphoria-recruiting.club/) domain
+> name (hence the project structure).
 
 A simple recruiting platform, written as a project for ECE366 (Software
 Engineering & Large Systems Design) at The Cooper Union. Euphoria's tech stack
