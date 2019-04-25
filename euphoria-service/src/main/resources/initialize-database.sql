@@ -88,9 +88,9 @@ CREATE TABLE postings (postingId INT AUTO_INCREMENT PRIMARY KEY,
 INSERT INTO postings
     (companyId, jobTitle, description, location, industry, skillLevel, dateCreated)
 VALUES
-    (123, "Underwater Basket Weaver", "Must lift.", "WASHINGTON", "SERVICES", "INTERNSHIP", "2019-04-16 02:12:22"),
-    (456, "Frontend Developer", "Must know everything about React.js.", "NEWYORK", "TECHNOLOGY", "EXECUTIVE", "2019-04-16 02:12:22"),
-    (789, "Backend Developer", "Must know nothing about React.js.", "NEWYORK", "TECHNOLOGY", "INTERNSHIP", "2019-04-16 02:12:22");
+    (1, "Underwater Basket Weaver", "Must lift.", "WASHINGTON", "SERVICES", "INTERNSHIP", "2019-04-16 02:12:22"),
+    (2, "Frontend Developer", "Must know everything about React.js.", "NEWYORK", "TECHNOLOGY", "EXECUTIVE", "2019-04-16 02:12:22"),
+    (2, "Backend Developer", "Must know nothing about React.js.", "NEWYORK", "TECHNOLOGY", "INTERNSHIP", "2019-04-16 02:12:22");
 
 CREATE TABLE applications (applicationId INT AUTO_INCREMENT PRIMARY KEY,
                            postingId INT NOT NULL,  -- FOREIGN KEY(postingId), REFERENCES postings (postingId),
