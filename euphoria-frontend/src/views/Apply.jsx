@@ -19,7 +19,7 @@ class Apply extends Component {
   }
 
   componentDidMount() {
-    let url = "http://localhost:8080/api/posting/" + this.props.match.params.postingId;
+    let url = "http://199.98.27.117:8080/api/posting/" + this.props.match.params.postingId;
 
     this.handleGet(url);
   }
@@ -48,7 +48,7 @@ class Apply extends Component {
       coverLetter
     } = this.state;
 
-    let applicationUrl = "http://localhost:8080/api/application";
+    let applicationUrl = "http://199.98.27.117:8080/api/application";
 
     let applicationPayload = {
       postingId: postingData.postingId,
