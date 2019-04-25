@@ -48,7 +48,7 @@ class Signin extends Component {
       password
     } = this.state;
 
-    const cookieUrl = "http://euphoria-recruiting.club/api/cookie";
+    const cookieUrl = "http://199.98.27.117:8080/api/cookie";
 
     let authenticationPayload = {
       username: username,

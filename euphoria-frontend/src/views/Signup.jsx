@@ -70,7 +70,7 @@ class Signup extends Component {
       description
     } = this.state;
 
-    let userUrl = "http://euphoria-recruiting.club/api/";
+    let userUrl = "http://199.98.27.117:8080/api/";
     let userPayload = "";
 
     if (isUser){
@@ -113,7 +113,7 @@ class Signup extends Component {
       password,
     } = this.state;
 
-    const authenticationUrl = "http://euphoria-recruiting.club/api/authentication";
+    const authenticationUrl = "http://199.98.27.117:8080/api/authentication";
 
     let authenticationPayload = {
       id: id,

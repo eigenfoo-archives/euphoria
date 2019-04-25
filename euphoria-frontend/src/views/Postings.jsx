@@ -21,12 +21,12 @@ class Postings extends Component {
   }
 
   componentDidMount() {
-    const url = "http://euphoria-recruiting.club/api/posting/random";
+    const url = "http://199.98.27.117:8080/api/posting/random";
     this.handleGet(url);
   }
 
   handleChange(event) {
-    let url = "http://euphoria-recruiting.club/api/posting/"
+    let url = "http://199.98.27.117:8080/api/posting/"
 
     this.setState({[event.target.name]: event.target.value}, () => {
 
