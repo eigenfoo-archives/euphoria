@@ -23,6 +23,7 @@ class EditPost extends Component {
 
   componentDidMount() {
     const url = "http://199.98.27.117:8080/api/posting/" + this.props.match.params.postingId;
+
     this.handleGet(url);
   }
 
@@ -87,7 +88,7 @@ class EditPost extends Component {
       })
       .then(response => response.json())
       .then(data => {
-        if(data !== "undefined" && data.length == 0){
+        if(data !== "undefined" && data.length === 0){
           alert("Post edited!")
           this.handleRedirect("/dashboard")
         }

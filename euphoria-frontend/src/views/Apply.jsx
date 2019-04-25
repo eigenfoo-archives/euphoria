@@ -65,7 +65,7 @@ class Apply extends Component {
       }) //FIXME add check for is user exists
       .then(response => response.json())
       .then(data => {
-        if(data !== "undefined" && data.length == 0){
+        if(data !== "undefined" && data.length === 0){
           alert("Application successfully submitted!")
           this.handleRedirect("/postings")
         }
@@ -113,7 +113,7 @@ class Apply extends Component {
     </Button>;
 
     if(this.state.coverLetter!=="" && this.state.resume!==""){
-      var applyButton =
+      applyButton =
       <Button
         variant="info"
         size="lg"
@@ -146,7 +146,7 @@ class Apply extends Component {
               </Col>
               <Col sm={3}>
                 <Button
-                  variant={this.state.resume=="" ? "info" : "secondary"}
+                  variant={this.state.resume === "" ? "info" : "secondary"}
                   size="lg"
                   onClick={() => document.getElementById('resumeInput').click()}>
                     Resume
@@ -168,7 +168,7 @@ class Apply extends Component {
               </Col>
               <Col sm={3}>
                 <Button
-                  variant={this.state.coverLetter=="" ? "info" : "secondary"}
+                  variant={this.state.coverLetter === "" ? "info" : "secondary"}
                   size="lg"
                   onClick={() => document.getElementById('coverLetterInput').click()}>
                     Cover Letter

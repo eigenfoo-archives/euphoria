@@ -63,7 +63,7 @@ class Post extends Component {
       })
       .then(response => response.json())
       .then(data => {
-        if(data !== "undefined" && data.length == 0){
+        if(data !== "undefined" && data.length === 0){
           alert("Post Created!")
           this.handleRedirect("/postings")
         }

@@ -78,9 +78,6 @@ class Applications extends Component {
   render() {
     const {
       applications_data,
-      location,
-      industry,
-      skillLevel,
     } = this.state;
 
     return(

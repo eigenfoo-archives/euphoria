@@ -47,6 +47,7 @@ class Dashboard extends Component {
 
   handleDelete(postingId){
     const url = "http://199.98.27.117:8080/api/posting/" + postingId;
+        
     fetch(url, {
         method: "DELETE",
       })
@@ -141,9 +142,6 @@ class Dashboard extends Component {
   render() {
     const {
       companyPostingsData,
-      location,
-      industry,
-      skillLevel,
     } = this.state;
 
     return(

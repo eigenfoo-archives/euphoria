@@ -32,10 +32,6 @@ class Signup extends Component {
   }
 
   handleChange(event) {
-    var data = event.target.value;
-
-    data = data.replace(/ /g, "%20");
-
     this.setState({ [event.target.name]: event.target.value});
   }
 
@@ -132,7 +128,7 @@ class Signup extends Component {
       })
       .then(response => response.json())
       .then(data => {
-        if(data.length == 0){
+        if(data.length === 0){
           alert("Account Created");
           this.handleRedirect("/signin")
         }
