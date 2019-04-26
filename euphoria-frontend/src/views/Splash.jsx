@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
-import * as globalConsts from "../globals.js";
 
 class Splash extends Component {
   constructor(props, context) {
