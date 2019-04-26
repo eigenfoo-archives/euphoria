@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import {Image, Button, ButtonGroup, Container, Row, Col} from "react-bootstrap";
+import * as globalConsts from "../globals.js";
 
 class Dashboard extends Component {
   constructor(props, context) {
     super(props);
 
-    this.dashboardUrl = "http://199.98.27.117:8080/api/posting/company/" + this.props.cookies.get("id")
+    this.dashboardUrl = globalConsts.baseUrl + "/api/posting/company/" + this.props.cookies.get("id")
 
     this.state = {
       companyPostingsData: [],
@@ -46,8 +47,8 @@ class Dashboard extends Component {
   }
 
   handleDelete(postingId){
-    const url = "http://199.98.27.117:8080/api/posting/" + postingId;
-        
+    const url = globalConsts.baseUrl + "/api/posting/" + postingId;
+
     fetch(url, {
         method: "DELETE",
       })

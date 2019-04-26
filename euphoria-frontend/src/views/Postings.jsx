@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col, Form} from "react-bootstrap";
+import * as globalConsts from "../globals.js";
 
 class Postings extends Component {
   constructor(props, context) {
@@ -21,12 +22,12 @@ class Postings extends Component {
   }
 
   componentDidMount() {
-    const url = "http://199.98.27.117:8080/api/posting/random";
+    const url = globalConsts.baseUrl + "/api/posting/random";
     this.handleGet(url);
   }
 
   handleChange(event) {
-    let url = "http://199.98.27.117:8080/api/posting/"
+    let url = globalConsts.baseUrl + "/api/posting/"
 
     this.setState({[event.target.name]: event.target.value}, () => {
 

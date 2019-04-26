@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Image, Form, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, Col} from "react-bootstrap";
+import * as globalConsts from "../globals.js";
 
 class Signup extends Component {
 
@@ -70,7 +71,7 @@ class Signup extends Component {
       description
     } = this.state;
 
-    let userUrl = "http://199.98.27.117:8080/api/";
+    let userUrl = globalConsts.baseUrl + "/api/";
     let userPayload = "";
 
     if (isUser){
@@ -113,7 +114,7 @@ class Signup extends Component {
       password,
     } = this.state;
 
-    const authenticationUrl = "http://199.98.27.117:8080/api/authentication";
+    const authenticationUrl = globalConsts.baseUrl + "/api/authentication";
 
     let authenticationPayload = {
       id: id,

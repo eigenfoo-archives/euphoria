@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Image, Form, Button, Col} from "react-bootstrap";
+import * as globalConsts from "../globals.js";
 
 class Post extends Component {
 
@@ -31,7 +32,7 @@ class Post extends Component {
     event.preventDefault(); //prevent redirect with form in url
 
     const form = event.currentTarget;
-    let url = "http://199.98.27.117:8080/api/posting";
+    let url = globalConsts.baseUrl + "/api/posting";
 
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -65,7 +66,7 @@ class Post extends Component {
       .then(data => {
         if(data !== "undefined" && data.length === 0){
           alert("Post Created!")
-          this.handleRedirect("/postings")
+          this.handleRedirect("/dashboard")
         }
       })
       .catch(err => {
