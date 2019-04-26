@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Image, Form, Button, Col} from "react-bootstrap";
+import * as globalConsts from "../globals.js";
 
 class EditPost extends Component {
 
@@ -22,7 +23,7 @@ class EditPost extends Component {
   }
 
   componentDidMount() {
-    const url = "http://199.98.27.117:8080/api/posting/" + this.props.match.params.postingId;
+    const url = globalConsts.baseUrl + "/api/posting/" + this.props.match.params.postingId;
 
     this.handleGet(url);
   }
@@ -57,7 +58,7 @@ class EditPost extends Component {
     event.preventDefault(); //prevent redirect with form in url
 
     const form = event.currentTarget;
-    let url = "http://199.98.27.117:8080/api/posting";
+    let url = globalConsts.baseUrl + "/api/posting";
 
     if (form.checkValidity() === false) {
       event.preventDefault();

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Image, Form, Button} from "react-bootstrap";
+import * as globalConsts from "../globals.js";
 
 class Signin extends Component {
 
@@ -48,7 +49,7 @@ class Signin extends Component {
       password
     } = this.state;
 
-    const cookieUrl = "http://199.98.27.117:8080/api/cookie";
+    const cookieUrl = globalConsts.baseUrl + "/api/cookie";
 
     let authenticationPayload = {
       username: username,

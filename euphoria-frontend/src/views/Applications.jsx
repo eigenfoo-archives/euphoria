@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
+import * as globalConsts from "../globals.js";
 
 class Applications extends Component {
   constructor(props, context) {
@@ -19,7 +20,7 @@ class Applications extends Component {
   }
 
   componentDidMount() {
-    const url = "http://199.98.27.117:8080/api/application/posting/" + this.props.match.params.postingId;
+    const url = globalConsts.baseUrl + "/api/application/posting/" + this.props.match.params.postingId;
     console.log(url);
     this.handleGet(url);
   }
