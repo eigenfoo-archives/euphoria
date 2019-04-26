@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import {Image} from "react-bootstrap";
-import * as globalConsts from "../globals.js";
 
 class NotFound extends Component {
   constructor(props, context) {
