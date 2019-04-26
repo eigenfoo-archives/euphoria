@@ -66,7 +66,7 @@ class Post extends Component {
       .then(data => {
         if(data !== "undefined" && data.length === 0){
           alert("Post Created!")
-          this.handleRedirect("/postings")
+          this.handleRedirect("/dashboard")
         }
       })
       .catch(err => {
