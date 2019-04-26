@@ -36,7 +36,7 @@ class Applications extends Component {
         if(userId === undefined){
           this.setState({applicationsData: data});
 
-          data.map(applicationData => {
+          data.forEach(applicationData => {
             const userURL = globalConsts.baseUrl + "/api/user/" + applicationData.userId;
 
             this.handleGet(userURL, applicationData.userId);
@@ -91,9 +91,41 @@ class Applications extends Component {
               </p>
             </Col>
           </Row>
+          <Row>
+            <Col>
+              <p style={{fontSize:"15px"}}>
+                {userData.educationLevel}
+              </p>
+            </Col>
+          </Row>
+          <br />
+          <Row>
+            <Col>
+              <p style={{fontSize:"20px"}}>
+                {userData.description}
+              </p>
+            </Col>
+          </Row>
           <hr/>
           <Row>
-            <Button variant="info" size="lg" block>Download Documents</Button>
+            <Col>
+            <Button
+              variant="info"
+              size="lg"
+              block
+              onClick={() => this.downloadDocument(applicationData.resume)}>
+              Download Resume
+            </Button>
+            </Col>
+            <Col>
+            <Button
+              variant="info"
+              size="lg"
+              block
+              onClick={() => this.downloadDocument(applicationData.coverLetter)}>
+              Download Cover Letter
+            </Button>
+            </Col>
           </Row>
         </Container>
       </div>
