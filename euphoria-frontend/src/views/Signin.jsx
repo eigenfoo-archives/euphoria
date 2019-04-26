@@ -112,7 +112,7 @@ class Signin extends Component {
           <hr></hr>
           <Form onSubmit={event => this.handleSubmit(event)}>
             <Form.Group controlId="formBasicEmail">
-              <Form.Label>Email address</Form.Label>
+              <Form.Label>Username</Form.Label>
               <Form.Control
                 required
                 type="username"
