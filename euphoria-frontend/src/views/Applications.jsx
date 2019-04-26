@@ -7,7 +7,8 @@ class Applications extends Component {
     super(props);
 
     this.state = {
-      applications_data: [],
+      applicationsData: [],
+      userData: {},
       location: "",
       industry: "",
       skillLevel: ""
@@ -20,30 +21,53 @@ class Applications extends Component {
   }
 
   componentDidMount() {
-    const url = globalConsts.baseUrl + "/api/application/posting/" + this.props.match.params.postingId;
-    console.log(url);
-    this.handleGet(url);
+    const applicationsURL = globalConsts.baseUrl + "/api/application/posting/" + this.props.match.params.postingId;
+    this.handleGet(applicationsURL);
   }
 
   handleRedirect(path) {
     this.props.history.push(path);
   }
 
-  handleGet(url) {
+  handleGet(url, userId) {
     fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      this.setState({applications_data: data});
-    })
-    .catch(err => {
-      // Do something for an error here
-    })
+      .then(response => response.json())
+      .then(data => {
+        if(userId === undefined){
+          this.setState({applicationsData: data});
+
+          data.forEach(applicationData => {
+            const userURL = globalConsts.baseUrl + "/api/user/" + applicationData.userId;
+
+            this.handleGet(userURL, applicationData.userId);
+          });
+        }
+        else{
+          var userData = this.state.userData
+          userData[userId] = data;
+          this.setState({userData});
+        }
+      })
+      .catch(err => {
+        // Do something for an error here
+      });
 
     return;
   }
 
   application(props) {
-    const application_data = props.application_data;
+    const applicationData = props.applicationData;
+    const userData = this.state.userData[applicationData.userId];
+
+    if(userData === undefined){
+      return(
+        <div className="floating-container posting-container-scrolling" style={{width:"600px"}}>
+          <h1>
+            Could not retrieve application data
+          </h1>
+        </div>
+      );
+    }
 
     return(
       <div className="floating-container posting-container-scrolling" style={{width:"600px"}}>
@@ -51,25 +75,57 @@ class Applications extends Component {
           <Row>
             <Col>
               <h1>
-                {application_data.name}
+                {userData.name}
               </h1>
             </Col>
           </Row>
           <Row>
             <Col>
               <p style={{fontSize:"20px", color:"#AAA"}}>
-                {application_data.email}
+                {userData.email}
               </p>
             </Col>
             <Col>
               <p style={{fontSize:"20px", color:"#AAA"}}>
-                {application_data.phoneNumber}
+                {userData.phoneNumber}
+              </p>
+            </Col>
+          </Row>
+          <Row>
+            <Col>
+              <p style={{fontSize:"15px"}}>
+                {userData.educationLevel}
+              </p>
+            </Col>
+          </Row>
+          <br />
+          <Row>
+            <Col>
+              <p style={{fontSize:"20px"}}>
+                {userData.description}
               </p>
             </Col>
           </Row>
           <hr/>
           <Row>
-            <Button variant="info" size="lg" block>Download Documents</Button>
+            <Col>
+            <Button
+              variant="info"
+              size="lg"
+              block
+              onClick={() => this.downloadDocument(applicationData.resume)}>
+              Download Resume
+            </Button>
+            </Col>
+            <Col>
+            <Button
+              variant="info"
+              size="lg"
+              block
+              onClick={() => this.downloadDocument(applicationData.coverLetter)}>
+              Download Cover Letter
+            </Button>
+            </Col>
           </Row>
         </Container>
       </div>
@@ -78,7 +134,7 @@ class Applications extends Component {
 
   render() {
     const {
-      applications_data,
+      applicationsData,
     } = this.state;
 
     return(
@@ -94,8 +150,8 @@ class Applications extends Component {
         </div>
 
         <div className="scrolling-container">
-          {applications_data.map(application_data => (
-            <this.application key={application_data.postingId} application_data={application_data} />
+          {applicationsData.map(applicationData => (
+            <this.application key={applicationData.applicationId} applicationData={applicationData} />
           ))}
         </div>
     </div>
