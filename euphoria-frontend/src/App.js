@@ -20,10 +20,6 @@ class App extends Component {
     this.handleRedirect = this.handleRedirect.bind(this);
   }
 
-  componentDidMount(){
-
-  }
-
   handleRedirect(path) {
     this.props.history.push(path);
   }
