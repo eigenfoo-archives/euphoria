@@ -17,15 +17,13 @@ class Dashboard extends Component {
     this.handleDelete = this.handleDelete.bind(this);
     this.handleSignout = this.handleSignout.bind(this);
 
+    this.verifyUser = this.verifyUser.bind(this);
+
     this.posting = this.posting.bind(this);
   }
 
   componentDidMount() {
-    // if (this.props.cookies.get("isUser")){
-    //   this.handleRedirect("/");
-    // }
-
-    this.handleGet(this.dashboardUrl);
+    this.verifyUser(this.handleGet(this.dashboardUrl));
   }
 
   handleRedirect(path) {
@@ -75,6 +73,27 @@ class Dashboard extends Component {
     else{
       alert("Could not sign out. Try at a different time.");
     }
+
+    return;
+  }
+
+  verifyUser(func) {
+    const cookie = this.props.cookies.get("authenticationHash");
+    const url = globalConsts.baseUrl + "/api/cookie/" + cookie;
+
+    fetch(url)
+    .then(response => response.json())
+    .then(data => {
+      if(data.cookie === cookie){
+        func()
+      }
+      else {
+        alert("You are not authorized to look at this content. Please sign out and sign in again.")
+      }
+    })
+    .catch(err => {
+      // Do something for an error here
+    })
 
     return;
   }
