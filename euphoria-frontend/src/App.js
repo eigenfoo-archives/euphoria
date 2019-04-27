@@ -14,16 +14,6 @@ import Apply from './views/Apply.jsx';
 import NotFound from './views/NotFound';
 
 class App extends Component {
-  constructor(props, context) {
-    super(props);
-
-    this.handleRedirect = this.handleRedirect.bind(this);
-  }
-
-  handleRedirect(path) {
-    this.props.history.push(path);
-  }
-
   render() {
     switch(this.props.cookies.get("isUser")){
       case "true":

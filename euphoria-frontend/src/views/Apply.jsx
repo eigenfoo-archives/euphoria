@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
 import * as globals from "../globals.js";
 
+import Navbar from './Navbar';
+
 class Apply extends Component {
 
   constructor(props, context) {
@@ -13,7 +15,6 @@ class Apply extends Component {
       coverLetter: ""
     };
 
-    this.handleRedirect = this.handleRedirect.bind(this);
     this.handleGet = this.handleGet.bind(this);
     this.handleApply = this.handleApply.bind(this);
     this.readFile = this.readFile.bind(this);
@@ -23,10 +24,6 @@ class Apply extends Component {
     let url = globals.baseUrl + "/api/posting/" + this.props.match.params.postingId;
 
     globals.verifyUser(this.props.cookies, this.handleGet(url));
-  }
-
-  handleRedirect(path) {
-    this.props.history.push(path);
   }
 
   handleGet(url) {
@@ -66,7 +63,7 @@ class Apply extends Component {
       .then(data => {
         if(data !== undefined && data.length === 0){
           alert("Application successfully submitted!")
-          this.handleRedirect("/")
+          globals.handleRedirect(this.props, "/")
         }
       })
       .catch(err => {
@@ -125,15 +122,7 @@ class Apply extends Component {
 
     return(
       <div>
-        <div className="navbar">
-          <div className="logo">
-            <Image
-              src={require('../images/Logo.png')}
-              fluid
-              onClick={() => this.handleRedirect("/")}
-            />
-          </div>
-        </div>
+        <Navbar {...this.props}/>
 
         <div className="floating-container centered-container" style={{width:"900px"}}>
           <Container fluid>

@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import {Image, Form, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, Col} from "react-bootstrap";
+import {Form, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, Col} from "react-bootstrap";
 import * as globals from "../globals.js";
+
+import Navbar from './Navbar';
 
 class Signup extends Component {
 
@@ -22,7 +24,6 @@ class Signup extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleUserChange = this.handleUserChange.bind(this);
-    this.handleRedirect = this.handleRedirect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
     this.createUser = this.createUser.bind(this);
@@ -38,10 +39,6 @@ class Signup extends Component {
 
   handleUserChange(isUser){
     this.setState({isUser});
-  }
-
-  handleRedirect(path) {
-    this.props.history.push(path);
   }
 
   handleSubmit(event) {
@@ -131,7 +128,7 @@ class Signup extends Component {
       .then(data => {
         if(data.length === 0){
           alert("Account Created");
-          this.handleRedirect("/signin")
+          globals.handleRedirect(this.props, "/signin")
         }
       })
       .catch(err => {
@@ -256,15 +253,7 @@ class Signup extends Component {
 
     return(
       <div>
-        <div className="navbar">
-          <div className="logo">
-            <Image
-              src={require('../images/Logo.png')}
-              fluid
-              onClick={() => this.handleRedirect("/")}
-            />
-          </div>
-        </div>
+        <Navbar {...this.props}/>
 
         <div className="floating-container centered-container" style={{width:"600px"}}>
           <h1>Sign Up</h1>
@@ -345,7 +334,7 @@ class Signup extends Component {
             <Button variant="info" type="submit">
               Submit
             </Button>
-            <Button variant="link" type="button" onClick={() => this.handleRedirect("/signin")}>
+            <Button variant="link" type="button" onClick={() => globals.handleRedirect(this.props, "/signin")}>
               Sign in...
             </Button>
           </Form>

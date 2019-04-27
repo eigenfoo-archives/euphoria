@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {Image, Button, ButtonGroup, Container, Row, Col} from "react-bootstrap";
 import * as globals from "../globals.js";
 
+import Navbar from './Navbar';
+
 class Dashboard extends Component {
   constructor(props, context) {
     super(props);
@@ -12,7 +14,6 @@ class Dashboard extends Component {
       companyPostingsData: [],
     };
 
-    this.handleRedirect = this.handleRedirect.bind(this);
     this.handleGet = this.handleGet.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
     this.handleSignout = this.handleSignout.bind(this);
@@ -22,10 +23,6 @@ class Dashboard extends Component {
 
   componentDidMount() {
     globals.verifyUser(this.props.cookies, this.handleGet(this.dashboardUrl));
-  }
-
-  handleRedirect(path) {
-    this.props.history.push(path);
   }
 
   handleGet(url) {
@@ -64,7 +61,7 @@ class Dashboard extends Component {
     if (cookiesProp.get("username") === undefined){
       alert("Successfully signed out");
 
-      this.handleRedirect("/");
+      globals.handleRedirect(this.props, "/");
     }
     else{
       alert("Could not sign out. Try at a different time.");
@@ -118,13 +115,13 @@ class Dashboard extends Component {
           <br/>
           <Row>
             <Col sm={8}>
-              <Button variant="info" size="lg" block onClick={() => this.handleRedirect("/dashboard/applications/" + companyPostingData.postingId)}>
+              <Button variant="info" size="lg" block onClick={() => globals.handleRedirect(this.props, "/dashboard/applications/" + companyPostingData.postingId)}>
                 View Applications
               </Button>
             </Col>
             <Col sm={4}>
               <ButtonGroup>
-                <Button variant="secondary" size="lg" onClick={() => this.handleRedirect("/dashboard/post/edit/" + companyPostingData.postingId)}>Edit</Button>
+                <Button variant="secondary" size="lg" onClick={() => globals.handleRedirect(this.props, "/dashboard/post/edit/" + companyPostingData.postingId)}>Edit</Button>
                 <Button variant="danger" size="lg" onClick={() => this.handleDelete(companyPostingData.postingId)}>Delete</Button>
               </ButtonGroup>
             </Col>
@@ -141,15 +138,7 @@ class Dashboard extends Component {
 
     return(
       <div>
-        <div className="navbar">
-          <div className="logo">
-            <Image
-              src={require('../images/Logo.png')}
-              fluid
-              onClick={() => this.handleRedirect("/")}
-            />
-          </div>
-        </div>
+        <Navbar {...this.props}/>
 
         <div className="signout-container" style={{width:"200px", height:"100px"}}>
           <Button
@@ -172,7 +161,7 @@ class Dashboard extends Component {
             variant="info"
             size="lg"
             block
-            onClick={() => this.handleRedirect("/dashboard/post")}>
+            onClick={() => globals.handleRedirect(this.props, "/dashboard/post")}>
             Post New Job
           </Button>
         </div>
