@@ -8,12 +8,13 @@ class EditPost extends Component {
     super(props);
 
     this.state = {
-          postingId: "",
-          jobTitle: "",
-          description: "",
-          location: "",
-          industry: "",
-          skillLevel: "",
+      companyId: "",
+      postingId: "",
+      jobTitle: "",
+      description: "",
+      location: "",
+      industry: "",
+      skillLevel: "",
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -25,7 +26,7 @@ class EditPost extends Component {
   componentDidMount() {
     const url = globals.baseUrl + "/api/posting/" + this.props.match.params.postingId;
 
-    this.handleGet(url);
+    globals.verifyUser(this.props.cookies, this.handleGet(url));
   }
 
   handleChange(event) {
@@ -40,7 +41,9 @@ class EditPost extends Component {
     fetch(url)
     .then(response => response.json())
     .then(data => {
-      this.setState({postingId: this.props.match.params.postingId});
+      console.log(data);
+      this.setState({companyId: data.companyId});
+      this.setState({postingId: data.postingId});
       this.setState({jobTitle: data.jobTitle});
       this.setState({description: data.description});
       this.setState({location: data.location});
@@ -91,7 +94,7 @@ class EditPost extends Component {
       .then(data => {
         if(data !== undefined && data.length === 0){
           alert("Post edited!")
-          this.handleRedirect("/dashboard")
+          this.handleRedirect("/")
         }
       })
       .catch(err => {
@@ -145,7 +148,7 @@ class EditPost extends Component {
                   onChange={this.handleChange}>
                   <option>NEWYORK</option>
                   <option>LONDON</option>
-                  <option>HONGKONG</option>
+                  <option>HONGKONG</option>console.log(id);
                   <option>BERLIN</option>
                   <option>BEIJING</option>
                   <option>WASHINGTON</option>
@@ -208,7 +211,9 @@ class EditPost extends Component {
                 onChange={this.handleChange}/>
             </Form.Group>
 
-            <Button variant="info" type="submit">
+            <Button
+              variant="info"
+              onClick={event => globals.verifyUser(this.props.cookies, this.handleSubmit(event), this.state.companyId)}>
               Submit
             </Button>
           </Form>

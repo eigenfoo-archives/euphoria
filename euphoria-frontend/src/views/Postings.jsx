@@ -23,7 +23,7 @@ class Postings extends Component {
 
   componentDidMount() {
     const url = globals.baseUrl + "/api/posting/random";
-    globals.verifyUser(this.props.cookies, this.handleGet(url), false);
+    globals.verifyUser(this.props.cookies, this.handleGet(url));
   }
 
   handleChange(event) {
@@ -48,7 +48,7 @@ class Postings extends Component {
         }
       }
 
-      globals.verifyUser(this.props.cookies, this.handleGet(url), false);
+      globals.verifyUser(this.props.cookies, this.handleGet(url));
     });
   }
 

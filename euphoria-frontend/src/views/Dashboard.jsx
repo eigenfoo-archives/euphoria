@@ -21,7 +21,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    globals.verifyUser(this.props.cookies, this.handleGet(this.dashboardUrl), false);
+    globals.verifyUser(this.props.cookies, this.handleGet(this.dashboardUrl));
   }
 
   handleRedirect(path) {
@@ -47,7 +47,7 @@ class Dashboard extends Component {
         method: "DELETE",
       })
       .then(() => {
-        globals.verifyUser(this.handleGet(this.dashboardUrl), false);
+        globals.verifyUser(this.handleGet(this.dashboardUrl));
       })
 
     return;

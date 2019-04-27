@@ -22,7 +22,7 @@ class Apply extends Component {
   componentDidMount() {
     let url = globals.baseUrl + "/api/posting/" + this.props.match.params.postingId;
 
-    globals.verifyUser(this.props.cookies, this.handleGet(url), false);
+    globals.verifyUser(this.props.cookies, this.handleGet(url));
   }
 
   handleRedirect(path) {
@@ -68,7 +68,7 @@ class Apply extends Component {
       .then(data => {
         if(data !== undefined && data.length === 0){
           alert("Application successfully submitted!")
-          this.handleRedirect("/postings")
+          this.handleRedirect("/")
         }
       })
       .catch(err => {
@@ -119,7 +119,7 @@ class Apply extends Component {
         variant="info"
         size="lg"
         block
-        onClick={() => globals.verifyUser(this.props.cookies, this.handleApply(), false)}>
+        onClick={() => globals.verifyUser(this.props.cookies, this.handleApply())}>
           Apply
       </Button>;
     }
