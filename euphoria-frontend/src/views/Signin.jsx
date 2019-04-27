@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import {Image, Form, Button} from "react-bootstrap";
+import {Form, Button} from "react-bootstrap";
 import * as globals from "../globals.js";
+
+import Navbar from './Navbar';
 
 class Signin extends Component {
 
@@ -87,15 +89,7 @@ class Signin extends Component {
 
     return(
       <div>
-        <div className="navbar">
-          <div className="logo">
-            <Image
-              src={require('../images/Logo.png')}
-              fluid
-              onClick={() => globals.handleRedirect(this.props, "/")}
-            />
-          </div>
-        </div>
+        <Navbar {...this.props}/>
 
         <div className="floating-container centered-container" style={{width:"600px"}}>
           <h1>Sign In</h1>

@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
 import * as globals from "../globals.js";
 
+import Navbar from './Navbar';
+
 class Apply extends Component {
 
   constructor(props, context) {
@@ -120,15 +122,7 @@ class Apply extends Component {
 
     return(
       <div>
-        <div className="navbar">
-          <div className="logo">
-            <Image
-              src={require('../images/Logo.png')}
-              fluid
-              onClick={() => globals.handleRedirect(this.props, "/")}
-            />
-          </div>
-        </div>
+        <Navbar {...this.props}/>
 
         <div className="floating-container centered-container" style={{width:"900px"}}>
           <Container fluid>

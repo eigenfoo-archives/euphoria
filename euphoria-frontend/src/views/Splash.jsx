@@ -1,20 +1,14 @@
 import React, { Component } from 'react';
-import {Image, Button, Container, Row, Col} from "react-bootstrap";
+import {Button, Container, Row, Col} from "react-bootstrap";
 import * as globals from "../globals.js";
+
+import Navbar from './Navbar';
 
 class Splash extends Component {
   render() {
     return(
       <div>
-        <div className="navbar">
-          <div className="logo">
-              <Image
-                src={require('../images/Logo.png')}
-                fluid
-                onClick={() => globals.handleRedirect(this.props, "/")}
-              />
-          </div>
-        </div>
+        <Navbar {...this.props}/>
 
         <div className="floating-container centered-container" style={{width:"600px"}}>
           <Container>

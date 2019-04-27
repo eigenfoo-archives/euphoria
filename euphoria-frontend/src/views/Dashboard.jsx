@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import {Image, Button, ButtonGroup, Container, Row, Col} from "react-bootstrap";
 import * as globals from "../globals.js";
 
+import Navbar from './Navbar';
+
 class Dashboard extends Component {
   constructor(props, context) {
     super(props);
@@ -136,15 +138,7 @@ class Dashboard extends Component {
 
     return(
       <div>
-        <div className="navbar">
-          <div className="logo">
-            <Image
-              src={require('../images/Logo.png')}
-              fluid
-              onClick={() => globals.handleRedirect(this.props, "/")}
-            />
-          </div>
-        </div>
+        <Navbar {...this.props}/>
 
         <div className="signout-container" style={{width:"200px", height:"100px"}}>
           <Button

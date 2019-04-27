@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import {Image, Form, Button, Col} from "react-bootstrap";
+import {Form, Button, Col} from "react-bootstrap";
 import * as globals from "../globals.js";
+
+import Navbar from './Navbar';
 
 class EditPost extends Component {
 
@@ -106,15 +108,7 @@ class EditPost extends Component {
 
     return(
       <div>
-        <div className="navbar">
-          <div className="logo">
-            <Image
-              src={require('../images/Logo.png')}
-              fluid
-              onClick={() => globals.handleRedirect(this.props, "/")}
-            />
-          </div>
-        </div>
+        <Navbar {...this.props}/>
 
         <div className="floating-container centered-container" style={{width:"600px"}}>
           <h1>Edit Posting</h1>

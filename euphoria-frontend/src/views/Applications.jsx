@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
-import {Image, Button, Container, Row, Col} from "react-bootstrap";
+import {Button, Container, Row, Col} from "react-bootstrap";
 import * as globals from "../globals.js";
+
+import Navbar from './Navbar';
 
 class Applications extends Component {
   constructor(props, context) {
@@ -104,22 +106,22 @@ class Applications extends Component {
           <hr/>
           <Row>
             <Col>
-            <Button
-              variant="info"
-              size="lg"
-              block
-              onClick={() => this.downloadDocument(applicationData.resume)}>
-              Download Resume
-            </Button>
+              <Button
+                variant="info"
+                size="lg"
+                block
+                onClick={() => this.downloadDocument(applicationData.resume)}>
+                Download Resume
+              </Button>
             </Col>
             <Col>
-            <Button
-              variant="info"
-              size="lg"
-              block
-              onClick={() => this.downloadDocument(applicationData.coverLetter)}>
-              Download Cover Letter
-            </Button>
+              <Button
+                variant="info"
+                size="lg"
+                block
+                onClick={() => this.downloadDocument(applicationData.coverLetter)}>
+                Download Cover Letter
+              </Button>
             </Col>
           </Row>
         </Container>
@@ -134,15 +136,7 @@ class Applications extends Component {
 
     return(
       <div>
-        <div className="navbar">
-          <div className="logo">
-            <Image
-              src={require('../images/Logo.png')}
-              fluid
-              onClick={() => globals.handleRedirect(this.props, "/")}
-            />
-          </div>
-        </div>
+        <Navbar {...this.props}/>
 
         <div className="scrolling-container">
           {applicationsData.map(applicationData => (
