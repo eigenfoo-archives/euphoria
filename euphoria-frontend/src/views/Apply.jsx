@@ -78,7 +78,7 @@ class Apply extends Component {
     var reader = new FileReader();
 
     reader.onload = (event) => {
-      const encodedString = new Buffer(event.target.result).toString('base64');
+      const encodedString = window.btoa(unescape(encodeURIComponent(event.target.result)));
 
       this.setState({[name]: encodedString}, () => {
         return;

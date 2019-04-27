@@ -17,6 +17,7 @@ class Applications extends Component {
     };
 
     this.handleGet = this.handleGet.bind(this);
+    this.downloadDocument = this.downloadDocument.bind(this);
 
     this.application = this.application.bind(this);
   }
@@ -48,6 +49,24 @@ class Applications extends Component {
       .catch(err => {
         // Do something for an error here
       });
+
+    return;
+  }
+
+  downloadDocument(documentData, filename) {
+    const decodedDocumentData = decodeURIComponent(escape(window.atob(documentData)));
+    console.log(decodedDocumentData);
+
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + decodedDocumentData);
+    element.setAttribute('download', filename);
+
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
 
     return;
   }
@@ -110,7 +129,7 @@ class Applications extends Component {
                 variant="info"
                 size="lg"
                 block
-                onClick={() => this.downloadDocument(applicationData.resume)}>
+                onClick={() => this.downloadDocument(applicationData.resume, (userData.name + "-Resume.pdf"))}>
                 Download Resume
               </Button>
             </Col>
@@ -119,7 +138,7 @@ class Applications extends Component {
                 variant="info"
                 size="lg"
                 block
-                onClick={() => this.downloadDocument(applicationData.coverLetter)}>
+                onClick={() => this.downloadDocument(applicationData.coverLetter, (userData.name + "-Cover_Letter.pdf"))}>
                 Download Cover Letter
               </Button>
             </Col>
