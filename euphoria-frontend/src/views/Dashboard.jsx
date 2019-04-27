@@ -16,7 +16,6 @@ class Dashboard extends Component {
 
     this.handleGet = this.handleGet.bind(this);
     this.handleDelete = this.handleDelete.bind(this);
-    this.handleSignout = this.handleSignout.bind(this);
 
     this.posting = this.posting.bind(this);
   }
@@ -46,26 +45,6 @@ class Dashboard extends Component {
       .then(() => {
         globals.verifyUser(this.props.cookies, this.handleGet(this.dashboardUrl));
       })
-
-    return;
-  }
-
-  handleSignout() {
-    const cookiesProp = this.props.cookies;
-
-    cookiesProp.remove("username");
-    cookiesProp.remove("id");
-    cookiesProp.remove("isUser");
-    cookiesProp.remove("authenticationHash");
-
-    if (cookiesProp.get("username") === undefined){
-      alert("Successfully signed out");
-
-      globals.handleRedirect(this.props, "/");
-    }
-    else{
-      alert("Could not sign out. Try at a different time.");
-    }
 
     return;
   }
@@ -145,7 +124,7 @@ class Dashboard extends Component {
             variant="dark"
             size="lg"
             block
-            onClick={() => this.handleSignout()}>
+            onClick={() => globals.handleSignout(this.props)}>
             Sign Out
           </Button>
         </div>

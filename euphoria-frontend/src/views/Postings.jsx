@@ -17,7 +17,6 @@ class Postings extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleGet = this.handleGet.bind(this);
-    this.handleSignout = this.handleSignout.bind(this);
 
     this.posting = this.posting.bind(this);
   }
@@ -61,26 +60,6 @@ class Postings extends Component {
     })
     .catch(err => {
     })
-
-    return;
-  }
-
-  handleSignout() {
-    const cookiesProp = this.props.cookies;
-
-    cookiesProp.remove("username");
-    cookiesProp.remove("id");
-    cookiesProp.remove("isUser");
-    cookiesProp.remove("authenticationHash");
-
-    if (cookiesProp.get("username") === undefined){
-      alert("Successfully signed out");
-
-      globals.handleRedirect(this.props, "/");
-    }
-    else{
-      alert("Could not sign out. Try at a different time.");
-    }
 
     return;
   }
@@ -155,7 +134,7 @@ class Postings extends Component {
             variant="dark"
             size="lg"
             block
-            onClick={() => this.handleSignout()}>
+            onClick={() => globals.handleSignout(this.props)}>
             Sign Out
           </Button>
         </div>
@@ -227,7 +206,6 @@ class Postings extends Component {
               </Form.Group>
             </Form.Row>
           </Form>
-
         </div>
     </div>
     );
