@@ -54,19 +54,23 @@ class Applications extends Component {
   }
 
   downloadDocument(documentData, filename) {
-    const decodedDocumentData = decodeURIComponent(escape(window.atob(documentData)));
-    console.log(decodedDocumentData);
 
-    var element = document.createElement('a');
-    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + decodedDocumentData);
-    element.setAttribute('download', filename);
+    function base64ToArrayBuffer(data) {
+      var binaryString = window.atob(data);
+      var binaryLen = binaryString.length;
+      var bytes = new Uint8Array(binaryLen);
+      for (var i = 0; i < binaryLen; i++) {
+          var ascii = binaryString.charCodeAt(i);
+          bytes[i] = ascii;
+      }
+      return bytes;
+    };
 
-    element.style.display = 'none';
-    document.body.appendChild(element);
-
-    element.click();
-
-    document.body.removeChild(element);
+    //const decodedDocumentData = decodeURIComponent(escape(window.atob(documentData)));
+    var arrBuffer = base64ToArrayBuffer(documentData);
+    var FileSaver = require('file-saver');
+    var blob = new Blob([arrBuffer], {type: "application/pdf"});
+    FileSaver.saveAs(blob, filename);
 
     return;
   }
