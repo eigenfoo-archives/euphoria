@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
-import * as globalConsts from "../globals.js";
+import * as globals from "../globals.js";
 
 class Apply extends Component {
 
@@ -17,13 +17,12 @@ class Apply extends Component {
     this.handleGet = this.handleGet.bind(this);
     this.handleApply = this.handleApply.bind(this);
     this.readFile = this.readFile.bind(this);
-    this.verifyUser = this.verifyUser.bind(this);
   }
 
   componentDidMount() {
-    let url = globalConsts.baseUrl + "/api/posting/" + this.props.match.params.postingId;
+    let url = globals.baseUrl + "/api/posting/" + this.props.match.params.postingId;
 
-    this.verifyUser(this.handleGet(url));
+    globals.verifyUser(this.props.cookies, this.handleGet(url), false);
   }
 
   handleRedirect(path) {
@@ -50,7 +49,7 @@ class Apply extends Component {
       coverLetter
     } = this.state;
 
-    let applicationUrl = globalConsts.baseUrl + "/api/application";
+    let applicationUrl = globals.baseUrl + "/api/application";
 
     let applicationPayload = {
       postingId: postingData.postingId,
@@ -94,27 +93,6 @@ class Apply extends Component {
     reader.readAsText(file);
   }
 
-  verifyUser(func) {
-    const cookie = this.props.cookies.get("authenticationHash");
-    const url = globalConsts.baseUrl + "/api/cookie/" + cookie;
-
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      if(data.cookie === cookie){
-        func()
-      }
-      else {
-        alert("You are not authorized to look at this content. Please sign out and sign in again.")
-      }
-    })
-    .catch(err => {
-      // Do something for an error here
-    })
-
-    return;
-  }
-
   render() {
     const postingData = this.state.postingData;
 
@@ -141,7 +119,7 @@ class Apply extends Component {
         variant="info"
         size="lg"
         block
-        onClick={() => this.verifyUser(this.handleApply())}>
+        onClick={() => globals.verifyUser(this.props.cookies, this.handleApply(), false)}>
           Apply
       </Button>;
     }

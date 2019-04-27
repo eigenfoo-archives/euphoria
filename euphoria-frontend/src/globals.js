@@ -1,6 +1,6 @@
 export const baseUrl = "http://localhost:8080"; //"http://199.98.27.117:8080";
 
-export function verifyUser(func, cookies) {
+export function verifyUser(cookies, func, idCheck) {
   const cookie = cookies.get("authenticationHash");
   const url = baseUrl + "/api/cookie/" + cookie;
 
