@@ -17,6 +17,7 @@ class Applications extends Component {
     };
 
     this.handleGet = this.handleGet.bind(this);
+    this.downloadDocument = this.downloadDocument.bind(this);
 
     this.application = this.application.bind(this);
   }
@@ -48,6 +49,28 @@ class Applications extends Component {
       .catch(err => {
         // Do something for an error here
       });
+
+    return;
+  }
+
+  downloadDocument(documentData, filename) {
+
+    function base64ToArrayBuffer(data) {
+      var binaryString = window.atob(data);
+      var binaryLen = binaryString.length;
+      var bytes = new Uint8Array(binaryLen);
+      for (var i = 0; i < binaryLen; i++) {
+          var ascii = binaryString.charCodeAt(i);
+          bytes[i] = ascii;
+      }
+      return bytes;
+    };
+
+    //const decodedDocumentData = decodeURIComponent(escape(window.atob(documentData)));
+    var arrBuffer = base64ToArrayBuffer(documentData);
+    var FileSaver = require('file-saver');
+    var blob = new Blob([arrBuffer], {type: "application/pdf"});
+    FileSaver.saveAs(blob, filename);
 
     return;
   }
@@ -110,7 +133,7 @@ class Applications extends Component {
                 variant="info"
                 size="lg"
                 block
-                onClick={() => this.downloadDocument(applicationData.resume)}>
+                onClick={() => this.downloadDocument(applicationData.resume, (userData.name + "-Resume.pdf"))}>
                 Download Resume
               </Button>
             </Col>
@@ -119,7 +142,7 @@ class Applications extends Component {
                 variant="info"
                 size="lg"
                 block
-                onClick={() => this.downloadDocument(applicationData.coverLetter)}>
+                onClick={() => this.downloadDocument(applicationData.coverLetter, (userData.name + "-Cover_Letter.pdf"))}>
                 Download Cover Letter
               </Button>
             </Col>
