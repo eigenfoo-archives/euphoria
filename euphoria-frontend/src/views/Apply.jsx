@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
-import * as globalConsts from "../globals.js";
+import * as globals from "../globals.js";
 
 class Apply extends Component {
 
@@ -20,9 +20,9 @@ class Apply extends Component {
   }
 
   componentDidMount() {
-    let url = globalConsts.baseUrl + "/api/posting/" + this.props.match.params.postingId;
+    let url = globals.baseUrl + "/api/posting/" + this.props.match.params.postingId;
 
-    this.handleGet(url);
+    globals.verifyUser(this.props.cookies, this.handleGet(url));
   }
 
   handleRedirect(path) {
@@ -49,7 +49,7 @@ class Apply extends Component {
       coverLetter
     } = this.state;
 
-    let applicationUrl = globalConsts.baseUrl + "/api/application";
+    let applicationUrl = globals.baseUrl + "/api/application";
 
     let applicationPayload = {
       postingId: postingData.postingId,
@@ -57,8 +57,6 @@ class Apply extends Component {
       resume,
       coverLetter
     };
-
-    console.log(applicationPayload)
 
     fetch(applicationUrl, {
         method: "POST",
@@ -68,7 +66,7 @@ class Apply extends Component {
       .then(data => {
         if(data !== undefined && data.length === 0){
           alert("Application successfully submitted!")
-          this.handleRedirect("/postings")
+          this.handleRedirect("/")
         }
       })
       .catch(err => {
@@ -119,7 +117,7 @@ class Apply extends Component {
         variant="info"
         size="lg"
         block
-        onClick={() => this.handleApply()}>
+        onClick={() => globals.verifyUser(this.props.cookies, this.handleApply())}>
           Apply
       </Button>;
     }

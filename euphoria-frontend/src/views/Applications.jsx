@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
-import * as globalConsts from "../globals.js";
+import * as globals from "../globals.js";
 
 class Applications extends Component {
   constructor(props, context) {
@@ -21,7 +21,7 @@ class Applications extends Component {
   }
 
   componentDidMount() {
-    const applicationsURL = globalConsts.baseUrl + "/api/application/posting/" + this.props.match.params.postingId;
+    const applicationsURL = globals.baseUrl + "/api/application/posting/" + this.props.match.params.postingId;
     this.handleGet(applicationsURL);
   }
 
@@ -37,7 +37,7 @@ class Applications extends Component {
           this.setState({applicationsData: data});
 
           data.forEach(applicationData => {
-            const userURL = globalConsts.baseUrl + "/api/user/" + applicationData.userId;
+            const userURL = globals.baseUrl + "/api/user/" + applicationData.userId;
 
             this.handleGet(userURL, applicationData.userId);
           });

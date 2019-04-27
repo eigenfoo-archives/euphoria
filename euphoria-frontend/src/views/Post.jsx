@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Image, Form, Button, Col} from "react-bootstrap";
-import * as globalConsts from "../globals.js";
+import * as globals from "../globals.js";
 
 class Post extends Component {
 
@@ -32,7 +32,7 @@ class Post extends Component {
     event.preventDefault(); //prevent redirect with form in url
 
     const form = event.currentTarget;
-    let url = globalConsts.baseUrl + "/api/posting";
+    let url = globals.baseUrl + "/api/posting";
 
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -188,7 +188,9 @@ class Post extends Component {
                 onChange={this.handleChange}/>
             </Form.Group>
 
-            <Button variant="info" type="submit">
+            <Button
+              variant="info"
+              onClick={event => globals.verifyUser(this.props.cookies, this.handleSubmit(event))}>
               Submit
             </Button>
           </Form>

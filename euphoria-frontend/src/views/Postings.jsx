@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col, Form} from "react-bootstrap";
-import * as globalConsts from "../globals.js";
+import * as globals from "../globals.js";
 
 class Postings extends Component {
   constructor(props, context) {
@@ -22,12 +22,12 @@ class Postings extends Component {
   }
 
   componentDidMount() {
-    const url = globalConsts.baseUrl + "/api/posting/random";
-    this.handleGet(url);
+    const url = globals.baseUrl + "/api/posting/random";
+    globals.verifyUser(this.props.cookies, this.handleGet(url));
   }
 
   handleChange(event) {
-    let url = globalConsts.baseUrl + "/api/posting/"
+    let url = globals.baseUrl + "/api/posting/"
 
     this.setState({[event.target.name]: event.target.value}, () => {
 
@@ -48,7 +48,7 @@ class Postings extends Component {
         }
       }
 
-      this.handleGet(url);
+      globals.verifyUser(this.props.cookies, this.handleGet(url));
     });
   }
 

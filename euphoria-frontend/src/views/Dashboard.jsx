@@ -1,12 +1,12 @@
 import React, { Component } from 'react';
 import {Image, Button, ButtonGroup, Container, Row, Col} from "react-bootstrap";
-import * as globalConsts from "../globals.js";
+import * as globals from "../globals.js";
 
 class Dashboard extends Component {
   constructor(props, context) {
     super(props);
 
-    this.dashboardUrl = globalConsts.baseUrl + "/api/posting/company/" + this.props.cookies.get("id")
+    this.dashboardUrl = globals.baseUrl + "/api/posting/company/" + this.props.cookies.get("id")
 
     this.state = {
       companyPostingsData: [],
@@ -21,11 +21,7 @@ class Dashboard extends Component {
   }
 
   componentDidMount() {
-    // if (this.props.cookies.get("isUser")){
-    //   this.handleRedirect("/");
-    // }
-
-    this.handleGet(this.dashboardUrl);
+    globals.verifyUser(this.props.cookies, this.handleGet(this.dashboardUrl));
   }
 
   handleRedirect(path) {
@@ -36,24 +32,22 @@ class Dashboard extends Component {
     fetch(url)
     .then(response => response.json())
     .then(data => {
-      // Work with JSON data here
       this.setState({companyPostingsData: data});
     })
     .catch(err => {
-      // Do something for an error here
     })
 
     return;
   }
 
   handleDelete(postingId){
-    const url = globalConsts.baseUrl + "/api/posting/" + postingId;
+    const url = globals.baseUrl + "/api/posting/" + postingId;
 
     fetch(url, {
         method: "DELETE",
       })
       .then(() => {
-        this.handleGet(this.dashboardUrl);
+        globals.verifyUser(this.props.cookies, this.handleGet(this.dashboardUrl));
       })
 
     return;

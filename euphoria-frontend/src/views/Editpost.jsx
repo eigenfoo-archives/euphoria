@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Image, Form, Button, Col} from "react-bootstrap";
-import * as globalConsts from "../globals.js";
+import * as globals from "../globals.js";
 
 class EditPost extends Component {
 
@@ -8,12 +8,13 @@ class EditPost extends Component {
     super(props);
 
     this.state = {
-          postingId: "",
-          jobTitle: "",
-          description: "",
-          location: "",
-          industry: "",
-          skillLevel: "",
+      companyId: "",
+      postingId: "",
+      jobTitle: "",
+      description: "",
+      location: "",
+      industry: "",
+      skillLevel: "",
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -23,9 +24,9 @@ class EditPost extends Component {
   }
 
   componentDidMount() {
-    const url = globalConsts.baseUrl + "/api/posting/" + this.props.match.params.postingId;
+    const url = globals.baseUrl + "/api/posting/" + this.props.match.params.postingId;
 
-    this.handleGet(url);
+    globals.verifyUser(this.props.cookies, this.handleGet(url));
   }
 
   handleChange(event) {
@@ -40,7 +41,8 @@ class EditPost extends Component {
     fetch(url)
     .then(response => response.json())
     .then(data => {
-      this.setState({postingId: this.props.match.params.postingId});
+      this.setState({companyId: data.companyId});
+      this.setState({postingId: data.postingId});
       this.setState({jobTitle: data.jobTitle});
       this.setState({description: data.description});
       this.setState({location: data.location});
@@ -58,7 +60,7 @@ class EditPost extends Component {
     event.preventDefault(); //prevent redirect with form in url
 
     const form = event.currentTarget;
-    let url = globalConsts.baseUrl + "/api/posting";
+    let url = globals.baseUrl + "/api/posting";
 
     if (form.checkValidity() === false) {
       event.preventDefault();
@@ -91,7 +93,7 @@ class EditPost extends Component {
       .then(data => {
         if(data !== undefined && data.length === 0){
           alert("Post edited!")
-          this.handleRedirect("/dashboard")
+          this.handleRedirect("/")
         }
       })
       .catch(err => {
@@ -208,7 +210,9 @@ class EditPost extends Component {
                 onChange={this.handleChange}/>
             </Form.Group>
 
-            <Button variant="info" type="submit">
+            <Button
+              variant="info"
+              onClick={event => globals.verifyUser(this.props.cookies, this.handleSubmit(event), this.state.companyId)}>
               Submit
             </Button>
           </Form>
