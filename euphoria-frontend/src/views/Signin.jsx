@@ -70,12 +70,7 @@ class Signin extends Component {
           cookiesProp.set("isUser", data.isUser, { path: '/', maxAge: 1728000 });
           cookiesProp.set("authenticationHash", data.cookie, { path: '/', maxAge: 1728000 });
 
-          if(data.isUser){
-            this.handleRedirect("/postings")
-          }
-          else{
-            this.handleRedirect("/dashboard")
-          }
+          this.handleRedirect("/");
         }
         else{
           alert("Not a valid login");

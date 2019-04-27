@@ -66,7 +66,7 @@ class Apply extends Component {
       }) //FIXME add check for is user exists
       .then(response => response.json())
       .then(data => {
-        if(data !== "undefined" && data.length === 0){
+        if(data !== undefined && data.length === 0){
           alert("Application successfully submitted!")
           this.handleRedirect("/postings")
         }
@@ -132,7 +132,7 @@ class Apply extends Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/postings")}
+              onClick={() => this.handleRedirect("/")}
             />
           </div>
         </div>

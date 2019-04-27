@@ -152,7 +152,7 @@ class Dashboard extends Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/dashboard")}
+              onClick={() => this.handleRedirect("/")}
             />
           </div>
         </div>
