@@ -188,7 +188,9 @@ class Post extends Component {
                 onChange={this.handleChange}/>
             </Form.Group>
 
-            <Button variant="info" type="submit">
+            <Button
+              variant="info"
+              onClick={event => globals.verifyUser(this.props.cookies, this.handleSubmit(event))}>
               Submit
             </Button>
           </Form>

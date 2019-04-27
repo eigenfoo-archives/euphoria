@@ -58,8 +58,6 @@ class Apply extends Component {
       coverLetter
     };
 
-    console.log(applicationPayload)
-
     fetch(applicationUrl, {
         method: "POST",
         body: JSON.stringify(applicationPayload)

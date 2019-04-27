@@ -33,7 +33,6 @@ class Applications extends Component {
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        console.log(data);
         if(userId === undefined){
           this.setState({applicationsData: data});
 

@@ -47,7 +47,7 @@ class Dashboard extends Component {
         method: "DELETE",
       })
       .then(() => {
-        globals.verifyUser(this.handleGet(this.dashboardUrl));
+        globals.verifyUser(this.props.cookies, this.handleGet(this.dashboardUrl));
       })
 
     return;

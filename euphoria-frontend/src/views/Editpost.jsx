@@ -41,7 +41,6 @@ class EditPost extends Component {
     fetch(url)
     .then(response => response.json())
     .then(data => {
-      console.log(data);
       this.setState({companyId: data.companyId});
       this.setState({postingId: data.postingId});
       this.setState({jobTitle: data.jobTitle});
@@ -148,7 +147,7 @@ class EditPost extends Component {
                   onChange={this.handleChange}>
                   <option>NEWYORK</option>
                   <option>LONDON</option>
-                  <option>HONGKONG</option>console.log(id);
+                  <option>HONGKONG</option>
                   <option>BERLIN</option>
                   <option>BEIJING</option>
                   <option>WASHINGTON</option>
