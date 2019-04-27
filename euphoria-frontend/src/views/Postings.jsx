@@ -76,7 +76,7 @@ class Postings extends Component {
     cookiesProp.remove("isUser");
     cookiesProp.remove("authenticationHash");
 
-    if (cookiesProp.get("username") === "undefined"){
+    if (cookiesProp.get("username") === undefined){
       alert("Successfully signed out");
 
       this.handleRedirect("/");
@@ -156,7 +156,7 @@ class Postings extends Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/postings")}
+              onClick={() => this.handleRedirect("/")}
             />
           </div>
         </div>

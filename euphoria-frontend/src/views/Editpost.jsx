@@ -89,7 +89,7 @@ class EditPost extends Component {
       })
       .then(response => response.json())
       .then(data => {
-        if(data !== "undefined" && data.length === 0){
+        if(data !== undefined && data.length === 0){
           alert("Post edited!")
           this.handleRedirect("/dashboard")
         }
@@ -114,7 +114,7 @@ class EditPost extends Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/dashboard")}
+              onClick={() => this.handleRedirect("/")}
             />
           </div>
         </div>

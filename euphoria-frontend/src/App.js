@@ -33,8 +33,7 @@ class App extends Component {
             <Switch>
               <Route exact path="/postings" render={(props) => (<Postings cookies={this.props.cookies} {...props} />)} />
               <Route path="/postings/apply/:postingId" render={(props) => (<Apply cookies={this.props.cookies} {...props} />)} />
-              <Redirect from="/" to="/postings" />
-              <Redirect from="/dashboard" to="/signin" />
+              <Redirect exact from="/" to="/postings" />
               <Route path="/404" component={NotFound} />
               <Redirect to="/404" />
             </Switch>
@@ -49,8 +48,7 @@ class App extends Component {
               <Route exact path="/dashboard/post" render={(props) => (<Post cookies={this.props.cookies} {...props} />)} />
               <Route path="/dashboard/post/edit/:postingId" render={(props) => (<Editpost cookies={this.props.cookies} {...props} />)} />
               <Route path="/dashboard/applications/:postingId" render={(props) => (<Applications cookies={this.props.cookies} {...props} />)} />
-              <Redirect from="/" to="/dashboard" />
-              <Redirect from="/postings" to="/signin" />
+              <Redirect exact from="/" to="/dashboard" />
               <Route path="/404" component={NotFound} />
               <Redirect to="/404" />
             </Switch>
