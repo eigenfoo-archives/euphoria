@@ -1,17 +1,8 @@
 import React, { Component } from 'react';
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
+import * as globals from "../globals.js";
 
 class Splash extends Component {
-  constructor(props, context) {
-    super(props);
-
-    this.handleRedirect = this.handleRedirect.bind(this);
-  }
-
-  handleRedirect(path) {
-    this.props.history.push(path);
-  }
-
   render() {
     return(
       <div>
@@ -20,7 +11,7 @@ class Splash extends Component {
               <Image
                 src={require('../images/Logo.png')}
                 fluid
-                onClick={() => this.handleRedirect("/")}
+                onClick={() => globals.handleRedirect(this.props, "/")}
               />
           </div>
         </div>
@@ -42,13 +33,13 @@ class Splash extends Component {
             <Row>
               <Col></Col>
               <Col xs={3}>
-                <Button variant="info" size="lg" onClick={() => this.handleRedirect("/signin")}>
+                <Button variant="info" size="lg" onClick={() => globals.handleRedirect(this.props, "/signin")}>
                   Sign in
                 </Button>
               </Col>
               <Col></Col>
               <Col xs={3}>
-                <Button variant="info" size="lg" onClick={() => this.handleRedirect("/signup")}>
+                <Button variant="info" size="lg" onClick={() => globals.handleRedirect(this.props, "/signup")}>
                   Sign up
                 </Button>
               </Col>

@@ -18,7 +18,6 @@ class EditPost extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleRedirect = this.handleRedirect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleGet = this.handleGet.bind(this);
   }
@@ -31,10 +30,6 @@ class EditPost extends Component {
 
   handleChange(event) {
     this.setState({[event.target.name]: event.target.value});
-  }
-
-  handleRedirect(path) {
-    this.props.history.push(path);
   }
 
   handleGet(url) {
@@ -93,7 +88,7 @@ class EditPost extends Component {
       .then(data => {
         if(data !== undefined && data.length === 0){
           alert("Post edited!")
-          this.handleRedirect("/")
+          globals.handleRedirect(this.props, "/")
         }
       })
       .catch(err => {
@@ -116,7 +111,7 @@ class EditPost extends Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/")}
+              onClick={() => globals.handleRedirect(this.props, "/")}
             />
           </div>
         </div>

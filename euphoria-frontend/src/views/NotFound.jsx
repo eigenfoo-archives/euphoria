@@ -1,17 +1,8 @@
 import React, { Component } from 'react';
 import {Image} from "react-bootstrap";
+import * as globals from "../globals.js";
 
 class NotFound extends Component {
-  constructor(props, context) {
-    super(props);
-
-    this.handleRedirect = this.handleRedirect.bind(this);
-  }
-
-  handleRedirect(path) {
-    this.props.history.push(path);
-  }
-
   render() {
     return(
       <div>
@@ -20,7 +11,7 @@ class NotFound extends Component {
               <Image
                 src={require('../images/Logo.png')}
                 fluid
-                onClick={() => this.handleRedirect("/")}
+                onClick={() => globals.handleRedirect(this.props, "/")}
               />
           </div>
         </div>

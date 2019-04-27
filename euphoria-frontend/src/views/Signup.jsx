@@ -22,7 +22,6 @@ class Signup extends Component {
 
     this.handleChange = this.handleChange.bind(this);
     this.handleUserChange = this.handleUserChange.bind(this);
-    this.handleRedirect = this.handleRedirect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
     this.createUser = this.createUser.bind(this);
@@ -38,10 +37,6 @@ class Signup extends Component {
 
   handleUserChange(isUser){
     this.setState({isUser});
-  }
-
-  handleRedirect(path) {
-    this.props.history.push(path);
   }
 
   handleSubmit(event) {
@@ -131,7 +126,7 @@ class Signup extends Component {
       .then(data => {
         if(data.length === 0){
           alert("Account Created");
-          this.handleRedirect("/signin")
+          globals.handleRedirect(this.props, "/signin")
         }
       })
       .catch(err => {
@@ -261,7 +256,7 @@ class Signup extends Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/")}
+              onClick={() => globals.handleRedirect(this.props, "/")}
             />
           </div>
         </div>
@@ -345,7 +340,7 @@ class Signup extends Component {
             <Button variant="info" type="submit">
               Submit
             </Button>
-            <Button variant="link" type="button" onClick={() => this.handleRedirect("/signin")}>
+            <Button variant="link" type="button" onClick={() => globals.handleRedirect(this.props, "/signin")}>
               Sign in...
             </Button>
           </Form>

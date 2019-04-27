@@ -17,7 +17,7 @@ class App extends Component {
   constructor(props, context) {
     super(props);
 
-    this.handleRedirect = this.handleRedirect.bind(this);
+    
   }
 
   handleRedirect(path) {

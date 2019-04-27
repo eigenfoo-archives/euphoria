@@ -14,7 +14,6 @@ class Applications extends Component {
       skillLevel: ""
     };
 
-    this.handleRedirect = this.handleRedirect.bind(this);
     this.handleGet = this.handleGet.bind(this);
 
     this.application = this.application.bind(this);
@@ -23,10 +22,6 @@ class Applications extends Component {
   componentDidMount() {
     const applicationsURL = globals.baseUrl + "/api/application/posting/" + this.props.match.params.postingId;
     this.handleGet(applicationsURL);
-  }
-
-  handleRedirect(path) {
-    this.props.history.push(path);
   }
 
   handleGet(url, userId) {
@@ -144,7 +139,7 @@ class Applications extends Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/")}
+              onClick={() => globals.handleRedirect(this.props, "/")}
             />
           </div>
         </div>

@@ -13,7 +13,6 @@ class Apply extends Component {
       coverLetter: ""
     };
 
-    this.handleRedirect = this.handleRedirect.bind(this);
     this.handleGet = this.handleGet.bind(this);
     this.handleApply = this.handleApply.bind(this);
     this.readFile = this.readFile.bind(this);
@@ -23,10 +22,6 @@ class Apply extends Component {
     let url = globals.baseUrl + "/api/posting/" + this.props.match.params.postingId;
 
     globals.verifyUser(this.props.cookies, this.handleGet(url));
-  }
-
-  handleRedirect(path) {
-    this.props.history.push(path);
   }
 
   handleGet(url) {
@@ -66,7 +61,7 @@ class Apply extends Component {
       .then(data => {
         if(data !== undefined && data.length === 0){
           alert("Application successfully submitted!")
-          this.handleRedirect("/")
+          globals.handleRedirect(this.props, "/")
         }
       })
       .catch(err => {
@@ -130,7 +125,7 @@ class Apply extends Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/")}
+              onClick={() => globals.handleRedirect(this.props, "/")}
             />
           </div>
         </div>

@@ -14,7 +14,6 @@ class Postings extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleRedirect = this.handleRedirect.bind(this);
     this.handleGet = this.handleGet.bind(this);
     this.handleSignout = this.handleSignout.bind(this);
 
@@ -52,10 +51,6 @@ class Postings extends Component {
     });
   }
 
-  handleRedirect(path) {
-    this.props.history.push(path);
-  }
-
   handleGet(url) {
     fetch(url)
     .then(response => response.json())
@@ -79,7 +74,7 @@ class Postings extends Component {
     if (cookiesProp.get("username") === undefined){
       alert("Successfully signed out");
 
-      this.handleRedirect("/");
+      globals.handleRedirect(this.props, "/");
     }
     else{
       alert("Could not sign out. Try at a different time.");
@@ -132,7 +127,7 @@ class Postings extends Component {
           </Row>
           <br/>
           <Row>
-            <Button variant="info" size="lg" block onClick={() => this.handleRedirect("/postings/apply/" + postingData.postingId)}>
+            <Button variant="info" size="lg" block onClick={() => globals.handleRedirect(this.props, "/postings/apply/" + postingData.postingId)}>
               Apply
             </Button>
           </Row>
@@ -156,7 +151,7 @@ class Postings extends Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/")}
+              onClick={() => globals.handleRedirect(this.props, "/")}
             />
           </div>
         </div>

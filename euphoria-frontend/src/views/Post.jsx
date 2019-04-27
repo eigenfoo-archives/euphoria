@@ -16,16 +16,11 @@ class Post extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleRedirect = this.handleRedirect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   handleChange(event) {
     this.setState({[event.target.name]: event.target.value});
-  }
-
-  handleRedirect(path) {
-    this.props.history.push(path);
   }
 
   handleSubmit(event) {
@@ -66,7 +61,7 @@ class Post extends Component {
       .then(data => {
         if(data !== undefined && data.length === 0){
           alert("Post Created!")
-          this.handleRedirect("/")
+          globals.handleRedirect(this.props, "/")
         }
       })
       .catch(err => {
@@ -89,7 +84,7 @@ class Post extends Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/")}
+              onClick={() => globals.handleRedirect(this.props, "/")}
             />
           </div>
         </div>

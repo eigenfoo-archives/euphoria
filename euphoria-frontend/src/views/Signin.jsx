@@ -13,7 +13,6 @@ class Signin extends Component {
     };
 
     this.handleChange = this.handleChange.bind(this);
-    this.handleRedirect = this.handleRedirect.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
 
     this.signIn = this.signIn.bind(this);
@@ -22,10 +21,6 @@ class Signin extends Component {
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value});
-  }
-
-  handleRedirect(path) {
-    this.props.history.push(path);
   }
 
   handleSubmit(event) {
@@ -70,7 +65,7 @@ class Signin extends Component {
           cookiesProp.set("isUser", data.isUser, { path: '/', maxAge: 1728000 });
           cookiesProp.set("authenticationHash", data.cookie, { path: '/', maxAge: 1728000 });
 
-          this.handleRedirect("/");
+          globals.handleRedirect(this.props, "/");
         }
         else{
           alert("Not a valid login");
@@ -97,7 +92,7 @@ class Signin extends Component {
             <Image
               src={require('../images/Logo.png')}
               fluid
-              onClick={() => this.handleRedirect("/")}
+              onClick={() => globals.handleRedirect(this.props, "/")}
             />
           </div>
         </div>
@@ -133,7 +128,7 @@ class Signin extends Component {
             <Button variant="info" type="submit">
               Submit
             </Button>
-            <Button variant="link" type="button" onClick={() => this.handleRedirect("/signup")}>
+            <Button variant="link" type="button" onClick={() => globals.handleRedirect(this.props, "/signup")}>
               Sign up...
             </Button>
           </Form>
