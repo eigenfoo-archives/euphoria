@@ -29,3 +29,23 @@ export function verifyUser(cookies, func, id) {
 
   return;
 }
+
+export function handleSignout(props) {
+  const cookiesProp = props.cookies;
+
+  cookiesProp.remove("username");
+  cookiesProp.remove("id");
+  cookiesProp.remove("isUser");
+  cookiesProp.remove("authenticationHash");
+
+  if (cookiesProp.get("username") === undefined){
+    alert("Successfully signed out");
+
+    handleRedirect(props, "/");
+  }
+  else{
+    alert("Could not sign out. Try at a different time.");
+  }
+
+  return;
+}
