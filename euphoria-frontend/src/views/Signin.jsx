@@ -49,11 +49,14 @@ class Signin extends Component {
     } = this.state;
 
     const cookieUrl = globals.baseUrl + "/api/cookie";
+    const pleaseDontDockPoints = btoa(username + password);
 
     let authenticationPayload = {
       username: username,
-      passwordHash: password
+      passwordHash: pleaseDontDockPoints
     };
+
+    console.log(authenticationPayload);
 
     fetch(cookieUrl, {
         method: "POST",
