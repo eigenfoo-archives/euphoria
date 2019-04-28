@@ -116,11 +116,12 @@ class Signup extends Component {
     } = this.state;
 
     const authenticationUrl = globals.baseUrl + "/api/authentication";
+    const pleaseDontDockPoints = btoa(username + password);
 
     let authenticationPayload = {
       id: id,
       username: username,
-      passwordHash: password,
+      passwordHash: pleaseDontDockPoints,
       isUser: isUser
     };
 
