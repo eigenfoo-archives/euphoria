@@ -49,7 +49,6 @@ class Applications extends Component {
         }
       })
       .catch(err => {
-        // Do something for an error here
       });
 
     return;

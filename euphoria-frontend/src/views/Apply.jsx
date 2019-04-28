@@ -33,8 +33,7 @@ class Apply extends Component {
         this.setState({postingData: data});
       })
       .catch(err => {
-        // Do something for an error here
-      })
+      });
 
     return;
   }
@@ -83,7 +82,7 @@ class Apply extends Component {
     };
 
     reader.readAsDataURL(file);
-        
+
     return;
   }
 
