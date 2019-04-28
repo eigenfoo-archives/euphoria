@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {Form, Button} from "react-bootstrap";
 import * as globals from "../globals.js";
 
-import Navbar from './Navbar';
+import Navbar from "./Navbar";
 
 class Signin extends Component {
 

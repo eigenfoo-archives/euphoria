@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {Button, Container, Row, Col} from "react-bootstrap";
 import * as globals from "../globals.js";
 
-import Navbar from './Navbar';
+import Navbar from "./Navbar";
 
 class Applications extends Component {
   constructor(props, context) {
@@ -57,22 +57,16 @@ class Applications extends Component {
 
   downloadDocument(documentData, filename) {
 
-    function base64ToArrayBuffer(data) {
-      var binaryString = window.atob(data);
-      var binaryLen = binaryString.length;
-      var bytes = new Uint8Array(binaryLen);
-      for (var i = 0; i < binaryLen; i++) {
-          var ascii = binaryString.charCodeAt(i);
-          bytes[i] = ascii;
-      }
-      return bytes;
-    };
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:application/pdf;base64,' + encodeURIComponent(documentData));
+    element.setAttribute('download', filename);
 
-    //const decodedDocumentData = decodeURIComponent(escape(window.atob(documentData)));
-    var arrBuffer = base64ToArrayBuffer(documentData);
-    var FileSaver = require('file-saver');
-    var blob = new Blob([arrBuffer], {type: "application/pdf"});
-    FileSaver.saveAs(blob, filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+
+    element.click();
+
+    document.body.removeChild(element);
 
     return;
   }
@@ -135,7 +129,7 @@ class Applications extends Component {
                 variant="info"
                 size="lg"
                 block
-                onClick={() => this.downloadDocument(applicationData.resume, (userData.name + "-Resume.pdf"))}>
+                onClick={() => this.downloadDocument(applicationData.resume, (userData.name.split(' ').join('_') + "-Resume.pdf"))}>
                 Download Resume
               </Button>
             </Col>
@@ -144,7 +138,7 @@ class Applications extends Component {
                 variant="info"
                 size="lg"
                 block
-                onClick={() => this.downloadDocument(applicationData.coverLetter, (userData.name + "-Cover_Letter.pdf"))}>
+                onClick={() => this.downloadDocument(applicationData.coverLetter, (userData.name.split(' ').join('_') + "-Cover_Letter.pdf"))}>
                 Download Cover Letter
               </Button>
             </Col>

@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {Image, Button, ButtonGroup, Container, Row, Col} from "react-bootstrap";
 import * as globals from "../globals.js";
 
-import Navbar from './Navbar';
+import Navbar from "./Navbar";
 
 class Dashboard extends Component {
   constructor(props, context) {

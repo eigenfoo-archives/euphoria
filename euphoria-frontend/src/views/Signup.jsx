@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {Form, ButtonToolbar, ToggleButton, ToggleButtonGroup, Button, Col} from "react-bootstrap";
 import * as globals from "../globals.js";
 
-import Navbar from './Navbar';
+import Navbar from "./Navbar";
 
 class Signup extends Component {
 

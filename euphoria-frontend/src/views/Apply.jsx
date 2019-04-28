@@ -1,8 +1,8 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import {Image, Button, Container, Row, Col} from "react-bootstrap";
 import * as globals from "../globals.js";
 
-import Navbar from './Navbar';
+import Navbar from "./Navbar";
 
 class Apply extends Component {
   constructor(props, context) {
@@ -78,15 +78,12 @@ class Apply extends Component {
     var reader = new FileReader();
 
     reader.onload = (event) => {
-      const encodedString = window.btoa(unescape(encodeURIComponent(event.target.result)));
-
-      this.setState({[name]: encodedString}, () => {
-        return;
-      });
+      const encodedFile = event.target.result.split(",");
+      this.setState({[name]: encodedFile[1]});
     };
 
-    reader.readAsText(file);
-
+    reader.readAsDataURL(file);
+        
     return;
   }
 
