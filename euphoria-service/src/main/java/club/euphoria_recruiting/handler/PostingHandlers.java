@@ -13,6 +13,7 @@ import club.euphoria_recruiting.utils.SkillLevel;
 import okio.ByteString;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -165,10 +166,14 @@ public class PostingHandlers implements RouteProvider {
     }
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {
+        Map<String, String> map = new HashMap<>();
+        map.put("Access-Control-Allow-Origin", "*");
+        map.put("Access-Control-Allow-Methods", "POST, GET, PUT, DELETE");
+
         return JsonSerializerMiddlewares.<T>jsonSerialize(objectMapper.writer())
                 .and(Middlewares::httpPayloadSemantics)
                 .and(responseAsyncHandler -> requestContext ->
                         responseAsyncHandler.invoke(requestContext)
-                                .thenApply(response -> response.withHeader("Access-Control-Allow-Origin", "*")));
+                                .thenApply(response -> response.withHeaders(map)));
     }
 }
