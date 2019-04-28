@@ -1,17 +1,17 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import { Route, Switch, Redirect, withRouter } from "react-router-dom";
-import { withCookies } from 'react-cookie';
+import { withCookies } from "react-cookie";
 
-import Splash from './views/Splash';
-import Signup from './views/Signup';
-import Signin from './views/Signin';
-import Dashboard from './views/Dashboard';
-import Post from './views/Post';
-import Editpost from './views/Editpost';
-import Applications from './views/Applications';
-import Postings from './views/Postings';
-import Apply from './views/Apply.jsx';
-import NotFound from './views/NotFound';
+import Splash from "./views/Splash";
+import Signup from "./views/Signup";
+import Signin from "./views/Signin";
+import Dashboard from "./views/Dashboard";
+import Post from "./views/Post";
+import Editpost from "./views/Editpost";
+import Applications from "./views/Applications";
+import Postings from "./views/Postings";
+import Apply from "./views/Apply.jsx";
+import NotFound from "./views/NotFound";
 
 class App extends Component {
   render() {
