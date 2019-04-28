@@ -1,4 +1,4 @@
-.PHONY: help install frontend backend database deploy
+.PHONY: help install frontend backend storage build all deploy
 .DEFAULT_GOAL = help
 
 SHELL = bash
@@ -25,16 +25,18 @@ backend:  # Package Spotify Apollo service with maven.
 	mvn clean package; \
 	)
 
-database:  # Initialize database and pre-populate with examples. Requires MySQL root password.
+storage:  # Initialize filesystemm and database and pre-populate with examples. Requires MySQL root password.
+	mkdir -p ~/.euphoria
+	cp -r docs/exampleFiles/* ~/.euphoria/
 	cat euphoria-service/src/main/resources/initialize-database.sql | mysql -u root -p
 
 build: frontend backend  # Alias for `make frontend backend`.
 
-all: install frontend backend database # Alias for `make install frontend backend database`.
+all: install frontend backend storage # Alias for `make install frontend backend storage`.
 
 deploy:  # Deploy euphoria. Requires sudo privileges.
 	sudo cp -r euphoria-frontend/build/* /var/www/club.euphoria_recruiting/
 	sudo nginx -t
 	sudo systemctl restart nginx
 	pkill java
-	nohup java -jar euphoria-1.0-SNAPSHOT.jar > /dev/null 2>&1 &
+	nohup java -jar euphoria-service/target/euphoria-1.0-SNAPSHOT.jar > /dev/null 2>&1 &
