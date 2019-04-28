@@ -42,3 +42,6 @@ deploy:  # Deploy euphoria. Requires sudo privileges.
 	sudo systemctl restart nginx
 	pkill java
 	nohup java -jar euphoria-service/target/euphoria-1.0-SNAPSHOT.jar > /dev/null 2>&1 &
+
+clean:
+	rm -rf euphoria-frontend/build/ euphoria-frontend/node_modules/ euphoria-service/target/
