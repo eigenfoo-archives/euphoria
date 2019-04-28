@@ -28,10 +28,13 @@ backend:  # Package Spotify Apollo service with maven.
 database:  # Initialize database and pre-populate with examples. Requires MySQL root password.
 	cat euphoria-service/src/main/resources/initialize-database.sql | mysql -u root -p
 
+build: frontend backend  # Alias for `make frontend backend`.
+
 all: install frontend backend database # Alias for `make install frontend backend database`.
 
 deploy:  # Deploy euphoria. Requires sudo privileges.
 	sudo cp -r euphoria-frontend/build/* /var/www/club.euphoria_recruiting/
 	sudo nginx -t
 	sudo systemctl restart nginx
+	pkill java
 	nohup java -jar euphoria-1.0-SNAPSHOT.jar > /dev/null 2>&1 &
