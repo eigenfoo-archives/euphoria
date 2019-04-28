@@ -1,4 +1,4 @@
-export const baseUrl = "http://localhost:8080"; //"http://199.98.27.117:8080";
+export const baseUrl = "http://199.98.27.117:8080";
 
 export function handleRedirect(props, path) {
   props.history.push(path);
