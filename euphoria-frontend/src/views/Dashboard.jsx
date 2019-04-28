@@ -8,10 +8,10 @@ class Dashboard extends Component {
   constructor(props, context) {
     super(props);
 
-    this.dashboardUrl = globals.baseUrl + "/api/posting/company/" + this.props.cookies.get("id")
+    this.dashboardUrl = globals.baseUrl + "/api/posting/company/" + this.props.cookies.get("id");
 
     this.state = {
-      companyPostingsData: [],
+      companyPostingsData: []
     };
 
     this.handleGet = this.handleGet.bind(this);
@@ -22,21 +22,23 @@ class Dashboard extends Component {
 
   componentDidMount() {
     globals.verifyUser(this.props.cookies, this.handleGet(this.dashboardUrl));
-  }
-
-  handleGet(url) {
-    fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      this.setState({companyPostingsData: data});
-    })
-    .catch(err => {
-    })
 
     return;
   }
 
-  handleDelete(postingId){
+  handleGet(url) {
+    fetch(url)
+      .then(response => response.json())
+      .then(data => {
+        this.setState({companyPostingsData: data});
+      })
+      .catch(err => {
+      });
+
+    return;
+  }
+
+  handleDelete(postingId) {
     const url = globals.baseUrl + "/api/posting/" + postingId;
 
     fetch(url, {
@@ -44,7 +46,7 @@ class Dashboard extends Component {
       })
       .then(() => {
         globals.verifyUser(this.props.cookies, this.handleGet(this.dashboardUrl));
-      })
+      });
 
     return;
   }
@@ -112,7 +114,7 @@ class Dashboard extends Component {
 
   render() {
     const {
-      companyPostingsData,
+      companyPostingsData
     } = this.state;
 
     return(

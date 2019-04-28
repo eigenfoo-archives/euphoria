@@ -25,6 +25,8 @@ class Applications extends Component {
   componentDidMount() {
     const applicationsURL = globals.baseUrl + "/api/application/posting/" + this.props.match.params.postingId;
     this.handleGet(applicationsURL);
+
+    return;
   }
 
   handleGet(url, userId) {
@@ -41,7 +43,7 @@ class Applications extends Component {
           });
         }
         else{
-          var userData = this.state.userData
+          var userData = this.state.userData;
           userData[userId] = data;
           this.setState({userData});
         }

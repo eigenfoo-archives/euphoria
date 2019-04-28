@@ -5,7 +5,6 @@ import * as globals from "../globals.js";
 import Navbar from './Navbar';
 
 class EditPost extends Component {
-
   constructor(props, context) {
     super(props);
 
@@ -28,27 +27,32 @@ class EditPost extends Component {
     const url = globals.baseUrl + "/api/posting/" + this.props.match.params.postingId;
 
     globals.verifyUser(this.props.cookies, this.handleGet(url));
+
+    return;
   }
 
   handleChange(event) {
     this.setState({[event.target.name]: event.target.value});
+
+    return;
   }
 
   handleGet(url) {
     fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      this.setState({companyId: data.companyId});
-      this.setState({postingId: data.postingId});
-      this.setState({jobTitle: data.jobTitle});
-      this.setState({description: data.description});
-      this.setState({location: data.location});
-      this.setState({industry: data.industry});
-      this.setState({skillLevel: data.skillLevel});
-    })
-    .catch(err => {
-      // Do something for an error here
-    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({
+            companyId: data.companyId,
+            postingId: data.postingId,
+            jobTitle: data.jobTitle,
+            description: data.description,
+            location: data.location,
+            industry: data.industry,
+            skillLevel: data.skillLevel
+        });
+      })
+      .catch(err => {
+      });
 
     return;
   }
@@ -89,12 +93,14 @@ class EditPost extends Component {
       .then(response => response.json())
       .then(data => {
         if(data !== undefined && data.length === 0){
-          alert("Post edited!")
-          globals.handleRedirect(this.props, "/")
+          alert("Post edited!");
+          globals.handleRedirect(this.props, "/");
         }
       })
       .catch(err => {
-      })
+      });
+
+    return;
   }
 
   render() {

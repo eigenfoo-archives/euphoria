@@ -5,16 +5,15 @@ import * as globals from "../globals.js";
 import Navbar from './Navbar';
 
 class Post extends Component {
-
   constructor(props, context) {
     super(props);
 
     this.state = {
-          jobTitle: "",
-          description: "",
-          location: "",
-          industry: "",
-          skillLevel: "",
+      jobTitle: "",
+      description: "",
+      location: "",
+      industry: "",
+      skillLevel: "",
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -23,6 +22,8 @@ class Post extends Component {
 
   handleChange(event) {
     this.setState({[event.target.name]: event.target.value});
+
+    return;
   }
 
   handleSubmit(event) {
@@ -67,7 +68,9 @@ class Post extends Component {
         }
       })
       .catch(err => {
-      })
+      });
+
+    return;
   }
 
   render() {
