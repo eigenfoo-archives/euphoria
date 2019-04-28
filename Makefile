@@ -1,10 +1,10 @@
-.PHONY: help build package deploy
+.PHONY: help install frontend backend database deploy
 .DEFAULT_GOAL = help
 
 SHELL = bash
 
 help:
-	@printf "Usage:\n"
+	@echo "Usage:"
 	@grep -E '^[a-zA-Z_-]+:.*?# .*$$' $(MAKEFILE_LIST) | awk 'BEGIN {FS = ":.*?# "}; {printf "\033[1;34mmake %-10s\033[0m%s\n", $$1, $$2}'
 
 install:  # Install Node dependencies with npm.
@@ -25,12 +25,12 @@ backend:  # Package Spotify Apollo service with maven.
 	mvn clean package; \
 	)
 
-database:  # Initialize database and pre-populate with examples.
+database:  # Initialize database and pre-populate with examples. Requires MySQL root password.
 	cat euphoria-service/src/main/resources/initialize-database.sql | mysql -u root -p
 
 all: install frontend backend database # Alias for `make install frontend backend database`.
 
-deploy:  # Deploy euphoria. Ensure that latest build is in euphoria-frontend/build.
+deploy:  # Deploy euphoria. Requires sudo privileges.
 	sudo cp -r euphoria-frontend/build/* /var/www/club.euphoria_recruiting/
 	sudo nginx -t
 	sudo systemctl restart nginx
