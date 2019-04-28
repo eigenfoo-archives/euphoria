@@ -5,7 +5,6 @@ import * as globals from "../globals.js";
 import Navbar from "./Navbar";
 
 class Apply extends Component {
-
   constructor(props, context) {
     super(props);
 
@@ -22,19 +21,20 @@ class Apply extends Component {
 
   componentDidMount() {
     let url = globals.baseUrl + "/api/posting/" + this.props.match.params.postingId;
-
     globals.verifyUser(this.props.cookies, this.handleGet(url));
+
+    return;
   }
 
   handleGet(url) {
     fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      this.setState({postingData: data});
-    })
-    .catch(err => {
-      // Do something for an error here
-    })
+      .then(response => response.json())
+      .then(data => {
+        this.setState({postingData: data});
+      })
+      .catch(err => {
+        // Do something for an error here
+      })
 
     return;
   }
@@ -62,19 +62,19 @@ class Apply extends Component {
       .then(response => response.json())
       .then(data => {
         if(data !== undefined && data.length === 0){
-          alert("Application successfully submitted!")
-          globals.handleRedirect(this.props, "/")
+          alert("Application successfully submitted!");
+          globals.handleRedirect(this.props, "/");
         }
       })
       .catch(err => {
-      })
+      });
 
     return;
   }
 
   readFile(event) {
     var file = event.target.files[0];
-    var name = event.target.name
+    var name = event.target.name;
     var reader = new FileReader();
 
     reader.onload = (event) => {
@@ -83,6 +83,8 @@ class Apply extends Component {
     };
 
     reader.readAsDataURL(file);
+        
+    return;
   }
 
   render() {
@@ -90,30 +92,30 @@ class Apply extends Component {
 
     if(postingData.skillLevel){
       var skillImage =
-      <Image
-        src={require("../images/" + postingData.skillLevel + ".png")}
-        style={{height:"20px"}}
-      />;
+        <Image
+          src={require("../images/" + postingData.skillLevel + ".png")}
+          style={{height:"20px"}}
+        />;
     }
 
     var applyButton =
-    <Button
-      variant="secondary"
-      size="lg"
-      block
-      onClick={() => {alert("Pleas upload both Resume and Cover Letter")}}>
-        Apply
-    </Button>;
+      <Button
+        variant="secondary"
+        size="lg"
+        block
+        onClick={() => {alert("Pleas upload both Resume and Cover Letter")}}>
+          Apply
+      </Button>;
 
     if(this.state.coverLetter!=="" && this.state.resume!==""){
       applyButton =
-      <Button
-        variant="info"
-        size="lg"
-        block
-        onClick={() => globals.verifyUser(this.props.cookies, this.handleApply())}>
-          Apply
-      </Button>;
+        <Button
+          variant="info"
+          size="lg"
+          block
+          onClick={() => globals.verifyUser(this.props.cookies, this.handleApply())}>
+            Apply
+        </Button>;
     }
 
 

@@ -23,6 +23,8 @@ class Signin extends Component {
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value});
+
+    return;
   }
 
   handleSubmit(event) {
@@ -72,16 +74,14 @@ class Signin extends Component {
         else{
           alert("Not a valid login");
         }
-
       })
       .catch(err => {
-      })
+      });
 
     return;
   }
 
   render() {
-
     const {
       username,
       password

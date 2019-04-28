@@ -24,10 +24,12 @@ class Postings extends Component {
   componentDidMount() {
     const url = globals.baseUrl + "/api/posting/random";
     globals.verifyUser(this.props.cookies, this.handleGet(url));
+
+    return;
   }
 
   handleChange(event) {
-    let url = globals.baseUrl + "/api/posting/"
+    let url = globals.baseUrl + "/api/posting/";
 
     this.setState({[event.target.name]: event.target.value}, () => {
 
@@ -50,6 +52,8 @@ class Postings extends Component {
 
       globals.verifyUser(this.props.cookies, this.handleGet(url));
     });
+
+    return;
   }
 
   handleGet(url) {

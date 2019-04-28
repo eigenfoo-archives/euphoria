@@ -35,10 +35,14 @@ class Signup extends Component {
 
   handleChange(event) {
     this.setState({ [event.target.name]: event.target.value});
+
+    return;
   }
 
   handleUserChange(isUser){
     this.setState({isUser});
+
+    return;
   }
 
   handleSubmit(event) {
@@ -99,7 +103,7 @@ class Signup extends Component {
         this.createUserAuthentication((isUser) ? data.userId : data.companyId)
       })
       .catch(err => {
-      })
+      });
 
     return;
   }
@@ -128,7 +132,7 @@ class Signup extends Component {
       .then(data => {
         if(data.length === 0){
           alert("Account Created");
-          globals.handleRedirect(this.props, "/signin")
+          globals.handleRedirect(this.props, "/signin");
         }
       })
       .catch(err => {
