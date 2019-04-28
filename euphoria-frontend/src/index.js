@@ -1,14 +1,14 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
+import React from "react";
+import ReactDOM from "react-dom";
 import { BrowserRouter as Router } from "react-router-dom";
-import { CookiesProvider } from 'react-cookie';
-import Particles from 'react-particles-js';
+import { CookiesProvider } from "react-cookie";
+import Particles from "react-particles-js";
 
-import App from './App.js';
+import App from "./App.js";
 
-import './index.css';
-import './views/Styles.css';
-import * as serviceWorker from './serviceWorker';
+import "./index.css";
+import "./views/Styles.css";
+import * as serviceWorker from "./serviceWorker";
 
 const routing = (
   <CookiesProvider>
