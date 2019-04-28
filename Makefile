@@ -35,6 +35,7 @@ build: frontend backend  # Alias for `make frontend backend`.
 all: install frontend backend storage # Alias for `make install frontend backend storage`.
 
 deploy:  # Deploy euphoria. Requires sudo privileges.
+	sudo rm -r /var/www/club.euphoria_recruiting/
 	sudo cp -r euphoria-frontend/build/* /var/www/club.euphoria_recruiting/
 	sudo nginx -t
 	sudo systemctl restart nginx
