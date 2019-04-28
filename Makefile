@@ -43,5 +43,5 @@ deploy:  # Deploy euphoria. Requires sudo privileges.
 	pkill java
 	nohup java -jar euphoria-service/target/euphoria-1.0-SNAPSHOT.jar > /dev/null 2>&1 &
 
-clean:  # Remove Node modules and built web application and service.
+clean:
 	rm -rf euphoria-frontend/build/ euphoria-frontend/node_modules/ euphoria-service/target/
