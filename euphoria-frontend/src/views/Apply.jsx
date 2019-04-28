@@ -78,14 +78,11 @@ class Apply extends Component {
     var reader = new FileReader();
 
     reader.onload = (event) => {
-      const encodedString = window.btoa(unescape(encodeURIComponent(event.target.result)));
-
-      this.setState({[name]: encodedString}, () => {
-        return;
-      });
+      const encodedFile = event.target.result.split(",");
+      this.setState({[name]: encodedFile[1]});
     };
 
-    reader.readAsText(file);
+    reader.readAsDataURL(file);
   }
 
   render() {
