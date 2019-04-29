@@ -42,7 +42,7 @@ class Dashboard extends Component {
     const url = globals.baseUrl + "/api/posting/" + postingId;
 
     fetch(url, {
-        method: "DELETE",
+        method: "POST"
       })
       .then(() => {
         globals.verifyUser(this.props.cookies, this.handleGet(this.dashboardUrl));

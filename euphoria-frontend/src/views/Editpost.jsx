@@ -87,7 +87,7 @@ class EditPost extends Component {
     };
 
     fetch(url, {
-        method: "PUT",
+        method: "POST",
         body: JSON.stringify(data)
       })
       .then(response => response.json())
