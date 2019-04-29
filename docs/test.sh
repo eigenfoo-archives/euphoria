@@ -1,3 +1,6 @@
+#!/bin/bash
+# This script
+
 curl -X GET http://localhost:8080/api/authentication/apple/hash
 echo ""
 # [{"id":1,"username":"apple","passwordHash":"hash","isUser":false}]%
@@ -68,7 +71,7 @@ echo ""
 
 curl -X POST http://localhost:8080/api/user -H "Content-Type: application/json" -d '{"name": "george", "email": "ho@cooper.edu", "phoneNumber": "1234567890", "educationLevel": "BACHELORS", "description": "fml."}'
 echo ""
-# [{"userId":4,"name":"namefield","email":"emailfield","phoneNumber":"phoneNumfield","educationLevel":"PHD","description":"descriptonfield"}]%
+# [{"userId":4,"name":"NA","email":"NA","phoneNumber":"NA","educationLevel":"NA","description":"NA"}]%
 
 curl -X GET http://localhost:8080/api/user/4
 echo ""
@@ -76,7 +79,7 @@ echo ""
 
 curl -X POST http://localhost:8080/api/company -H "Content-Type: application/json" -d '{"name": "Cooper", "website": "cooper.edu", "description": "fml."}'
 echo ""
-# [{"companyId":3,"name":"namefield","website":"websitefield","description":"descriptonfield"}]%
+# [{"companyId":3,"name":"NA","website":"NA","description":"NA"}]%
 
 curl -X PUT http://localhost:8080/api/posting -H "Content-Type: application/json" -d '{"postingId": 4, "jobTitle": "again hello", "description":"there", "location" : "NEWYORK" , "industry": "FINANCE", "skillLevel":"INTERNSHIP"}'
 echo ""
@@ -98,6 +101,6 @@ curl -X POST http://localhost:8080/api/cookie -H "Content-Type: application/json
 echo ""
 # [{"cookie":"random36charUUIDstring"}]%
 
-curl -X GET http://localhost:8080/api/cookie/af310190-856f-46e1-b256-04240216367a
+curl -X GET http://localhost:8080/api/cookie/abcdefgh-ijkl-mnop-qurs-tuvwxyz12345
 echo ""
-# [{"id":2,"isUser":true,"cookie":"af310190-856f-46e1-b256-04240216367a"}]%
+# []%

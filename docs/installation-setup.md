@@ -14,14 +14,14 @@
     ```
 
 3. Initiliaze the example files by manually copying the contents of
-   [`docs/exampleFiles`
-   subdirectory](https://github.com/eigenfoo/euphoria/tree/master/docs/exampleFiles)
+   [`docs/example-files`
+   subdirectory](https://github.com/eigenfoo/euphoria/tree/master/docs/example-files)
    into `~/.euphoria/`. You will need to manually create the `~/.euphoria`
    directory.
 
    ```bash
    mkdir ~/.euphoria/
-   cp -r docs/exampleFiles/* ~/.euphoria/
+   cp -r docs/example-files/* ~/.euphoria/
    ```
 
 4. Download dependencies for, and build, the frontend:
@@ -49,7 +49,7 @@
 5. If serving the frontend on a virtual machine, overwrite the file
    `/etc/nginx/sites-available/default` with [the `nginx/default`
    file](https://github.com/eigenfoo/euphoria/blob/master/nginx/default). Then
-   restart `nginx` with `sudo /etc/init.d/nginx reload`.
+   restart `nginx` with `sudo systemctl restart nginx`.
 
    Before restarting `nginx`, you can test your configuration with `sudo nginx
    -t`.

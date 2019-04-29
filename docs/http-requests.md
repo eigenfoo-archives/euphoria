@@ -130,6 +130,7 @@
     Payload contains nothing.
 
 ---
+
 To base64 dump any file:
 ```bash
 base64 resume.pdf | tr -d '\n'
