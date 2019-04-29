@@ -46,6 +46,7 @@ class Dashboard extends Component {
       })
       .then(() => {
         globals.verifyUser(this.props.cookies, this.handleGet(this.dashboardUrl));
+        alert("Post Deleted!");
       });
 
     return;
