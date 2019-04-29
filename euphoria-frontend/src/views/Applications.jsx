@@ -149,7 +149,6 @@ class Applications extends Component {
           <Navbar {...this.props}/>
         </div>
       );
-      );
     }
     else {
       return(
