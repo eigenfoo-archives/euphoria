@@ -13,6 +13,7 @@ import club.euphoria_recruiting.utils.SkillLevel;
 import okio.ByteString;
 
 import java.io.IOException;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
@@ -35,8 +36,10 @@ public class PostingHandlers implements RouteProvider {
                 Route.sync("GET", "/api/posting/company/<companyId>", this::getPostingsForCompany).withMiddleware(jsonMiddleware()),
                 Route.sync("GET", "/api/posting/<location>/<industry>/<skillLevel>", this::searchPostings).withMiddleware(jsonMiddleware()),
                 Route.sync("POST", "/api/posting/", this::createPosting).withMiddleware(jsonMiddleware()),
-                Route.sync("PUT", "/api/posting/", this::editPosting).withMiddleware(jsonMiddleware()),
-                Route.sync("DELETE", "/api/posting/<postingId>", this::deletePosting).withMiddleware(jsonMiddleware())
+                Route.sync("PUT", "/api/posting", this::editPosting).withMiddleware(jsonMiddleware()),
+                Route.sync("OPTIONS", "/api/posting", rc -> "ok").withMiddleware(jsonMiddleware()),
+                Route.sync("DELETE", "/api/posting/<postingId>", this::deletePosting).withMiddleware(jsonMiddleware()),
+                Route.sync("OPTIONS", "/api/posting/<postingId>", rc -> "ok").withMiddleware(jsonMiddleware())
         );
     }
 
@@ -165,10 +168,16 @@ public class PostingHandlers implements RouteProvider {
     }
 
     private <T> Middleware<AsyncHandler<T>, AsyncHandler<Response<ByteString>>> jsonMiddleware() {
+        Map<String, String> headers = new HashMap<>();
+        headers.put("Access-Control-Allow-Origin", "*");
+        headers.put("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+        headers.put("Access-Control-Allow-Headers", "origin, content-type, accept, x-requested-with, session-token");
+        headers.put("Access-Control-Max-Age", "3600");
+
         return JsonSerializerMiddlewares.<T>jsonSerialize(objectMapper.writer())
                 .and(Middlewares::httpPayloadSemantics)
                 .and(responseAsyncHandler -> requestContext ->
                         responseAsyncHandler.invoke(requestContext)
-                                .thenApply(response -> response.withHeader("Access-Control-Allow-Origin", "*")));
+                                .thenApply(response -> response.withHeaders(headers)));
     }
 }
