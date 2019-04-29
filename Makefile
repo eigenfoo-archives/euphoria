@@ -27,7 +27,7 @@ backend:  # Package Spotify Apollo service with maven.
 
 storage:  # Initialize filesystemm and database and pre-populate with examples. Requires MySQL root password.
 	mkdir -p ~/.euphoria
-	cp -r docs/exampleFiles/* ~/.euphoria/
+	cp -r docs/example-files/* ~/.euphoria/
 	cat euphoria-service/src/main/resources/initialize-database.sql | mysql -u root -p
 
 build: frontend backend  # Alias for `make frontend backend`.
