@@ -1,21 +1,23 @@
 matrix:
-  - name: Backend Unit Tests
-    language: java
-    jdk: oraclejdk11
-    sudo: false
-    script:
-      - cd euphoria-service/ && mvn clean package -B -V
-    cache:
-      directories:
-      - $HOME/.m2
-  - name: Frontend Build
-    language: node_js
-    node: 3
-    sudo: false
-    script:
-      - cd euphoria-frontend/ && npm install && npm run build
-    cache:
-      - npm
+  include:
+    - name: Backend Unit Tests
+      language: java
+      jdk: oraclejdk11
+      sudo: false
+      script:
+        - cd euphoria-service/ && mvn clean package -B -V
+      cache:
+        directories:
+        - $HOME/.m2
+
+    - name: Frontend Build
+      language: node_js
+      node: 3
+      sudo: false
+      script:
+        - cd euphoria-frontend/ && npm install && npm run build
+      cache:
+        - npm
 
 notifications:
   email: false
