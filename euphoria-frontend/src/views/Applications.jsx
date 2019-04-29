@@ -74,16 +74,6 @@ class Applications extends Component {
     const applicationData = props.applicationData;
     const userData = this.state.userData[applicationData.userId];
 
-    if(userData === undefined){
-      return(
-        <div className="floating-container posting-container-scrolling" style={{width:"600px"}}>
-          <h1>
-            Could not retrieve application data
-          </h1>
-        </div>
-      );
-    }
-
     return(
       <div className="floating-container posting-container-scrolling" style={{width:"600px"}}>
         <Container>
@@ -150,19 +140,30 @@ class Applications extends Component {
   render() {
     const {
       applicationsData,
+      userData
     } = this.state;
 
-    return(
-      <div>
-        <Navbar {...this.props}/>
-
-        <div className="scrolling-container">
-          {applicationsData.map(applicationData => (
-            <this.application key={applicationData.applicationId} applicationData={applicationData} />
-          ))}
+    if(userData === undefined){
+      return(
+        <div>
+          <Navbar {...this.props}/>
         </div>
-    </div>
-    );
+      );
+      );
+    }
+    else {
+      return(
+        <div>
+          <Navbar {...this.props}/>
+
+          <div className="scrolling-container">
+            {applicationsData.map(applicationData => (
+              <this.application key={applicationData.applicationId} applicationData={applicationData} />
+            ))}
+          </div>
+        </div>
+      );
+    }
   }
 }
 export default Applications
