@@ -36,8 +36,9 @@ public class PostingHandlers implements RouteProvider {
                 Route.sync("GET", "/api/posting/company/<companyId>", this::getPostingsForCompany).withMiddleware(jsonMiddleware()),
                 Route.sync("GET", "/api/posting/<location>/<industry>/<skillLevel>", this::searchPostings).withMiddleware(jsonMiddleware()),
                 Route.sync("POST", "/api/posting/", this::createPosting).withMiddleware(jsonMiddleware()),
-                Route.sync("PUT", "/api/posting", this::editPosting).withMiddleware(jsonMiddleware()),
-                Route.sync("OPTIONS", "/api/posting", rc -> "ok").withMiddleware(jsonMiddleware()),
+                Route.sync("OPTIONS", "/api/posting/", rc -> "ok").withMiddleware(jsonMiddleware()),
+                Route.sync("PUT", "/api/posting/", this::editPosting).withMiddleware(jsonMiddleware()),
+                Route.sync("OPTIONS", "/api/posting/", rc -> "ok").withMiddleware(jsonMiddleware()),
                 Route.sync("DELETE", "/api/posting/<postingId>", this::deletePosting).withMiddleware(jsonMiddleware()),
                 Route.sync("OPTIONS", "/api/posting/<postingId>", rc -> "ok").withMiddleware(jsonMiddleware())
         );
