@@ -50,6 +50,11 @@ See the [installation and setup
 documentation](https://github.com/eigenfoo/euphoria/blob/master/docs/installation-setup.md)
 for more detailed instructions on how to manually install and setup `euphoria`.
 
+## Deployment
+
+Upon running `make all`, you can simply run `make deploy` in a virtual machine
+to deploy euphoria.
+
 ## Documentation
 
 See the [`docs/`
