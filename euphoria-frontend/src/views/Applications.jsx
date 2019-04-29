@@ -143,7 +143,7 @@ class Applications extends Component {
       userData
     } = this.state;
 
-    if(userData === undefined){
+    if(Object.keys(userData).length === 0){
       return(
         <div>
           <Navbar {...this.props}/>
