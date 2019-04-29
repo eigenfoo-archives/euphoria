@@ -1,6 +1,6 @@
 #!/bin/bash
-# This script tests the HTTP request API from the command line via curl.
-# Expected output is included as comments.
+# This script sends test HTTP requests from the command line via curl.
+# Expected outputs are documented as comments.
 
 curl -X GET http://localhost:8080/api/authentication/apple/hash
 echo ""
