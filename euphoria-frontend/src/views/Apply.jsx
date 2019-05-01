@@ -10,6 +10,7 @@ class Apply extends Component {
 
     this.state = {
       postingData: [],
+      companyData: [],
       resume: "",
       coverLetter: ""
     };
@@ -26,11 +27,19 @@ class Apply extends Component {
     return;
   }
 
-  handleGet(url) {
+  handleGet(url, companyId) {
     fetch(url)
       .then(response => response.json())
       .then(data => {
-        this.setState({postingData: data});
+        if(companyId === undefined){
+          this.setState({postingData: data});
+
+          const companyURL = globals.baseUrl + "/api/company/" + data.companyId;
+          this.handleGet(companyURL, data.companyId);
+        }
+        else{
+          this.setState({companyData: data});
+        }
       })
       .catch(err => {
       });
@@ -87,7 +96,12 @@ class Apply extends Component {
   }
 
   render() {
-    const postingData = this.state.postingData;
+    const {
+      postingData,
+      companyData,
+    } = this.state;
+
+    console.log(companyData)
 
     if(postingData.skillLevel){
       var skillImage =
@@ -117,6 +131,15 @@ class Apply extends Component {
         </Button>;
     }
 
+    if(companyData === undefined){
+      return(
+        <div>
+          <Navbar {...this.props}/>
+        </div>
+      );
+    }
+
+    const companyWebsiteLink = "//" + companyData.website;
 
     return(
       <div>
@@ -149,7 +172,7 @@ class Apply extends Component {
             <Row>
               <Col sm={9}>
                 <p style={{fontSize:"20px", color:"#AAA"}}>
-                  {postingData.location}
+                  {postingData.location} - <a href={companyWebsiteLink}>{companyData.name}</a>
                 </p>
               </Col>
               <Col sm={3}>
@@ -182,7 +205,12 @@ class Apply extends Component {
             <Row>
               <Col>
                 <p style={{fontSize:"16px", color:"#AAA"}}>
-                  Description
+                  Job Description
+                </p>
+              </Col>
+              <Col>
+                <p style={{fontSize:"16px", color:"#AAA"}}>
+                  Company Description
                 </p>
               </Col>
             </Row>
@@ -190,6 +218,11 @@ class Apply extends Component {
               <Col>
                 <p>
                   {postingData.description}
+                </p>
+              </Col>
+              <Col>
+                <p>
+                  {companyData.description}
                 </p>
               </Col>
             </Row>

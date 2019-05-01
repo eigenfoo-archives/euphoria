@@ -154,19 +154,18 @@ class Applications extends Component {
         </div>
       );
     }
-    else {
-      return(
-        <div>
-          <Navbar {...this.props}/>
 
-          <div className="scrolling-container">
-            {applicationsData.map(applicationData => (
-              <this.application key={applicationData.applicationId} applicationData={applicationData} />
-            ))}
-          </div>
+    return(
+      <div>
+        <Navbar {...this.props}/>
+
+        <div className="scrolling-container">
+          {applicationsData.map(applicationData => (
+            <this.application key={applicationData.applicationId} applicationData={applicationData} />
+          ))}
         </div>
-      );
-    }
+      </div>
+    );
   }
 }
 export default Applications

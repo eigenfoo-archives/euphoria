@@ -85,9 +85,11 @@ class Postings extends Component {
   posting(props) {
     const postingData = props.postingData;
     const companyData = this.state.companyData[postingData.companyId];
+
     if(companyData === undefined){
       return null;
     }
+
     return(
       <div className="floating-container posting-container-scrolling" style={{width:"600px"}}>
         <Container>
@@ -146,7 +148,7 @@ class Postings extends Component {
       industry,
       skillLevel,
     } = this.state;
-    //console.log(companyData);
+
     if(Object.keys(companyData).length === 0){
       return(
         <div>
@@ -154,92 +156,91 @@ class Postings extends Component {
         </div>
       );
     }
-    else {
-      return(
-        <div>
-          <Navbar {...this.props}/>
 
-          <div className="signout-container" style={{width:"200px", height:"100px"}}>
-            <Button
-              variant="dark"
-              size="lg"
-              block
-              onClick={() => globals.handleSignout(this.props)}>
-              Sign Out
-            </Button>
-          </div>
+    return(
+      <div>
+        <Navbar {...this.props}/>
 
-          <div className="scrolling-container">
-            {postingsData.map(postingData => (
-              <this.posting key={postingData.postingId} postingData={postingData} />
-            ))}
-          </div>
+        <div className="signout-container" style={{width:"200px", height:"100px"}}>
+          <Button
+            variant="dark"
+            size="lg"
+            block
+            onClick={() => globals.handleSignout(this.props)}>
+            Sign Out
+          </Button>
+        </div>
 
-          <div className="floating-container postings-container-dropdown" style={{width:"900px", height:"100px"}}>
-            <Form>
-              <Form.Row>
-                <Form.Group as={Col} controlId="formGridLocation">
-                  <Form.Control
-                    required
-                    as="select"
-                    name="location"
-                    value={location}
-                    onChange={this.handleChange}>
-                    <option>Location...</option>
-                    <option>NEWYORK</option>
-                    <option>LONDON</option>
-                    <option>HONGKONG</option>
-                    <option>BERLIN</option>
-                    <option>BEIJING</option>
-                    <option>WASHINGTON</option>
-                  </Form.Control>
-                </Form.Group>
+        <div className="scrolling-container">
+          {postingsData.map(postingData => (
+            <this.posting key={postingData.postingId} postingData={postingData} />
+          ))}
+        </div>
 
-                <Form.Group as={Col} controlId="formGridIndustry">
-                  <Form.Control
-                    required
-                    as="select"
-                    name="industry"
-                    value={industry}
-                    onChange={this.handleChange}>
-                    <option>Industry...</option>
-                    <option>EDUCATION</option>
-                    <option>ENERGY</option>
-                    <option>FINANCE</option>
-                    <option>FOOD</option>
-                    <option>HEALTHCARE</option>
-                    <option>INSURANCE</option>
-                    <option>MEDIA</option>
-                    <option>RETAIL</option>
-                    <option>SERVICES</option>
-                    <option>TECHNOLOGY</option>
-                    <option>TRANSPORT</option>
-                    <option>UTILITIES</option>
-                  </Form.Control>
-                </Form.Group>
+        <div className="floating-container postings-container-dropdown" style={{width:"900px", height:"100px"}}>
+          <Form>
+            <Form.Row>
+              <Form.Group as={Col} controlId="formGridLocation">
+                <Form.Control
+                  required
+                  as="select"
+                  name="location"
+                  value={location}
+                  onChange={this.handleChange}>
+                  <option>Location...</option>
+                  <option>NEWYORK</option>
+                  <option>LONDON</option>
+                  <option>HONGKONG</option>
+                  <option>BERLIN</option>
+                  <option>BEIJING</option>
+                  <option>WASHINGTON</option>
+                </Form.Control>
+              </Form.Group>
 
-                <Form.Group as={Col} controlId="formGridSkillLevel">
-                  <Form.Control
-                    required
-                    as="select"
-                    name="skillLevel"
-                    value={skillLevel}
-                    onChange={this.handleChange}>
-                    <option>Skill Level...</option>
-                    <option>INTERNSHIP</option>
-                    <option>ENTRYLEVEL</option>
-                    <option>ASSOCIATE</option>
-                    <option>SENIOR</option>
-                    <option>DIRECTOR</option>
-                    <option>EXECUTIVE</option>
-                  </Form.Control>
-                </Form.Group>
-              </Form.Row>
-            </Form>
-          </div>
-      </div>
-      );
-    }
+              <Form.Group as={Col} controlId="formGridIndustry">
+                <Form.Control
+                  required
+                  as="select"
+                  name="industry"
+                  value={industry}
+                  onChange={this.handleChange}>
+                  <option>Industry...</option>
+                  <option>EDUCATION</option>
+                  <option>ENERGY</option>
+                  <option>FINANCE</option>
+                  <option>FOOD</option>
+                  <option>HEALTHCARE</option>
+                  <option>INSURANCE</option>
+                  <option>MEDIA</option>
+                  <option>RETAIL</option>
+                  <option>SERVICES</option>
+                  <option>TECHNOLOGY</option>
+                  <option>TRANSPORT</option>
+                  <option>UTILITIES</option>
+                </Form.Control>
+              </Form.Group>
+
+              <Form.Group as={Col} controlId="formGridSkillLevel">
+                <Form.Control
+                  required
+                  as="select"
+                  name="skillLevel"
+                  value={skillLevel}
+                  onChange={this.handleChange}>
+                  <option>Skill Level...</option>
+                  <option>INTERNSHIP</option>
+                  <option>ENTRYLEVEL</option>
+                  <option>ASSOCIATE</option>
+                  <option>SENIOR</option>
+                  <option>DIRECTOR</option>
+                  <option>EXECUTIVE</option>
+                </Form.Control>
+              </Form.Group>
+            </Form.Row>
+          </Form>
+        </div>
+    </div>
+    );
   }
 }
 export default Postings
