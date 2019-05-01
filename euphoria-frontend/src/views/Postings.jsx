@@ -10,6 +10,7 @@ class Postings extends Component {
 
     this.state = {
       postingsData: [],
+      companyData: {},
       location: "...",
       industry: "...",
       skillLevel: "..."
@@ -56,20 +57,38 @@ class Postings extends Component {
     return;
   }
 
-  handleGet(url) {
+  handleGet(url, companyId) {
     fetch(url)
-    .then(response => response.json())
-    .then(data => {
-      this.setState({postingsData: data});
-    })
-    .catch(err => {
-    })
+      .then(response => response.json())
+      .then(data => {
+        if(companyId === undefined){
+          this.setState({postingsData: data});
+
+          data.forEach(applicationData => {
+            const companyURL = globals.baseUrl + "/api/company/" + applicationData.companyId;
+
+            this.handleGet(companyURL, applicationData.companyId);
+          });
+        }
+        else{
+          var companyData = this.state.companyData;
+          companyData[companyId] = data;
+          this.setState({companyData});
+        }
+      })
+      .catch(err => {
+      });
 
     return;
   }
 
   posting(props) {
     const postingData = props.postingData;
+    const companyData = this.state.companyData[postingData.companyId];
+
+    if(companyData === undefined){
+      return null;
+    }
 
     return(
       <div className="floating-container posting-container-scrolling" style={{width:"600px"}}>
@@ -84,7 +103,7 @@ class Postings extends Component {
           <Row>
             <Col>
               <p style={{fontSize:"20px", color:"#AAA"}}>
-                {postingData.location}
+                {postingData.location} - {companyData.name}
               </p>
             </Col>
           </Row>
@@ -124,10 +143,19 @@ class Postings extends Component {
   render() {
     const {
       postingsData,
+      companyData,
       location,
       industry,
       skillLevel,
     } = this.state;
+
+    if(Object.keys(companyData).length === 0){
+      return(
+        <div>
+          <Navbar {...this.props}/>
+        </div>
+      );
+    }
 
     return(
       <div>

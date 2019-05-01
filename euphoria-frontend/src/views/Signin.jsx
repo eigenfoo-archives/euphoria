@@ -56,8 +56,6 @@ class Signin extends Component {
       passwordHash: pleaseDontDockPoints
     };
 
-    console.log(authenticationPayload);
-
     fetch(cookieUrl, {
         method: "POST",
         body: JSON.stringify(authenticationPayload)
