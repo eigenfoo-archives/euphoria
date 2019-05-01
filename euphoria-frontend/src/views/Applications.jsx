@@ -74,6 +74,10 @@ class Applications extends Component {
     const applicationData = props.applicationData;
     const userData = this.state.userData[applicationData.userId];
 
+    if(userData === undefined){
+      return null;
+    }
+
     return(
       <div className="floating-container posting-container-scrolling" style={{width:"600px"}}>
         <Container>
